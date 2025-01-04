@@ -232,8 +232,8 @@ show() {
 
 search(){
   
-    this.showTable=true;
-    this.isScreenCollapsed=true;
+    // this.showTable=true;
+    // this.isScreenCollapsed=true;
 }
 
   // async submit(){
@@ -374,7 +374,6 @@ search(){
   // }
 
   async submit(){
-    this.showTable=false;
     this.updatedLogs=[];
     if(!this.isLocationWiseChecked){
       if(this.locationFormGroup.valid){
@@ -456,8 +455,7 @@ uploadData(data:any){
           const brandObj=this.brands.find((obj:any)=>{
             return obj.brand_id==this.locationFormGroup.value.brand;
           })
-          this.brand=brandObj.brand;
-          this.isLoading=true   
+          this.brand=brandObj.brand; 
            this.uploadService.uploadLogs({...this.locationFormGroup.value,userId:this.userId}).subscribe({
              next:(res: any) => {
                this.isScreenCollapsed=true
@@ -475,7 +473,14 @@ uploadData(data:any){
                    // Keep the original log data too, if needed
                  });
                  this.isSearchButton = true;
-                 this.showTable=true;
+                 if(this.uploadLogs.length==0){
+                  this.showTable=false;
+
+                 }
+                 else{
+                   this.showTable=true;
+
+                 }
                  this.isLoading=false;
                  this.formData = new FormData();
                });
@@ -521,7 +526,14 @@ uploadData(data:any){
                              // Keep the original log data too, if needed
                          });
                          })
-                         this.showTable=true;
+                         if(this.uploadLogs.length==0){
+                          this.showTable=false;
+                          this.isScreenCollapsed=false;
+                         }
+                         else{
+                           this.showTable=true;
+
+                         }
                         //  this.uploadForm.reset();
                         this.isLoading=false;
                          this.formData = new FormData();
@@ -531,9 +543,11 @@ uploadData(data:any){
                       }})
           
                      }
-        if(res.data){
-    
-            this.messageService.add({ severity: 'info', summary:'Your data has been successfully uploaded', life: 10000 });
+        if(res.data==true){
+            this.showTable=false;
+            this.messageService.add({ severity: 'error', summary:'Part No ,Dealer and Location cannot be null', life: 20000 });
+            this.isLoading=false;
+            // this.showTable=false;
         }
         if(res?.allColumnsPresent==false){
           this.messageService.add({ severity: 'warn', summary:'Your uploaded does not contains with the mapped data', life: 3000 }); 

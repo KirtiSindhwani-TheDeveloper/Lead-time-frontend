@@ -17,7 +17,7 @@
     <div class="">
   
     <i class='bx bx-collapse-alt bx-md cursor-pointer' (click)="collapseScreen()"></i>
-        <div class="font-bold row col-2">
+        <div class="font-bold row col-3">
             <span class="d-flex justify-content-end align-items-center">Lead Time</span>
         </div>
            <div class="row">
@@ -178,11 +178,11 @@
     </div>
         </form>
             <div class="row " [ngClass]="isLocationWiseChecked?'mt-4':'mt-4'">
-                <div class="" [ngClass]="isScreenCollapsed?'col-3':'col-2'">
+                <div class="" [ngClass]="isScreenCollapsed?'col-4':'col-2'">
                     <span class="d-flex justify-content-end align-items-center">Upload Excel :</span>
                     
                 </div>
-                <div class=" d-flex flex-row gap-5" [ngClass]="isScreenCollapsed?'col-9':'col-10'">
+                <div class=" d-flex flex-row gap-5" [ngClass]="isScreenCollapsed?'col-8':'col-10'">
                     <div class="row col-2 me-2">
     
                         <p-fileUpload #fileUpload
@@ -228,10 +228,10 @@
                 <div class="col-12 d-flex justify-content-center">
                     <p-table 
                    [value]="updatedLogs"
-                    dataKey="code" 
+                    dataKey="code" *ngIf="showTable"
                     [tableStyle]="{'min-width': '50rem'}"  [scrollable]="true"
                     [scrollHeight]="isScreenCollapsed ? '350px' : '250px'" >
-                        <ng-template pTemplate="header">
+                        <ng-template pTemplate="header" >
                             <tr>
                                 <!-- <th style="width: 4rem"><p-tableHeaderCheckbox /></th> -->
                                 <th>Brand</th>
@@ -242,6 +242,9 @@
                                 <th>Updated By</th>
                             </tr>
                         </ng-template>
+                        <!-- <ng-template pTemplate="emptymessage" *ngIf="updatedLogs.length==0">
+                            No Data Available
+                        </ng-template> -->
                         <ng-template pTemplate="body" let-product>
                             <tr>
                                 <!-- <td>
