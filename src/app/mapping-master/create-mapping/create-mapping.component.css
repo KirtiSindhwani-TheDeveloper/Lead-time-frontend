@@ -1,0 +1,159 @@
+.body{
+    background-color: var(--secondary-color);
+    height: 100vh;
+    width: 100%;
+    overflow: auto;
+    /* padding:20px; */
+}
+:host ::ng-deep .p-inputtext{
+    padding:0.5rem !important;
+    border-radius:22px !important;
+    font-size: 14px;
+    padding: 0.25rem !important;
+    
+    padding-left: 0.75rem !important;
+}
+
+:host ::ng-deep p-dropdown .p-dropdown.p-component.p-inputwrapper{
+    border-radius:22px !important;
+    width:-webkit-fill-available !important;
+    border: #64748b 1px solid;
+}
+
+:host ::ng-deep .p-dropdown:not(.p-disabled):hover {
+    border-color:#d1d5db !important;
+}
+
+:host ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+    border-color:#d1d5db !important;
+    box-shadow:none !important
+}
+
+.p-inputtext:enabled:focus{
+    box-shadow: none !important;
+    border-color: #d1d5db !important
+}
+span{
+    font-weight: 500;
+}
+:host ::ng-deep span.p-ripple.p-element.p-button.p-component.p-fileupload-choose{
+    padding: 0.25rem;
+}
+:host ::ng-deep span.p-button-label.ng-star-inserted{
+  width:161px !important
+}
+
+:host ::ng-deep .p-button{
+    border-color:white !important;
+    box-shadow: none;
+    padding: 0.25rem;
+    border-radius: 6px;
+    background-color: var(--theme-color);
+}
+
+:host ::ng-deep .p-fileupload .p-fileupload-buttonbar{
+    background-color: var(--secondary-color) !important;
+    border:none !important;
+    padding: 0px;
+    /* padding-top: 30px; */
+}
+
+:host ::ng-deep .p-fileupload .p-fileupload-content{
+    background-color: none !important;
+    border:none !important;
+    padding:0px !important;
+    display: none;
+}
+
+:host ::ng-deep .p-progressbar.p-component.p-progressbar-determinate{
+    display: none ;
+}
+
+:host ::ng-deep ul{
+    padding: 0rem;
+}
+
+:host ::ng-deep ::-webkit-scrollbar {
+   width:4px;
+    height: 4px; /* Set the height for horizontal scrollbar */
+  }
+
+:host ::ng-deep ::-webkit-scrollbar-track {
+    background-color: #bdb8b8; 
+    /* background-color: red; */
+    border-radius: 10px;
+  }
+
+:host ::ng-deep input.p-inputtext.p-component.p-element.p-inputnumber-input.p-filled{
+    height:29px;
+    border: #64748b 1px solid;
+}
+
+:host ::ng-deep span.p-inputnumber.p-component.p-inputnumber-buttons-stacked{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:host ::ng-deep button.p-element.p-button-icon-only.p-inputnumber-button.p-inputnumber-button-up.p-button.p-component{
+    width: 25px;
+    height: 20px;
+}
+
+:host ::ng-deep button.p-element.p-button-icon-only.p-inputnumber-button.p-inputnumber-button-down.p-button.p-component{
+    width: 25px;
+    height: 20px;
+}
+
+::ng-deep .p-datatable .p-datatable-body {
+    max-height: 300px;  
+    overflow: auto;     /* Enable scrolling */
+  }
+
+  ::ng-deep .p-datatable-scrollable-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;  /* Higher z-index to ensure the header stays above the body */
+  }
+
+  td{
+    padding: 4px
+  }
+
+  ::ng-deep .ui-dropdown {
+    z-index: 9999;  /* Ensure it's on top */
+  }
+
+
+
+  :host ::ng-deep .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even){
+    background-color: var(--secondary-color);
+  }
+
+  :host ::ng-deep .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(odd){
+    background-color: var(--theme-color);
+  }
+
+  :host::ng-deep .p-checkbox-box.p-highlight {
+    outline: none;
+    box-shadow: none;
+    background: #64748b;
+}
+
+:host ::ng-deep input.p-inputtext.p-component.p-element {
+    border: #64748b 1px solid !important;
+}
+
+
+:host ::ng-deep button.p-element.p-button-icon-only.p-inputnumber-button.p-inputnumber-button-up.p-button.p-component{
+    color: white;
+  }
+  :host ::ng-deep button.p-element.p-button-icon-only.p-inputnumber-button.p-inputnumber-button-down.p-button.p-component{
+    color: white;
+  }  
+/* :host ::ng-deep .p-dropdown-items-wrapper{
+  max-height:350px !important;
+} */
+  /* :host ::ng-deep input.p-inputnumber-input {
+    pointer-events: none;
+} */

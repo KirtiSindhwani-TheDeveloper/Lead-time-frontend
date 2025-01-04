@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            
             "outputPath": "dist/lead-time-front",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -27,7 +28,11 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/global.css",
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+    "node_modules/primeng/resources/primeng.min.css",
+    "node_modules/primeicons/primeicons.css"
             ],
             "scripts": []
           },
@@ -36,8 +41,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "2.5MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -63,7 +68,10 @@
             },
             "development": {
               "buildTarget": "lead-time-front:build:development"
-            }
+            },
+            "options": {
+      "proxyConfig": "proxy.conf.json"
+    }
           },
           "defaultConfiguration": "development"
         },

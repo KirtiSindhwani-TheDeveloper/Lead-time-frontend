@@ -1,0 +1,13 @@
+:host ::ng-deep button.p-ripple.p-element.p-button.p-component{
+    background: #2f667f;
+    border-color: #2f667f;
+    box-shadow: none;
+    outline:none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    
+}
+
+:host ::ng-deep svg.p-icon{
+    color: white;
+  }

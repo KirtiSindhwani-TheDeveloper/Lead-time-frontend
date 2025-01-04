@@ -1,0 +1,102 @@
+body{
+    background: var(--secondary-color) !important;
+    height: 100%;
+}
+.body{
+    background-color: var(--secondary-color) !important;
+    height: 100vh;
+    overflow: hidden;
+}
+
+:host ::ng-deep .p-fileupload-content{
+    display: none;
+}
+:host ::ng-deep .p-fileupload-buttonbar{
+    padding: 0%;
+    background-color: var(--secondary-color) !important;
+}
+
+:host ::ng-deep span.p-ripple.p-element.p-button.p-component.p-fileupload-choose{
+background-color: var(--theme-color);
+padding: 10px !important;
+/* width: 128px;
+height: 36px;
+margin-left: 64px; */
+}
+
+:host ::ng-deep p-dropdown .p-dropdown.p-component.p-inputwrapper{
+    border-radius:22px !important;
+    width:-webkit-fill-available !important;
+}
+
+:host ::ng-deep .p-dropdown:not(.p-disabled):hover {
+    border-color:#d1d5db !important;
+}
+
+:host ::ng-deep .p-dropdown:not(.p-disabled).p-focus {
+    border-color:#d1d5db !important;
+    box-shadow:none !important
+}
+
+:host ::ng-deep span.p-element.p-dropdown-label.p-inputtext.p-placeholder.ng-star-inserted{
+    padding: 4px !important;
+    padding-left:10px !important;
+}
+
+.card{
+    background-color: white;
+}
+
+.btn-search{
+    background-color: var(--theme-color);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.btn-view{
+    background-color: var(--theme-color);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:host ::ng-deep button:focus:not(:focus-visible) {
+    outline: 0;
+    border: none;
+    box-shadow: none;
+}
+
+:host ::ng-deep span.p-element.p-dropdown-label.p-inputtext.ng-star-inserted{
+    padding: 4px !important;
+    padding-left:10px !important;
+}
+
+:host ::ng-deep .btn-export{
+
+    background-color: #198754;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+:host ::ng-deep th.p-element.p-sortable-column{
+    display: flex;
+}
+
+:host ::ng-deep svg.p-icon.p-sortable-column-icon {
+    width: 12px;
+    height: 12px;
+}
+:host ::ng-deep sortalticon.p-element.p-icon-wrapper.ng-star-inserted{
+    padding-top: 6px;
+}
+
+:host::ng-deep p-sorticon.p-element{
+    padding: 5px !important;
+}

@@ -1,0 +1,95 @@
+<div class="body d-flex" >
+  <img
+  src="Background_image.png"
+  alt="Background"
+  class="absolute inset-0 w-full h-full object-cover -z-10"
+/>
+
+  <div class="">
+    <app-sidebar></app-sidebar>
+  </div>
+  <div class="w-100 h-100 mt-4">
+    <div class="row d-flex justify-center">
+      <div class="col-7">
+        <span class="font-bold">Add User</span>
+
+      </div>
+
+    </div>
+     <div class="d-flex justify-content-center align-items-center flex-column">
+       <div class="card">
+         <div class="row">
+          <div class="col-12">
+            <form [formGroup]="addUserForm">
+              <div class="row">
+                 <div class="col-6 p-3 d-flex flex-column">
+                    <span class="text-white">Name</span>
+                    <input type="text" pInputText formControlName="name" placeholder="Enter Name" />
+                 </div>
+                 <div class="col-6 p-3">
+                  <span class="text-white">Designation</span>
+                      <p-dropdown 
+        [options]="designations" 
+       formControlName="designation"
+        optionLabel="name" 
+        placeholder="Enter Designation" />
+               </div>
+              </div>
+              <div class="row">
+                <div class="col-6 p-3 pt-2 d-flex flex-column">
+                   <span class="text-white">Role</span>
+                   <p-dropdown 
+                   [options]="designations" 
+                  formControlName="role"
+                   optionLabel="name" 
+                   placeholder="Enter Role" />
+                  </div>
+  
+                  <div class="col-6 p-3 pt-2">
+                    <span class="text-white">Email ID</span>
+                    <input type="text" pInputText formControlName="email" placeholder="Enter Email" />
+                   
+              </div>
+             </div>
+             <div class="row">
+              <div class="col-6 p-3 pt-2 d-flex flex-column">
+                 <span class="text-white">Mobile No </span>
+                 <input type="text" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
+                </div>
+                
+                <div class="col-6 p-3 pt-2">
+                  <span class="text-white">User ID</span>
+                  <input type="text" pInputText formControlName="userId" placeholder="Enter User ID"/>
+                 
+            </div>
+           </div>
+           <div class="row">
+            <div class="col-6 p-3 pt-2 d-flex flex-column">
+               <span class="text-white">Password </span>
+               <input type="text" pInputText formControlName="password" placeholder="Enter Password"/>
+              </div>
+              
+              <div class="col-6 p-3 pt-2 d-flex flex-column">
+                <span class="text-white">Status</span>
+                <p-dropdown 
+                [options]="designations" 
+               formControlName="status"
+                optionLabel="name" 
+                placeholder="Enter Status" />
+               
+          </div>
+         </div>
+  
+            </form>
+          </div>
+    
+         </div>
+  
+       </div>
+       <div class="">
+         <p-button label="Cancel" class="btn text-white mr-5"/>
+         <p-button label="Submit" class="btn text-white "/>
+       </div>
+     </div>
+  </div>
+</div>

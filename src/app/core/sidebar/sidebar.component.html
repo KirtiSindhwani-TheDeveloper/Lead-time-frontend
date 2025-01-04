@@ -1,0 +1,18 @@
+<!-- <div class="w-[15vw] h-[100vh] bg-[#2f667f] flex flex-col pt-3">
+    <div
+      *ngFor="let item of sideBarList; let i = index"
+      class="w-full h-8 flex items-center justify-center cursor-pointer bg-black text-white hover:text-black hover:bg-white"
+      [ngClass]="{ 'bg-white text-black': activeIndex === i, 'bg-black text-white': activeIndex !== i }"
+      (click)="ActiveMenu(i,item)" 
+    >
+      <h1 class="text">{{ item.value }}</h1>
+    </div>
+  </div> -->
+
+  <div class="sidebar">
+    <ul>
+      <li *ngFor="let item of sidebarItems">
+        <a [routerLink]="item.route" routerLinkActive="active">{{ item.label }}</a>
+      </li>
+    </ul>
+  </div> 

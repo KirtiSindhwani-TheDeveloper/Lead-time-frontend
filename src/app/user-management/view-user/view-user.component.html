@@ -1,0 +1,122 @@
+<div class="body d-flex">
+    <img
+    src="Background_image.png"
+    alt="Background"
+    class="absolute inset-0 w-full h-full object-cover -z-10"
+  />
+    <div>
+        <app-sidebar></app-sidebar>
+    </div>
+    <div class="mt-5 ">
+        <div class="mb-3">
+            <span class="font-bold f-18">View Users</span>
+        </div>
+        <p-table 
+        [value]="users" 
+        styleClass="p-datatable-gridlines" 
+        [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Associated Business</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Action</th>
+                    <th>Status</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product>
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.designation }}</td>
+                    <td>{{ product.associatedBusiness }}</td>
+                    <td>{{ product.email }}</td>
+                    <td>{{ product.mobile }}</td>
+                    <td class="text-center" ><i class='bx bx-edit cursor-pointer' (click)="showDialog()"></i></td>
+                    <td>{{ product.status }}</td>
+                </tr>
+            </ng-template>
+    </p-table>
+    </div>
+</div>
+
+<div>
+<p-dialog header="Edit User" [modal]="true" [(visible)]="visible" [style]="{ width: '55rem' }">
+    <!-- <span class="p-text-secondary block mb-5">Update your information.</span> -->
+    <div class="card">
+        <div class="row">
+         <div class="col-12">
+           <form [formGroup]="editUserForm">
+             <div class="row">
+                <div class="col-6 p-3 d-flex flex-column">
+                   <span class="text-white">Name</span>
+                   <input type="text" pInputText formControlName="name" placeholder="Enter Name" />
+                </div>
+                <div class="col-6 p-3 d-flex flex-column">
+                 <span class="text-white">Designation</span>
+                     <p-dropdown 
+       [options]="designations" 
+      formControlName="designation"
+       optionLabel="name" 
+       placeholder="Enter Designation" />
+              </div>
+             </div>
+             <div class="row">
+               <div class="col-6 p-3 pt-2 d-flex flex-column">
+                  <span class="text-white">Role</span>
+                  <p-dropdown 
+                  [options]="designations" 
+                 formControlName="role"
+                  optionLabel="name" 
+                  placeholder="Enter Role" />
+                 </div>
+ 
+                 <div class="col-6 p-3 pt-2">
+                   <span class="text-white">Email ID</span>
+                   <input type="text" pInputText formControlName="email" placeholder="Enter Email" />
+                  
+             </div>
+            </div>
+            <div class="row">
+             <div class="col-6 p-3 pt-2 d-flex flex-column">
+                <span class="text-white">Mobile No </span>
+                <input type="text" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
+               </div>
+               
+               <div class="col-6 p-3 pt-2">
+                 <span class="text-white">User ID</span>
+                 <input type="text" pInputText formControlName="userId" placeholder="Enter User ID"/>
+                
+           </div>
+          </div>
+          <div class="row">
+           <div class="col-6 p-3 pt-2 d-flex flex-column">
+              <span class="text-white">Password </span>
+              <input type="text" pInputText formControlName="password" placeholder="Enter Password"/>
+             </div>
+             
+             <div class="col-6 p-3 pt-2 d-flex flex-column">
+               <span class="text-white">Status</span>
+               <p-dropdown 
+               [options]="designations" 
+              formControlName="status"
+               optionLabel="name" 
+               placeholder="Enter Status" />
+              
+         </div>
+        </div>
+ 
+           </form>
+         </div>
+   
+        </div>
+ 
+      
+      <div class="div-btn">
+        <p-button label="Cancel" class="btn text-white mr-5"/>
+        <p-button label="Submit" class="btn text-white "/>
+      </div>
+    </div>
+</p-dialog>
+</div>

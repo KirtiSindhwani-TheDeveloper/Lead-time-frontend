@@ -1,0 +1,13 @@
+:root{
+    --theme-color:#2f667f !important;
+    --secondary-color:#f2f2f2 !important;
+    --tertiary-color:#2f667f !important
+}
+
+.text-white{
+    font:white;
+}
+
+.f-18{
+    font-size: 18px !important;
+}
