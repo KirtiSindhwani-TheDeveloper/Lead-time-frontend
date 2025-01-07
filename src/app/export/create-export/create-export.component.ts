@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { UtilitiesService } from '../../services/utilities.service';
 import { ExportService } from '../../services/export.service';
 import { SidebarComponent } from '../../core/sidebar/sidebar.component';
-
+import * as FileSaver from 'file-saver';
 @Component({
   selector: 'app-create-export',
   imports: [
@@ -29,6 +29,7 @@ import { SidebarComponent } from '../../core/sidebar/sidebar.component';
 })
 export class CreateExportComponent {
   loading:boolean=false;
+  brand:any;dealer:any;location:any;
   brands: any[] = [];
   locations: any[] = [];
   dealers: any[] = [];
@@ -36,6 +37,7 @@ export class CreateExportComponent {
   fileTypes: any[] = [{name:'Partwise OrderType'},{name:'Partwise Summary'},{name:'Overall Summary'},{name:'M1 Month'}];
   minDate: Date | undefined;
   maxDate: Date | undefined;
+  currentDateTime:any;
   exportForm: FormGroup = new FormGroup({
     brand: new FormControl('',[Validators.required]),
     dealer: new FormControl('',[]),
@@ -52,24 +54,69 @@ export class CreateExportComponent {
   }
 
   downloadExcel() {
+    
     if(this.exportForm.valid){
      
       this.loading=true;
-      this.exportService.exportExcel(this.exportForm.value).subscribe({next:(response: Blob) => {
-        const url = window.URL.createObjectURL(response);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'multi_sheets.xlsx'; // Set the name of the downloaded file
-        a.click();
-        window.URL.revokeObjectURL(url);
-        this.loading=false
-      },
-      error:(error:any)=>{
-        this.loading=false;
-        this.messageService.add({severity:'error',summary:'There is no result available for this brand',life:3000})
+      const brandObj=this.brands.find((obj:any)=>{
+        return obj.brand_id==this.exportForm.value.brand;
+      })
+      this.brand=brandObj?.brand;
+      if(this.exportForm.value.dealer!=null){
+        const dealerObj=this.dealers.find((obj:any)=>{
+          return obj.dealer_id==this.exportForm.value.dealer;
+        })
+        this.dealer=dealerObj?.dealer_name;
+
       }
-    },
-    );   
+    if(this.exportForm.value.location){
+      const locationObj=this.locations.find((obj:any)=>{
+        return obj.Location_id==this.exportForm.value.location;
+      })
+      this.location=locationObj.Location_name
+    }
+
+      this.exportService.exportExcel(this.exportForm.value).subscribe((response: any) => {
+        // Create a URL for the blob
+        console.log(response)
+        let fileName='Lead time Output_'+this.brand;
+        if(this.dealer!=null){
+          fileName+="_"+this.dealer+"_"
+        }
+        if(this.location!=null)
+        {
+          fileName+=this.location+'_';
+        }
+       fileName+=this.currentDateTime
+      // Trigger the download for file1
+      this.downloadFile(response, fileName);  // Adjust the name as needed
+      this.exportService.downloadLogs(this.exportForm.value).subscribe((res:any)=>{
+        let fileName='Error_Logs_'+this.brand;
+          if(this.dealer!=null){
+            fileName+="_"+this.dealer+"_"
+          }
+          if(this.location!=null)
+          {
+            fileName+=this.location+'_';
+          }
+         fileName+=this.currentDateTime
+        this.downloadFile(res,fileName);
+        this.loading=false;
+       }
+      //  , error => {
+      //   this.loading=false;
+      //   this.messageService.add({ severity: 'error', summary: 'Error occured in processing excel file', life: 20000 });
+      //   console.error('Error downloading files', error);
+      // }
+    )
+      
+    }, error => {
+      this.loading=false;
+      this.messageService.add({ severity: 'error', summary: 'Error occured in processing excel file', life: 20000 });
+      console.error('Error downloading files', error);
+    });
+     
+    
     }
     else{
       Object.keys(this.exportForm.controls).forEach(controlName => {
@@ -78,7 +125,20 @@ export class CreateExportComponent {
       console.log('Form is invalid');
     }
   }
+  private downloadFile(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;  // Set the filename for the download
+    a.click();
+    window.URL.revokeObjectURL(url);  // Clean up after download
+   
+  }
   
+  
+  
+  
+
 
   ngOnInit() {
     let today = new Date();
@@ -99,13 +159,9 @@ this.minDate.setMonth(today.getMonth() - 15);
 this.minDate.setDate(1); // Set minDate to the first day of the month
 
 
-
-// Adjusting minDate in case it goes past the previous year and handles edge cases (like the 31st -> February 28/29)
-// if (this.minDate.getMonth() > today.getMonth()) {
-//   this.minDate.setFullYear(today.getFullYear() - 1);
-// }
- // Ensure that the minDate is not later than the maxDate
-
+const now = new Date();
+    this.currentDateTime = now.toLocaleString();
+  console.log(this.currentDateTime)
 this.getBrands(); 
     console.log('Min Date: ', this.minDate.toISOString().split('T')[0]);
     console.log('Max Date: ', this.maxDate.toISOString().split('T')[0]);

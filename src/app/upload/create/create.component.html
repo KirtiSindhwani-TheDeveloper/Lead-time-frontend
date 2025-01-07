@@ -62,26 +62,35 @@
                                   </div>
                                     </div>
                                 </div>
-                                <div class="row ">
-                                    <div class="col-2">
-                                        <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
+                                <div class="d-flex flex-column" *ngFor="let fileType of fileTypes;let i=index;">
+                                    <div class="row " >
+                                        <div class="col-2">
+                                            <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
+                                        </div>
+                                        <div class="col-4" >
+                                       <p>{{fileType.fileType}}</p>
+                                      <!-- <div *ngIf="locationFormGroup.get('fileType')?.touched && locationFormGroup.get('fileType')?.invalid">
+                                        <small *ngIf="locationFormGroup.get('fileType')?.hasError('required')" style="color: red; font-size: 12px;">FileType is required.</small>
+                                      </div> -->
+                                        </div>
+                                        <div class="col-2 me-2">
+    
+                                            <p-fileUpload #fileUpload
+                                            [name]="'fileType_' + i"
+                                            [accept]="'.xlsx, .xls, .csv'"
+                                            [auto]="true"
+                                            mode="advanced"
+                                            chooseLabel="Upload"
+                                            chooseIcon="pi pi-upload"
+                                            (onSelect)="onUpload($event, fileType, i)"
+                                            multiple="false">
+                               </p-fileUpload>
+                                        </div>
                                     </div>
-                                    <div class="col-10">
-                                        <p-dropdown
-                                    [styleClass]=""
-                                    [options]="fileTypes"
-                                    id="fileType"
-                                    formControlName="fileType"
-                                    optionLabel="fileType"
-                                    optionValue="id"
-                                    placeholder="Select File Type"
-                                  >
-                                  </p-dropdown>
-                                  <div *ngIf="locationFormGroup.get('fileType')?.touched && locationFormGroup.get('fileType')?.invalid">
-                                    <small *ngIf="locationFormGroup.get('fileType')?.hasError('required')" style="color: red; font-size: 12px;">fileType is required.</small>
-                                  </div>
-                                    </div>
-                                </div>
+                                    
+
+                                </div> 
+                                
                             </div>
                         </div>
                
@@ -154,7 +163,43 @@
           </div>
                 </div>
             </div>
-            <div class="row ">
+            <div class="d-flex flex-column" *ngFor="let fileType of fileTypes;let i=index">
+                <div class="row " >
+                    <div class="col-2">
+                        <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
+                    </div>
+                    <div class="col-4" >
+                        <!-- <p-dropdown
+                    [styleClass]=""
+                    [options]="fileTypes"
+                    id="fileType"
+                    formControlName="fileType"
+                    optionLabel="fileType"
+                    optionValue="id"
+                    placeholder="Select File Type"
+                  > -->
+                  <!-- </p-dropdown> -->
+                   <p>{{fileType.fileType}}</p>
+                    </div>
+                    <div class="col-2 me-2">
+
+                        <p-fileUpload #fileUpload
+                        #fileInput
+                        mode="advanced"
+                        multiple="true"
+                        chooseIcon="pi pi-upload"
+                        accept=".xlsx, .xls,.csv"
+                        [auto]="true"
+                        chooseLabel="Upload"
+                        [name]="'fileType_' + i"
+                        (onSelect)="onUpload($event,fileType,i)" 
+                          />
+                    </div>
+                </div>
+                
+
+            </div>
+            <!-- <div class="row ">
                 <div class="col-2">
                     <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
                 </div>
@@ -173,17 +218,17 @@
                 <small *ngIf="uploadForm.get('fileType')?.hasError('required')" style="color: red; font-size: 12px;">File Type is required.</small>
               </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
         </form>
             <div class="row " [ngClass]="isLocationWiseChecked?'mt-4':'mt-4'">
-                <div class="" [ngClass]="isScreenCollapsed?'col-4':'col-2'">
+                <!-- <div class="" [ngClass]="isScreenCollapsed?'col-4':'col-2'">
                     <span class="d-flex justify-content-end align-items-center">Upload Excel :</span>
                     
-                </div>
+                </div> -->
                 <div class=" d-flex flex-row gap-5" [ngClass]="isScreenCollapsed?'col-8':'col-10'">
-                    <div class="row col-2 me-2">
+                    <!-- <div class="row col-2 me-2">
     
                         <p-fileUpload #fileUpload
                         #fileInput
@@ -196,8 +241,8 @@
                         chooseLabel="Upload"
                         (onSelect)="onUpload($event)" 
                           />
-                    </div>
-                    <div class=" btn-search ms-4" [ngClass]="isScreenCollapsed?'col-3':'col-2'">
+                    </div> -->
+                    <div class=" btn-search ms-5 " [ngClass]="isScreenCollapsed?'col-3':'col-2'">
                         <p-button [styleClass]="'text-white'" label="Submit"  [disabled]="!isFileUploaded && fileName!=''" (click)="submit()" />
                     </div>
                     <div class="d-flex col-8 row justify-content-end gap-4">

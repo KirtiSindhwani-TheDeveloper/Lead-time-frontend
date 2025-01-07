@@ -23,6 +23,9 @@ export class ExportService {
   downloadFormat(data:any):Observable<any>{
     return this.http.post(`${this.url}leadtime/download-format`,data,{responseType:'blob'})
   }
+  downloadLogs(data:any):Observable<any>{
+    return this.http.post(`${this.url}leadtime/download-logs`,data,{responseType:'blob'})
+  }
 
   // exportFile(data: any){
   //   this.downloadFormat(data).subscribe(blob => {
