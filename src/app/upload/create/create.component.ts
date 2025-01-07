@@ -15,6 +15,7 @@ import * as XLSX from 'xlsx';
 import { FileUpload } from 'primeng/fileupload';
 import { UserService } from '../../services/user.service';
 import { switchMap } from 'rxjs';
+import { brandColumnObject } from '../../core/brandColumns';
 @Component({
   selector: 'app-create',
   imports: [PrimengModule,SharedModule,ReactiveFormsModule,FormsModule,CommonModule,SidebarComponent],
@@ -51,6 +52,7 @@ export class CreateComponent {
   userId:any;
   formDataPO:any;
   updatedBy:any;
+  updatedAuditLogs:any=[];
   isLoading:boolean=false;
   isSearchButton:boolean=false;
   locationFormGroup:FormGroup;
@@ -60,7 +62,7 @@ export class CreateComponent {
     brand: new FormControl('',[Validators.required]),
     dealer: new FormControl('',[Validators.required]),
     location: new FormControl('',[Validators.required]),
-    fileType:new FormControl('',[]),
+    // fileType:new FormControl('',[]),
 
 
   })
@@ -77,7 +79,7 @@ export class CreateComponent {
     this.locationFormGroup=this.fb.group({
 
       brand:['',[Validators.required]],
-      fileType:['',[]]
+      // fileType:['',[Validators.required]]
     })
   }
 
@@ -106,7 +108,7 @@ export class CreateComponent {
     this.utilitiesService.getDealers({brand_id:brand_id}).subscribe((res:any)=>{
       this.dealers=res.data;
     })
-
+    this.getFileType({brand_id:this.uploadForm.value.brand})
     // this.fetchMappedColumns({brand_id:brand_id,fileTypeId:this.uploadForm.value.fileType})
   }
 
@@ -114,7 +116,7 @@ export class CreateComponent {
     this.utilitiesService.getLocations({brand_id:this.uploadForm.value.brand,dealer_id:this.uploadForm.value.dealer}).subscribe((res:any)=>{
       this.locations=res.data;
     })
-    this.getFileType({brand_id:this.uploadForm.value.brand})
+   
   }
 
   onCheckboxChange(event: any): void {
@@ -123,6 +125,7 @@ export class CreateComponent {
      this.uploadLogs=[]  // Clearing the table
      this.showTable=false;
      this.isSearchButton=false;
+     this.updatedAuditLogs=[]
      this.showMapping=false;
      this.fileTypes=[];
      this.uploadForm.reset();
@@ -130,6 +133,7 @@ export class CreateComponent {
     } if(!this.isLocationWiseChecked){
       this.showTable=false;
       this.uploadLogs=[];
+      this.updatedAuditLogs=[]
       this.showTable=false;
       this.isSearchButton=false;
       this.showMapping=false;
@@ -153,6 +157,7 @@ export class CreateComponent {
 
 onUpload(event: any, fileType: any, index: number) {
   // Clear the previous file upload instance
+  this.updatedAuditLogs=[];
   this.fileUpload.clear();
 
   // Get the uploaded file
@@ -175,11 +180,18 @@ onUpload(event: any, fileType: any, index: number) {
       file: formData
   };
   console.log(this.uploadedFiles)
-  console.log('Uploaded file for file type:', fileType.fileType);
-  console.log('FormData:', formData);
+  if(this.fileTypes.length !=this.uploadedFiles.length){
+    // console.log(this.fileTypes.length ,this.uploadedFiles.length)
+    this.isFileUploaded=false;
+  }
+  else{
+    this.isFileUploaded=true;
+  }
+  // console.log('Uploaded file for file type:', fileType.fileType);
+  // console.log('FormData:', formData);
 
   // Flag to indicate the file has been uploaded
-  this.isFileUploaded = true;
+  // this.isFileUploaded = true;
 }
 
 
@@ -201,27 +213,33 @@ this.isLoading=true
   // }
 
   this.userId=localStorage.getItem('userId');
+  let logs;
   for(let item of this.uploadedFiles){
     this.formData=item.file;
     let fileTypeObj=item;
     console.log(this.formData)
-    this.mappingService.uploadFile(this.formData).subscribe((res:any)=>{
+    this.mappingService.uploadFile(this.formData).subscribe(async (res:any)=>{
       this.isFileUploaded=false
       this.uploadedData=res.data1
       this.excelCount=res.data1.length
       // console.log("this.ex" ,this.excelCount)
       this.isLoading=true;
       if(!this.isLocationWiseChecked){
-        console.log("jsfhd",this.locationFormGroup.value)
-        this.uploadData({brand_id:this.locationFormGroup.value.brand,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
+        console.log("jsfhd",fileTypeObj)
+     logs=  await this.uploadData({brand_id:this.locationFormGroup.value.brand,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
         this.formData = new FormData();
       }else{
-        console.log("jsfhd upload",this.uploadForm.value)
-        this.uploadData({brand_id:this.uploadForm.value.brand,dealer_id:this.uploadForm.value.dealer,location:this.uploadForm.value.location,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
+        console.log("jsfhd upload",fileTypeObj)
+      logs=await  this.uploadData({brand_id:this.uploadForm.value.brand,dealer_id:this.uploadForm.value.dealer,location:this.uploadForm.value.location,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
         this.formData = new FormData();
       }
     })
+    // console.log("upload logs ",logs)
   }
+
+  return logs
+
+  
 
 
 }
@@ -424,30 +442,33 @@ search(){
 
   // }
 
-  async submit(){
-    this.updatedLogs=[];
+  submit(){
+    this.updatedAuditLogs=[];
     if(!this.isLocationWiseChecked){
       if(this.locationFormGroup.valid){
           this.isLoading=true;
-         await this.uploadFile(this.formData)        
-             this.locationFormGroup.reset(); 
-             this.fileTypes=[];  
+          this.updatedAuditLogs=[];
+          this.uploadFile(this.formData)        
+
+            //  this.fileTypes=[];  
         }
         else{
               this.isLoading=false;
               Object.keys(this.locationFormGroup.controls).forEach(controlName => {
                 this.locationFormGroup.get(controlName)?.markAsTouched();
               });
-              this.messageService.add({severity:'error',summary:'Kindly fill all the information.',life:3000})
+              // this.messageService.add({severity:'error',summary:'Kindly fill all the information.',life:3000})
               console.log('Form is invalid');
             }
       }
         else{
           if(this.uploadForm.valid){
                       this.isLoading=true;   
-            await this.uploadFile(this.formData)  
-            this.fileTypes=[];      
-            this.uploadForm.reset(); 
+                      this.updatedAuditLogs=[];
+           let logs=  this.uploadFile(this.formData) 
+  
+            // this.fileTypes=[];      
+
                
     }
     else{
@@ -468,19 +489,23 @@ downloadExcel(){
   console.log("download ")
   let data ;
   let fileObj;
+  
   // this.utilitiesService.exportFile(data)
   if(!this.isLocationWiseChecked){
-    data=this.fetchData;
+    // data=this.fetchData;
+    let id=this.locationFormGroup.value.brand;
+    data=brandColumnObject[id];
+    console.log(data);
     // console.log(data,this.fileTypes)
-   data.forEach((item:any)=>{
-    fileObj=  this.fileTypes.find((obj:any)=>{
-        return obj.id==item?.file_type
-      })
-      // console.log("fileObj ",fileObj)
-      item.fileType=fileObj.fileType
-      const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==item.brand_id});
-      item.brandName=brandObj.brand;
-    })
+  //  data.forEach((item:any)=>{
+  //   fileObj=  this.fileTypes.find((obj:any)=>{
+  //       return obj.id==item?.file_type
+  //     })
+  //     // console.log("fileObj ",fileObj)
+  //     item.fileType=fileObj.fileType
+  //     const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==item.brand_id});
+  //     item.brandName=brandObj.brand;
+  //   })
    
   }
   else{
@@ -498,8 +523,7 @@ downloadExcel(){
     this.isLoading=false;
   });
 }
-
-uploadData(data:any){
+ uploadData(data:any){
  
     this.uploadService.uploadData(data).subscribe({
       next:(res)=>{
@@ -510,22 +534,32 @@ uploadData(data:any){
               return obj.brand_id==this.locationFormGroup.value.brand;
             })
             this.brand=brandObj.brand; 
-             this.uploadService.uploadLogs({...this.locationFormGroup.value,userId:this.userId}).subscribe({
+            console.log(this.locationFormGroup.value)
+            if(this.updatedAuditLogs.length!=0){
+              console.log("excuted")
+              this.updatedAuditLogs=[];
+            }
+            this.updatedAuditLogs=[];
+             this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
                next:(res: any) => {
+                
                  this.isScreenCollapsed=true
                  this.isSearchButton=true;
                  this.uploadLogs = res.data;
+                 this.updatedAuditLogs=[];
                  this.uploadLogs.forEach((item: any) => {
                    this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
-                   console.log("updated ", this.updatedDate);
+                  //  console.log("updated ", this.updatedDate);
                    let user = this.users.find((obj: any) => { return obj.userId == item.userID; });
                    this.updatedBy = user.name;
-                   this.updatedLogs.push({
+                  
+                   this.updatedAuditLogs.push({
                      ...item,
                      updatedDate: this.updatedDate,
                      updatedBy: this.updatedBy,
                      // Keep the original log data too, if needed
                    });
+                   this.showTable=true;
                    this.isSearchButton = true;
                   //  if(this.uploadLogs.length==0){
                   //   this.showTable=false;
@@ -535,9 +569,9 @@ uploadData(data:any){
                   //    this.showTable=true;
   
                   //  }
-                  this.showTable=true;
                    this.isLoading=false;
                    this.formData = new FormData();
+                   return this.updatedLogs
                  });
                 
                  // this.locationFormGroup.reset()
@@ -562,11 +596,18 @@ uploadData(data:any){
                         return obj.Location_id==this.uploadForm.value.location;
                       })
                       this.location=locationObj.Location_name
-                         this.uploadService.uploadLogs({...this.uploadForm.value,userId:this.userId}).subscribe({
+                      if(this.updatedAuditLogs.length!=0){
+                        // console.log("excuted")
+                        this.updatedAuditLogs=[];
+                      }
+                         this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
                          next:(res:any)=>{
+                         
+                         
                           this.isScreenCollapsed=true
                           this.isSearchButton=true;
                            this.uploadLogs=res.data;
+                           this.updatedAuditLogs=[];
                            this.uploadLogs.forEach((item:any)=>{
                              const dateObj = item.dateTime
                    
@@ -574,30 +615,24 @@ uploadData(data:any){
                              console.log("updated ",this.updatedDate)
                              let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
                              this.updatedBy=user.name;
-                             this.updatedLogs.push({
+                             this.updatedAuditLogs.push({
                                ...item ,
                                updatedDate: this.updatedDate,
                                updatedBy: this.updatedBy,
                                // Keep the original log data too, if needed
                            });
                            })
-                          //  if(this.uploadLogs.length==0){
-                          //   this.showTable=false;
-                          //   this.isScreenCollapsed=false;
-                          //  }
-                          //  else{
-                          //    this.showTable=true;
-  
-                          //  }
-                          this.showTable=true;
+                         
                           //  this.uploadForm.reset();
                           this.isLoading=false;
+                          this.showTable=true;
                            this.formData = new FormData();
+                           return this.updatedLogs;
                          },
                         error:(erro:any)=>{
                           this.isLoading=false;
                         }})
-            
+                        
                        }
           if(res.data==true){
               this.showTable=false;

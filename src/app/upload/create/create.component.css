@@ -26,7 +26,8 @@ margin-left: 64px; */
 
 :host ::ng-deep p-dropdown .p-dropdown.p-component.p-inputwrapper{
     border-radius:22px !important;
-    width:-webkit-fill-available !important;
+    /* width:-webkit-fill-available !important; */
+    width:550px !important
 }
 
 :host ::ng-deep .p-dropdown:not(.p-disabled):hover {
