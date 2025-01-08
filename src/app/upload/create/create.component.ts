@@ -45,6 +45,7 @@ export class CreateComponent {
   ref: DynamicDialogRef | undefined;
   showMapping:boolean=false;
   showTable:boolean=false;
+  showDownloadFormat:boolean=false;
   uploadedDetails:any=[]
   uploadedData:any;
   uploadedFiles:any;
@@ -88,8 +89,9 @@ export class CreateComponent {
    this.getUsers();
   }
   onBrandSelect(brand: string): void {
-
+    this.fileTypes=[]
     this.getFileType({brand_id:brand})
+    this.showDownloadFormat=true;
     this.uploadForm.get('fileType')?.patchValue(2);
   }
   
@@ -158,6 +160,7 @@ export class CreateComponent {
 onUpload(event: any, fileType: any, index: number) {
   // Clear the previous file upload instance
   this.updatedAuditLogs=[];
+  
   this.fileUpload.clear();
 
   // Get the uploaded file
@@ -181,7 +184,7 @@ onUpload(event: any, fileType: any, index: number) {
   };
   console.log(this.uploadedFiles)
   if(this.fileTypes.length !=this.uploadedFiles.length){
-    // console.log(this.fileTypes.length ,this.uploadedFiles.length)
+    //  console.log(this.fileTypes.length ,this.uploadedFiles.length)
     this.isFileUploaded=false;
   }
   else{
@@ -218,22 +221,24 @@ this.isLoading=true
     this.formData=item.file;
     let fileTypeObj=item;
     console.log(this.formData)
-    this.mappingService.uploadFile(this.formData).subscribe(async (res:any)=>{
-      this.isFileUploaded=false
-      this.uploadedData=res.data1
-      this.excelCount=res.data1.length
-      // console.log("this.ex" ,this.excelCount)
-      this.isLoading=true;
-      if(!this.isLocationWiseChecked){
-        console.log("jsfhd",fileTypeObj)
-     logs=  await this.uploadData({brand_id:this.locationFormGroup.value.brand,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
-        this.formData = new FormData();
-      }else{
-        console.log("jsfhd upload",fileTypeObj)
-      logs=await  this.uploadData({brand_id:this.uploadForm.value.brand,dealer_id:this.uploadForm.value.dealer,location:this.uploadForm.value.location,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
-        this.formData = new FormData();
-      }
-    })
+    
+      this.mappingService.uploadFile(this.formData).subscribe(async (res:any)=>{
+        this.isFileUploaded=false
+        this.uploadedData=res.data1
+        this.excelCount=res.data1.length
+        // console.log("this.ex" ,this.excelCount)
+        this.isLoading=true;
+        if(!this.isLocationWiseChecked){
+          console.log("jsfhd",fileTypeObj)
+       logs=  await this.uploadData({brand_id:this.locationFormGroup.value.brand,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
+          this.formData = new FormData();
+        }else{
+          console.log("jsfhd upload",fileTypeObj)
+        logs=await  this.uploadData({brand_id:this.uploadForm.value.brand,dealer_id:this.uploadForm.value.dealer,location:this.uploadForm.value.location,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
+          this.formData = new FormData();
+        }
+      })
+    
     // console.log("upload logs ",logs)
   }
 
@@ -443,6 +448,7 @@ search(){
   // }
 
   submit(){
+    this.isLoading=true;
     this.updatedAuditLogs=[];
     if(!this.isLocationWiseChecked){
       if(this.locationFormGroup.valid){
@@ -476,8 +482,8 @@ search(){
           Object.keys(this.uploadForm.controls).forEach(controlName => {
             this.uploadForm.get(controlName)?.markAsTouched();
           });
-          this.messageService.add({severity:'error',summary:'Kindly fill all the information.',life:3000})
-          console.log('Form is invalid');
+          // this.messageService.add({severity:'error',summary:'Kindly fill all the information.',life:3000})
+          // console.log('Form is invalid');
     }
   }
         
@@ -489,23 +495,18 @@ downloadExcel(){
   console.log("download ")
   let data ;
   let fileObj;
-  
+  let brandName='';
   // this.utilitiesService.exportFile(data)
   if(!this.isLocationWiseChecked){
     // data=this.fetchData;
+   
     let id=this.locationFormGroup.value.brand;
     data=brandColumnObject[id];
     console.log(data);
-    // console.log(data,this.fileTypes)
-  //  data.forEach((item:any)=>{
-  //   fileObj=  this.fileTypes.find((obj:any)=>{
-  //       return obj.id==item?.file_type
-  //     })
-  //     // console.log("fileObj ",fileObj)
-  //     item.fileType=fileObj.fileType
-  //     const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==item.brand_id});
-  //     item.brandName=brandObj.brand;
-  //   })
+
+      const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==id});
+       brandName=brandObj.brand;
+    
    
   }
   else{
@@ -517,7 +518,8 @@ downloadExcel(){
     const url = window.URL.createObjectURL(response);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'multi_sheets.xlsx'; // Set the name of the downloaded file
+    a.download = brandName+' Format.xlsx';
+    // a.download = 'multi_sheets'; // Set the name of the downloaded file
     a.click();
     window.URL.revokeObjectURL(url);
     this.isLoading=false;
@@ -525,148 +527,158 @@ downloadExcel(){
 }
  uploadData(data:any){
  
-    this.uploadService.uploadData(data).subscribe({
-      next:(res)=>{
-        console.log("res",res)
-          this.isLoading=true;
-           if(!this.isLocationWiseChecked){
-            const brandObj=this.brands.find((obj:any)=>{
-              return obj.brand_id==this.locationFormGroup.value.brand;
-            })
-            this.brand=brandObj.brand; 
-            console.log(this.locationFormGroup.value)
-            if(this.updatedAuditLogs.length!=0){
-              console.log("excuted")
-              this.updatedAuditLogs=[];
-            }
-            this.updatedAuditLogs=[];
-             this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
-               next:(res: any) => {
-                
-                 this.isScreenCollapsed=true
-                 this.isSearchButton=true;
-                 this.uploadLogs = res.data;
-                 this.updatedAuditLogs=[];
-                 this.uploadLogs.forEach((item: any) => {
-                   this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
-                  //  console.log("updated ", this.updatedDate);
-                   let user = this.users.find((obj: any) => { return obj.userId == item.userID; });
-                   this.updatedBy = user.name;
-                  
-                   this.updatedAuditLogs.push({
-                     ...item,
-                     updatedDate: this.updatedDate,
-                     updatedBy: this.updatedBy,
-                     // Keep the original log data too, if needed
-                   });
-                   this.showTable=true;
-                   this.isSearchButton = true;
-                  //  if(this.uploadLogs.length==0){
-                  //   this.showTable=false;
-  
-                  //  }
-                  //  else{
-                  //    this.showTable=true;
-  
-                  //  }
-                   this.isLoading=false;
-                   this.formData = new FormData();
-                   return this.updatedLogs
-                 });
-                
-                 // this.locationFormGroup.reset()
-               },
-               error:(error:any)=>{
-                 this.isLoading=false;
-               }
+     this.uploadService.uploadData(data).subscribe({
+       next:(res)=>{
+         console.log("res",res)
+           this.isLoading=true;
+            if(!this.isLocationWiseChecked){
+             const brandObj=this.brands.find((obj:any)=>{
+               return obj.brand_id==this.locationFormGroup.value.brand;
              })
-           }
-           else{
-                     const brandObj=this.brands.find((obj:any)=>{
-                        return obj.brand_id==this.uploadForm.value.brand;
-                      })
-                      this.brand=brandObj.brand;
-                
-                      const dealerObj=this.dealers.find((obj:any)=>{
-                        return obj.dealer_id==this.uploadForm.value.dealer;
-                      })
-                      this.dealer=dealerObj.dealer_name;
-                
-                      const locationObj=this.locations.find((obj:any)=>{
-                        return obj.Location_id==this.uploadForm.value.location;
-                      })
-                      this.location=locationObj.Location_name
-                      if(this.updatedAuditLogs.length!=0){
-                        // console.log("excuted")
-                        this.updatedAuditLogs=[];
-                      }
-                         this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
-                         next:(res:any)=>{
-                         
-                         
-                          this.isScreenCollapsed=true
-                          this.isSearchButton=true;
-                           this.uploadLogs=res.data;
-                           this.updatedAuditLogs=[];
-                           this.uploadLogs.forEach((item:any)=>{
-                             const dateObj = item.dateTime
+             this.brand=brandObj.brand; 
+             console.log(this.locationFormGroup.value)
+             if(this.updatedAuditLogs.length!=0){
+               console.log("excuted")
+               this.updatedAuditLogs=[];
+             }
+             this.updatedAuditLogs=[];
+              this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
+                next:(res: any) => {
+                 
+                  this.isScreenCollapsed=true
+                  this.isSearchButton=true;
+                  this.uploadLogs = res.data;
+                  this.updatedAuditLogs=[];
+                  this.uploadLogs.forEach((item: any) => {
+                    this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                   //  console.log("updated ", this.updatedDate);
+                    let user = this.users.find((obj: any) => { return obj.userId == item.userID; });
+                    this.updatedBy = user.name;
                    
-                             this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
-                             console.log("updated ",this.updatedDate)
-                             let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
-                             this.updatedBy=user.name;
-                             this.updatedAuditLogs.push({
-                               ...item ,
-                               updatedDate: this.updatedDate,
-                               updatedBy: this.updatedBy,
-                               // Keep the original log data too, if needed
-                           });
-                           })
-                         
-                          //  this.uploadForm.reset();
-                          this.isLoading=false;
-                          this.showTable=true;
-                           this.formData = new FormData();
-                           return this.updatedLogs;
-                         },
-                        error:(erro:any)=>{
-                          this.isLoading=false;
-                        }})
-                        
+                    this.updatedAuditLogs.push({
+                      ...item,
+                      updatedDate: this.updatedDate,
+                      updatedBy: this.updatedBy,
+                      // Keep the original log data too, if needed
+                    });
+                    this.showTable=true;
+                    this.isSearchButton = true;
+                   //  if(this.uploadLogs.length==0){
+                   //   this.showTable=false;
+   
+                   //  }
+                   //  else{
+                   //    this.showTable=true;
+   
+                   //  }
+                   this.isLoading=false;
+                    this.formData = new FormData();
+                    // this.uploadedFiles=[];
+                    return this.updatedLogs
+                  });
+                 
+                  // this.locationFormGroup.reset()
+                },
+                error:(error:any)=>{
+                
+                this.isLoading=false;
+                  // this.uploadedFiles=[];
+                  this.formData = new FormData();
+                }
+              })
+            }
+            else{
+                      const brandObj=this.brands.find((obj:any)=>{
+                         return obj.brand_id==this.uploadForm.value.brand;
+                       })
+                       this.brand=brandObj.brand;
+                 
+                       const dealerObj=this.dealers.find((obj:any)=>{
+                         return obj.dealer_id==this.uploadForm.value.dealer;
+                       })
+                       this.dealer=dealerObj.dealer_name;
+                 
+                       const locationObj=this.locations.find((obj:any)=>{
+                         return obj.Location_id==this.uploadForm.value.location;
+                       })
+                       this.location=locationObj.Location_name
+                       if(this.updatedAuditLogs.length!=0){
+                         // console.log("excuted")
+                         this.updatedAuditLogs=[];
                        }
-          if(res.data==true){
-              this.showTable=false;
-              this.messageService.add({ severity: 'error', summary:'Part No ,Dealer and Location cannot be null', life: 20000 });
-              this.isLoading=false;
-              // this.showTable=false;
-          }
-          if(res?.allColumnsPresent==false){
-            this.messageService.add({ severity: 'warn', summary:'Your uploaded does not contains with the mapped data', life: 3000 }); 
-          }
-          if(res?.fileMissMatch){
-            this.messageService.add({ severity: 'warn', summary:'Warning !!!', detail:'Your columns are not present according to the mapped data', life: 7000 });
-          }
-          if(res.status==201)
-          {
-            this.isLoading=false;
-          }
-          // if(res.status=400){
-          //   this.messageService.add({severity:'error', summary:'Warning !!',detail:'Part Number, Dealer and Location cannot be null Bad request',life:20000})
-          // }
-      },error:(error)=>{
-        console.log(error)
-        this.isLoading=false;
-        // this.isLoading = false;
-        // console.error("Error occurred during upload:", );
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error !!',
-          detail: error.error.message,
-          life: 20000
-        });
-        return;
-      }
-    })
+                          this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
+                          next:(res:any)=>{
+                          
+                          
+                           this.isScreenCollapsed=true
+                           this.isSearchButton=true;
+                            this.uploadLogs=res.data;
+                            this.updatedAuditLogs=[];
+                            this.uploadLogs.forEach((item:any)=>{
+                              const dateObj = item.dateTime
+                    
+                              this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                              console.log("updated ",this.updatedDate)
+                              let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
+                              this.updatedBy=user.name;
+                              this.updatedAuditLogs.push({
+                                ...item ,
+                                updatedDate: this.updatedDate,
+                                updatedBy: this.updatedBy,
+                                // Keep the original log data too, if needed
+                            });
+                            })
+                          
+                           //  this.uploadForm.reset();
+                           this.isLoading=false;
+                           this.showTable=true;
+                            this.formData = new FormData();
+                            // this.uploadedFiles=[];
+                            return this.updatedLogs;
+                          },
+                         error:(erro:any)=>{
+                           this.isLoading=false;
+                         }})
+                        //  this.uploadedFiles=[];
+                         this.formData = new FormData();
+                        }
+           if(res.data==true){
+            this.formData = new FormData();
+               this.showTable=false;
+               this.messageService.add({ severity: 'error', summary:'Part No ,Dealer and Location cannot be null', life: 20000 });
+               this.isLoading=false;
+               // this.showTable=false;
+           }
+           if(res?.allColumnsPresent==false){
+             this.messageService.add({ severity: 'warn', summary:'Your uploaded does not contains with the mapped data', life: 3000 }); 
+           }
+           if(res?.fileMissMatch){
+             this.messageService.add({ severity: 'warn', summary:'Warning !!!', detail:'Your columns are not present according to the mapped data', life: 7000 });
+           }
+           if(res.status==201)
+           {
+             this.isLoading=false;
+           }
+           // if(res.status=400){
+           //   this.messageService.add({severity:'error', summary:'Warning !!',detail:'Part Number, Dealer and Location cannot be null Bad request',life:20000})
+           // }
+       },error:(error)=>{
+         console.log(error)
+         this.isLoading=false;
+         // this.isLoading = false;
+         // console.error("Error occurred during upload:", );
+         this.messageService.add({
+           severity: 'error',
+           summary: 'Error !!',
+           detail: error.error.message,
+           life: 20000
+         });
+         return;
+       }
+     })
+
+    
+   
   }
 
 downloadExcelFile(data?:any){
