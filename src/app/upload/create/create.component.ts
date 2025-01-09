@@ -16,9 +16,10 @@ import { FileUpload } from 'primeng/fileupload';
 import { UserService } from '../../services/user.service';
 import { switchMap } from 'rxjs';
 import { brandColumnObject } from '../../core/brandColumns';
+import { HeaderComponent } from '../../core/header/header.component';
 @Component({
   selector: 'app-create',
-  imports: [PrimengModule,SharedModule,ReactiveFormsModule,FormsModule,CommonModule,SidebarComponent],
+  imports: [PrimengModule,SharedModule,ReactiveFormsModule,FormsModule,CommonModule,SidebarComponent,HeaderComponent],
   providers:[DialogService,MessageService,DatePipe],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css'
@@ -177,6 +178,7 @@ onUpload(event: any, fileType: any, index: number) {
   }
 
   // Store the file associated with this fileType
+  this.uploadedFiles.length=this.fileTypes.length
   this.uploadedFiles[index] = {
       fileTypeId:fileType.id,
       fileType: fileType.fileType,
@@ -184,7 +186,7 @@ onUpload(event: any, fileType: any, index: number) {
   };
   console.log(this.uploadedFiles)
   if(this.fileTypes.length !=this.uploadedFiles.length){
-    //  console.log(this.fileTypes.length ,this.uploadedFiles.length)
+     console.log("size not equal for uploaded file and file types ",this.fileTypes.length ,this.uploadedFiles.length)
     this.isFileUploaded=false;
   }
   else{
@@ -542,50 +544,63 @@ downloadExcel(){
                this.updatedAuditLogs=[];
              }
              this.updatedAuditLogs=[];
-              this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
-                next:(res: any) => {
-                 
-                  this.isScreenCollapsed=true
-                  this.isSearchButton=true;
-                  this.uploadLogs = res.data;
-                  this.updatedAuditLogs=[];
-                  this.uploadLogs.forEach((item: any) => {
-                    this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
-                   //  console.log("updated ", this.updatedDate);
-                    let user = this.users.find((obj: any) => { return obj.userId == item.userID; });
-                    this.updatedBy = user.name;
-                   
-                    this.updatedAuditLogs.push({
-                      ...item,
-                      updatedDate: this.updatedDate,
-                      updatedBy: this.updatedBy,
-                      // Keep the original log data too, if needed
-                    });
-                    this.showTable=true;
-                    this.isSearchButton = true;
-                   //  if(this.uploadLogs.length==0){
-                   //   this.showTable=false;
-   
-                   //  }
-                   //  else{
-                   //    this.showTable=true;
-   
-                   //  }
-                   this.isLoading=false;
-                    this.formData = new FormData();
-                    // this.uploadedFiles=[];
-                    return this.updatedLogs
-                  });
-                 
-                  // this.locationFormGroup.reset()
-                },
-                error:(error:any)=>{
-                
-                this.isLoading=false;
-                  // this.uploadedFiles=[];
-                  this.formData = new FormData();
-                }
-              })
+             if(res.data==true){
+              this.formData = new FormData();
+                 this.showTable=false;
+                 this.messageService.add({ severity: 'error', summary:'Part No ,Dealer and Location cannot be null', life: 20000 });
+                 this.isLoading=false;
+                 this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,userId:this.userId}).subscribe((res:any)=>{
+                  this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
+                    next:(res: any) => {
+                     
+                      this.isScreenCollapsed=true
+                      this.isSearchButton=true;
+                      this.uploadLogs = res.data;
+                      this.updatedAuditLogs=[];
+                      this.uploadLogs.forEach((item: any) => {
+                        this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                       //  console.log("updated ", this.updatedDate);
+                        let user = this.users.find((obj: any) => { return obj.userId == item.userID; });
+                        this.updatedBy = user.name;
+                       
+                        this.updatedAuditLogs.push({
+                          ...item,
+                          updatedDate: this.updatedDate,
+                          updatedBy: this.updatedBy,
+                          // Keep the original log data too, if needed
+                        });
+                        this.showTable=true;
+                        this.isSearchButton = true;
+                       //  if(this.uploadLogs.length==0){
+                       //   this.showTable=false;
+       
+                       //  }
+                       //  else{
+                       //    this.showTable=true;
+       
+                       //  }
+                       this.isLoading=false;
+                        this.formData = new FormData();
+                        // this.uploadedFiles=[];
+                        return this.updatedLogs
+                      });
+                     
+                      // this.locationFormGroup.reset()
+                    },
+                    error:(error:any)=>{
+                    
+                    this.isLoading=false;
+                      // this.uploadedFiles=[];
+                      this.formData = new FormData();
+                    }
+                  })
+                })
+                 // this.showTable=false;
+             }
+            
+              
+
+             
             }
             else{
                       const brandObj=this.brands.find((obj:any)=>{
@@ -606,49 +621,98 @@ downloadExcel(){
                          // console.log("excuted")
                          this.updatedAuditLogs=[];
                        }
-                          this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
-                          next:(res:any)=>{
+                       if(res.data==true){
+                        this.formData = new FormData();
+                           this.showTable=false;
+                           if(this.isLocationWiseChecked){
+                            let userId=localStorage.getItem('userId');
+                             this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand,userId:userId}).subscribe((res:any)=>{
+                              this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
+                                next:(res:any)=>{
+                                
+                                
+                                 this.isScreenCollapsed=true
+                                 this.isSearchButton=true;
+                                  this.uploadLogs=res.data;
+                                  this.updatedAuditLogs=[];
+                                  this.uploadLogs.forEach((item:any)=>{
+                                    const dateObj = item.dateTime
                           
+                                    this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                                    console.log("updated ",this.updatedDate)
+                                    let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
+                                    this.updatedBy=user.name;
+                                    this.updatedAuditLogs.push({
+                                      ...item ,
+                                      updatedDate: this.updatedDate,
+                                      updatedBy: this.updatedBy,
+                                      // Keep the original log data too, if needed
+                                  });
+                                  })
+                                
+                                 //  this.uploadForm.reset();
+                                 this.isLoading=false;
+                                 this.showTable=true;
+                                  this.formData = new FormData();
+                                  // this.uploadedFiles=[];
+                                  return this.updatedLogs;
+                                },
+                               error:(erro:any)=>{
+                                 this.isLoading=false;
+                               }})
+                             });
+                           }
+                           else{
+                            this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,userId:this.userId}).subscribe((res:any)=>{
+                              this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
+                                next:(res:any)=>{
+                                
+                                
+                                 this.isScreenCollapsed=true
+                                 this.isSearchButton=true;
+                                  this.uploadLogs=res.data;
+                                  this.updatedAuditLogs=[];
+                                  this.uploadLogs.forEach((item:any)=>{
+                                    const dateObj = item.dateTime
                           
-                           this.isScreenCollapsed=true
-                           this.isSearchButton=true;
-                            this.uploadLogs=res.data;
-                            this.updatedAuditLogs=[];
-                            this.uploadLogs.forEach((item:any)=>{
-                              const dateObj = item.dateTime
-                    
-                              this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
-                              console.log("updated ",this.updatedDate)
-                              let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
-                              this.updatedBy=user.name;
-                              this.updatedAuditLogs.push({
-                                ...item ,
-                                updatedDate: this.updatedDate,
-                                updatedBy: this.updatedBy,
-                                // Keep the original log data too, if needed
+                                    this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                                    console.log("updated ",this.updatedDate)
+                                    let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
+                                    this.updatedBy=user.name;
+                                    this.updatedAuditLogs.push({
+                                      ...item ,
+                                      updatedDate: this.updatedDate,
+                                      updatedBy: this.updatedBy,
+                                      // Keep the original log data too, if needed
+                                  });
+                                  })
+                                
+                                 //  this.uploadForm.reset();
+                                 this.isLoading=false;
+                                 this.showTable=true;
+                                  this.formData = new FormData();
+                                  // this.uploadedFiles=[];
+                                  return this.updatedLogs;
+                                },
+                               error:(erro:any)=>{
+                                 this.isLoading=false;
+                               }})
                             });
-                            })
-                          
-                           //  this.uploadForm.reset();
+                           }
+                           this.messageService.add({ severity: 'error', summary:'Part No ,Dealer and Location cannot be null', life: 20000 });
                            this.isLoading=false;
-                           this.showTable=true;
-                            this.formData = new FormData();
-                            // this.uploadedFiles=[];
-                            return this.updatedLogs;
-                          },
-                         error:(erro:any)=>{
-                           this.isLoading=false;
-                         }})
+                           
+                           // this.showTable=false;
+                       }
+                       if(!res.data)
+                       {
+                        
+
+                       }
                         //  this.uploadedFiles=[];
                          this.formData = new FormData();
                         }
-           if(res.data==true){
-            this.formData = new FormData();
-               this.showTable=false;
-               this.messageService.add({ severity: 'error', summary:'Part No ,Dealer and Location cannot be null', life: 20000 });
-               this.isLoading=false;
-               // this.showTable=false;
-           }
+         
            if(res?.allColumnsPresent==false){
              this.messageService.add({ severity: 'warn', summary:'Your uploaded does not contains with the mapped data', life: 3000 }); 
            }

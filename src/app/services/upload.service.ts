@@ -23,5 +23,9 @@ export class UploadService {
     return this.http.post(`${this.url}leadtime/uploaded-logs`,data)
   }
 
+  deleteUploadedData(data:any):Observable<any>{
+    return this.http.post(`${this.url}leadtime/delete-uploaded-data`,data);
+  }
+
  
 }

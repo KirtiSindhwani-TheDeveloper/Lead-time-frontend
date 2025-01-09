@@ -1,1 +1,22 @@
-<p>header works!</p>
+<header class="app-header">
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-item">MyApp</a>
+      </div>
+      
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <!-- <ng-container *ngIf="isAuthenticated(); else guest"> -->
+            <!-- Show logout button if user is authenticated -->
+            <button class="button is-danger" (click)="onLogout()">Logout</button>
+          <!-- </ng-container> -->
+          
+          <ng-template #guest>
+            <!-- Optionally show login/register buttons for guest users -->
+            <a class="navbar-item" href="/login">Login</a>
+          </ng-template>
+        </div>
+      </div>
+    </nav>
+  </header>
+  

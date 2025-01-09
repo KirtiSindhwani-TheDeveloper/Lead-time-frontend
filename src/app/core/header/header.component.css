@@ -1,0 +1,15 @@
+.app-header {
+    background-color: var(--theme-color);
+    padding: 4px;
+    color: white;
+  }
+  
+  .navbar-item {
+    margin: 0 10px;
+  }
+  
+  .button.is-danger {
+    background-color: #FF4C4C;
+    color: white;
+  }
+  

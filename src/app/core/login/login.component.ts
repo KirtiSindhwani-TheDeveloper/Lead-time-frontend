@@ -6,6 +6,8 @@ import { PrimengModule } from '../../shared/primeng/primeng.module';
 import { MessageService } from 'primeng/api';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -31,8 +33,10 @@ export class LoginComponent {
   isPasswordVisible = false;
   constructor(private loginService:LoginService,
     private messageService:MessageService,
+    private authService:AuthService,
     private router:Router,
-    private fb:FormBuilder
+    private fb:FormBuilder,
+    private cookieService:CookieService
   ){
 
     this.updateInfoForm=this.fb.group({
@@ -52,58 +56,38 @@ export class LoginComponent {
     const control = this.updateInfoForm.get(controlName);
     return (control?.touched || this.formSubmitted) && control?.invalid;
   }
-  onSubmit(){
-    // console.log(this.userLoginInputDetails.value)
+ 
+  onLogin() {
     if(this.userLoginInputDetails.valid){
-      // this.loginService.login(this.userLoginInputDetails.value).subscribe((res:any)=>{
-      //   if(res.login){
-      //     console.log("res",res)
-      //     this.messageService.add({ severity: 'info', summary:'Login Successfully', life: 3000 });
-      //     localStorage.setItem('userId',res.data.user.userId)
-      //     localStorage.setItem('authToken', res.data);
-      //     localStorage.setItem('designationId',res.data.user.designationId)
-      //     localStorage.setItem('roleId',res.data.user.roleId)
-      //     localStorage.setItem('name',res.data.user.name)
-      //     localStorage.setItem('status',res.data.user.status)
-      //     setTimeout(() => {
-      //       this.router.navigate(['/create']);
-      //     },1000);
-      //   }
-      //   else{
-      //     this.messageService.add({ severity: 'warn', summary:'Invalid Credentials', life: 3000 });
-      //   }
-      // })
-
-      this.loginService.loginUser(this.userLoginInputDetails.value).subscribe((res:any)=>{
-        // console.log("res",res)
+      let email=this.userLoginInputDetails.value.email;
+      let password=this.userLoginInputDetails.value.userPassword
+      console.log(email,password)
+      this.authService.login({email:email,userPassword:password}).subscribe((res:any)=>{
         if(res.user){
-          let refreshToken;
-          refreshToken=this.loginService.getCookieValue('refreshToken')
-          // let accessToken=this.loginService.getCookieValue('accessToken')
-              // console.log("res",token)
+          this.cookieService.set('refreshToken',res.refreshToken)
+          localStorage.setItem('authToken',res.accessToken)
+              this.messageService.add({ severity: 'info', summary:'Login Successfully', life: 3000 });
               localStorage.setItem('userId',res.user.userId)
-              // localStorage.setItem('authToken', res);
+              // localStorage.setItem('authToken', res.data);
               localStorage.setItem('designationId',res.user.designationId)
               localStorage.setItem('roleId',res.user.roleId)
               localStorage.setItem('name',res.user.name)
               localStorage.setItem('status',res.user.status)
-              this.messageService.add({ severity: 'info', summary:'Login Successfully', life: 3000 });
               setTimeout(() => {
                 this.router.navigate(['/app-upload']);
               },1000);
-            }
-            else{
-              this.messageService.add({ severity: 'warn', summary:'Invalid Credentials', life: 3000 });
-            }
+             // Navigate to protected route
+  
+        }
       })
-
+      
     }
     else{
       Object.keys(this.userLoginInputDetails.controls).forEach(controlName => {
         this.userLoginInputDetails.get(controlName)?.markAsTouched();
       });
     }
-    
+     
   }
 
 cancel(){
