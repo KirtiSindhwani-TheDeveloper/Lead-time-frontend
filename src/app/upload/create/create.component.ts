@@ -29,6 +29,7 @@ export class CreateComponent {
   updatedLogs:any= [];
  isMappedColumnPresent:boolean=false;
  isScreenCollapsed:boolean=false;
+ fileNames:any=[];
   brands:any;
   formData:any;
   dealers:any;
@@ -91,7 +92,8 @@ export class CreateComponent {
   }
   onBrandSelect(brand: string): void {
     this.fileTypes=[]
-    this.getFileType({brand_id:brand})
+    this.getFileType({brand_id:brand});
+    this.fileNames=[]
     this.showDownloadFormat=true;
     this.uploadForm.get('fileType')?.patchValue(2);
   }
@@ -167,7 +169,7 @@ onUpload(event: any, fileType: any, index: number) {
   // Get the uploaded file
   const file = event.currentFiles[0];
   this.fileName = file.name;
-
+  
   // Create a new FormData object for each file type upload
   const formData = new FormData();
   formData.append('excelFile', file, this.fileName);
@@ -182,9 +184,15 @@ onUpload(event: any, fileType: any, index: number) {
   this.uploadedFiles[index] = {
       fileTypeId:fileType.id,
       fileType: fileType.fileType,
-      file: formData
+      file: formData,
+      fileName:this.fileName
   };
-  console.log(this.uploadedFiles)
+  this.uploadedFiles.forEach((item:any, index:any) => {
+    this.fileNames[index]=item.fileName;
+    
+  });
+  // console.log(this.fileNames)
+  // console.log(this.uploadedFiles)
   if(this.fileTypes.length !=this.uploadedFiles.length){
      console.log("size not equal for uploaded file and file types ",this.fileTypes.length ,this.uploadedFiles.length)
     this.isFileUploaded=false;
@@ -232,14 +240,17 @@ this.isLoading=true
         this.isLoading=true;
         if(!this.isLocationWiseChecked){
           console.log("jsfhd",fileTypeObj)
-       logs=  await this.uploadData({brand_id:this.locationFormGroup.value.brand,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
+       logs=  await this.uploadData({brand_id:this.locationFormGroup.value.brand,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.fileTypeId,rowCount:this.excelCount,userId:this.userId},fileTypeObj)
           this.formData = new FormData();
         }else{
           console.log("jsfhd upload",fileTypeObj)
-        logs=await  this.uploadData({brand_id:this.uploadForm.value.brand,dealer_id:this.uploadForm.value.dealer,location:this.uploadForm.value.location,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.id,rowCount:this.excelCount,userId:this.userId})
+        logs=await  this.uploadData({brand_id:this.uploadForm.value.brand,dealer_id:this.uploadForm.value.dealer,location:this.uploadForm.value.location,filePath:res.filePath,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.fileTypeId,rowCount:this.excelCount,userId:this.userId},fileTypeObj)
           this.formData = new FormData();
         }
-      })
+      },
+    (error)=>{
+      this.messageService.add({severity:'error',summary:`You have selected the wrong file for ${fileTypeObj.fileType}`,life:3000})
+    })
     
     // console.log("upload logs ",logs)
   }
@@ -449,15 +460,16 @@ search(){
 
   // }
 
-  submit(){
+  async submit(){
+   this.fileNames=[];
     this.isLoading=true;
     this.updatedAuditLogs=[];
     if(!this.isLocationWiseChecked){
       if(this.locationFormGroup.valid){
           this.isLoading=true;
           this.updatedAuditLogs=[];
-          this.uploadFile(this.formData)        
-
+          await this.uploadFile(this.formData)        
+          this.uploadedFiles=[];
             //  this.fileTypes=[];  
         }
         else{
@@ -473,8 +485,8 @@ search(){
           if(this.uploadForm.valid){
                       this.isLoading=true;   
                       this.updatedAuditLogs=[];
-           let logs=  this.uploadFile(this.formData) 
-  
+           let logs= await this.uploadFile(this.formData) 
+           this.uploadedFiles=[];
             // this.fileTypes=[];      
 
                
@@ -527,8 +539,9 @@ downloadExcel(){
     this.isLoading=false;
   });
 }
- uploadData(data:any){
- 
+ uploadData(data:any,fileTypeObj:any){
+    this.isLoading=true;
+   
      this.uploadService.uploadData(data).subscribe({
        next:(res)=>{
          console.log("res",res)
@@ -547,9 +560,13 @@ downloadExcel(){
              if(res.data==true){
               this.formData = new FormData();
                  this.showTable=false;
-                 this.messageService.add({ severity: 'error', summary:'Part No ,Dealer and Location cannot be null', life: 20000 });
+                 this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be null for ${fileTypeObj.fileType}`, life: 20000 });
                  this.isLoading=false;
-                 this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,userId:this.userId}).subscribe((res:any)=>{
+                 let anotherFileObj=this.fileTypes.find((obj:any)=>{
+                  return obj.id!=fileTypeObj.fileTypeId
+                 })
+                //  console.log("another file type ",anotherFileObj)
+                 this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,userId:this.userId,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{
                   this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
                     next:(res: any) => {
                      
@@ -557,16 +574,30 @@ downloadExcel(){
                       this.isSearchButton=true;
                       this.uploadLogs = res.data;
                       this.updatedAuditLogs=[];
+                     
                       this.uploadLogs.forEach((item: any) => {
-                        this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                        // this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
                        //  console.log("updated ", this.updatedDate);
+                       let date = item.dateTime.split("T")[0];  // Extracts "2025-01-10"
+                       let time = item.dateTime.split("T")[1].split("Z")[0];
+                       let [hours, minutes] = time.split(":");  // Extracts "13" and "22"
+
+                       // Step 3: Format the time as "hh:mm"
+                       let formattedTime = `${hours}:${minutes}`;
+                       this.updatedDate=date+" "+formattedTime
                         let user = this.users.find((obj: any) => { return obj.userId == item.userID; });
                         this.updatedBy = user.name;
-                       
+                        console.log(this.fileTypes)
+                        fileTypeObj=this.fileTypes.find((obj:any)=>{
+                          // console.log("id ",obj.id,this.locationFormGroup.value.fileType)
+                       return obj.id==item.fileTypeID;
+                      })
+                      console.log("fileTypeObj in 573 line",fileTypeObj)
                         this.updatedAuditLogs.push({
                           ...item,
                           updatedDate: this.updatedDate,
                           updatedBy: this.updatedBy,
+                          fileType:fileTypeObj.fileType
                           // Keep the original log data too, if needed
                         });
                         this.showTable=true;
@@ -597,10 +628,67 @@ downloadExcel(){
                 })
                  // this.showTable=false;
              }
-            
+             if(!res.data){
               
+               this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
+                next:(res: any) => {
+                 
+                  this.isScreenCollapsed=true
+                  this.isSearchButton=true;
+                  this.uploadLogs = res.data;
+                  this.updatedAuditLogs=[];
+                  this.uploadLogs.forEach((item: any) => {
+                    // this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                   //  console.log("updated ", this.updatedDate);
+                   let date = item.dateTime.split("T")[0];  // Extracts "2025-01-10"
+                   let time = item.dateTime.split("T")[1].split("Z")[0];
+                   let [hours, minutes] = time.split(":");  // Extracts "13" and "22"
 
-             
+                   // Step 3: Format the time as "hh:mm"
+                   let formattedTime = `${hours}:${minutes}`;
+                   this.updatedDate=date+" "+formattedTime
+                    let user = this.users.find((obj: any) => { return obj.userId == item.userID; });
+                    this.updatedBy = user.name;
+                    fileTypeObj=this.fileTypes.find((obj:any)=>{
+
+                      // console.log("id ",obj.id,this.locationFormGroup.value.fileType)
+                   return obj.id==item.fileTypeID;
+                  })
+                  // console.log("fileTypeObj in 573 line",fileTypeObj)
+                    this.updatedAuditLogs.push({
+                      ...item,
+                      updatedDate: this.updatedDate,
+                      updatedBy: this.updatedBy,
+                      fileType:fileTypeObj.fileType
+                      // Keep the original log data too, if needed
+                    });
+                    this.showTable=true;
+                    this.isSearchButton = true;
+                   //  if(this.uploadLogs.length==0){
+                   //   this.showTable=false;
+   
+                   //  }
+                   //  else{
+                   //    this.showTable=true;
+   
+                   //  }
+                   this.isLoading=false;
+                    this.formData = new FormData();
+                    // this.uploadedFiles=[];
+                    return this.updatedLogs
+                  });
+                 
+                  // this.locationFormGroup.reset()
+                },
+                error:(error:any)=>{
+                
+                this.isLoading=false;
+                  // this.uploadedFiles=[];
+                  this.formData = new FormData();
+                }
+              })
+
+             }       
             }
             else{
                       const brandObj=this.brands.find((obj:any)=>{
@@ -626,7 +714,11 @@ downloadExcel(){
                            this.showTable=false;
                            if(this.isLocationWiseChecked){
                             let userId=localStorage.getItem('userId');
-                             this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand,userId:userId}).subscribe((res:any)=>{
+                            let anotherFileObj=this.fileTypes.find((obj:any)=>{
+                              return obj.id!=fileTypeObj.fileTypeId
+                             })
+                            console.log("file obj in upload form while delete",fileTypeObj)
+                             this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand,userId:userId,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{
                               this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
                                 next:(res:any)=>{
                                 
@@ -637,15 +729,26 @@ downloadExcel(){
                                   this.updatedAuditLogs=[];
                                   this.uploadLogs.forEach((item:any)=>{
                                     const dateObj = item.dateTime
-                          
-                                    this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
-                                    console.log("updated ",this.updatedDate)
+                                    let fileTypeObj1=this.fileTypes.find((obj:any)=>{
+                                      // console.log("id ",obj.id,this.locationFormGroup.value.fileType)
+                                   return obj.id==item.fileTypeID;
+                                  })
+                                    // this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                                    // console.log("updated ",this.updatedDate)
+                                    let date = item.dateTime.split("T")[0];  // Extracts "2025-01-10"
+                                    let time = item.dateTime.split("T")[1].split("Z")[0];
+                                    let [hours, minutes] = time.split(":");  // Extracts "13" and "22"
+      
+                                    // Step 3: Format the time as "hh:mm"
+                                    let formattedTime = `${hours}:${minutes}`;
+                                    this.updatedDate=date+" "+formattedTime
                                     let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
                                     this.updatedBy=user.name;
                                     this.updatedAuditLogs.push({
                                       ...item ,
                                       updatedDate: this.updatedDate,
                                       updatedBy: this.updatedBy,
+                                      fileType:fileTypeObj1.fileType
                                       // Keep the original log data too, if needed
                                   });
                                   })
@@ -663,7 +766,10 @@ downloadExcel(){
                              });
                            }
                            else{
-                            this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,userId:this.userId}).subscribe((res:any)=>{
+                            let anotherFileObj=this.fileTypes.find((obj:any)=>{
+                              return obj.id!=fileTypeObj.fileTypeId
+                             })
+                            this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand, dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,userId:this.userId,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{
                               this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
                                 next:(res:any)=>{
                                 
@@ -675,14 +781,26 @@ downloadExcel(){
                                   this.uploadLogs.forEach((item:any)=>{
                                     const dateObj = item.dateTime
                           
-                                    this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
-                                    console.log("updated ",this.updatedDate)
+                                    // this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                                    // console.log("updated ",this.updatedDate)
+                                    let date = item.dateTime.split("T")[0];  // Extracts "2025-01-10"
+                                    let time = item.dateTime.split("T")[1].split("Z")[0];
+                                    let [hours, minutes] = time.split(":");  // Extracts "13" and "22"
+      
+                                    // Step 3: Format the time as "hh:mm"
+                                    let formattedTime = `${hours}:${minutes}`;
+                                    this.updatedDate=date+" "+formattedTime
+                                    let fileTypeObj1=this.fileTypes.find((obj:any)=>{
+                                      // console.log("id ",obj.id,this.locationFormGroup.value.fileType)
+                                   return obj.id==item.fileTypeID;
+                                  })
                                     let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
                                     this.updatedBy=user.name;
                                     this.updatedAuditLogs.push({
                                       ...item ,
                                       updatedDate: this.updatedDate,
                                       updatedBy: this.updatedBy,
+                                      fileType:fileTypeObj1.fileType
                                       // Keep the original log data too, if needed
                                   });
                                   })
@@ -699,14 +817,58 @@ downloadExcel(){
                                }})
                             });
                            }
-                           this.messageService.add({ severity: 'error', summary:'Part No ,Dealer and Location cannot be null', life: 20000 });
+                           this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be null for ${fileTypeObj.fileType}`, life: 20000 });
                            this.isLoading=false;
                            
                            // this.showTable=false;
                        }
                        if(!res.data)
                        {
-                        
+                        this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
+                          next:(res:any)=>{
+                          
+                          
+                           this.isScreenCollapsed=true
+                           this.isSearchButton=true;
+                            this.uploadLogs=res.data;
+                            this.updatedAuditLogs=[];
+                            this.uploadLogs.forEach((item:any)=>{
+                              const dateObj = item.dateTime
+                    
+                              // this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
+                              let date = item.dateTime.split("T")[0];  // Extracts "2025-01-10"
+                              let time = item.dateTime.split("T")[1].split("Z")[0];
+                              let [hours, minutes] = time.split(":");  // Extracts "13" and "22"
+
+                              // Step 3: Format the time as "hh:mm"
+                              let formattedTime = `${hours}:${minutes}`;
+                              this.updatedDate=date+" "+formattedTime
+                              console.log("updated ",this.updatedDate)
+                              let user=this.users.find((obj:any)=>{return obj.userId==item.userID})
+                              fileTypeObj=this.fileTypes.find((obj:any)=>{
+                                // console.log("id ",obj.id,this.locationFormGroup.value.fileType)
+                             return obj.id==item.fileTypeID;
+                            })
+                              this.updatedBy=user.name;
+                              this.updatedAuditLogs.push({
+                                ...item ,
+                                updatedDate: this.updatedDate,
+                                updatedBy: this.updatedBy,
+                                fileType:fileTypeObj.fileType
+                                // Keep the original log data too, if needed
+                            });
+                            })
+                          
+                           //  this.uploadForm.reset();
+                           this.isLoading=false;
+                           this.showTable=true;
+                            this.formData = new FormData();
+                            // this.uploadedFiles=[];
+                            return this.updatedLogs;
+                          },
+                         error:(erro:any)=>{
+                           this.isLoading=false;
+                         }})
 
                        }
                         //  this.uploadedFiles=[];
@@ -729,6 +891,12 @@ downloadExcel(){
        },error:(error)=>{
          console.log(error)
          this.isLoading=false;
+         if(!this.isLocationWiseChecked){
+          let anotherFileObj=this.fileTypes.find((obj:any)=>{
+            return obj.id!=fileTypeObj.fileTypeId
+           })
+           this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{})
+         }
          // this.isLoading = false;
          // console.error("Error occurred during upload:", );
          this.messageService.add({

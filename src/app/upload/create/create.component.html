@@ -8,9 +8,9 @@
       animationDuration=".5s" />
 
   </p-blockUI>
-  <div>
+  <!-- <div>
     <app-header></app-header>
-</div>
+</div> -->
   <div class="body d-flex">
    
     <div class="h-[100vh]">
@@ -89,6 +89,7 @@
                                             (onSelect)="onUpload($event, fileType, i)"
                                             multiple="false">
                                </p-fileUpload>
+                               <p>{{fileNames[i]}}</p>
                                <!-- <div *ngIf="locationFormGroup.get('fileType' + i)?.touched && locationFormGroup.get('fileType' + i)?.invalid">
                                 <small *ngIf="locationFormGroup.get('fileType' + i)?.hasError('required')" style="color: red; font-size: 12px;">Brand is required.</small>
                               </div> -->
@@ -202,6 +203,7 @@
                         [name]="'fileType_' + i"
                         (onSelect)="onUpload($event,fileType,i)" 
                           />
+                          <p>{{fileNames[i]}}</p>
                           <!-- <div *ngIf="uploadForm.get('fileType' + i)?.touched && uploadForm.get('fileType' + i)?.invalid">
                             <small *ngIf="uploadForm.get('fileType' + i)?.hasError('required')" style="color: red; font-size: 12px;">Location is required.</small>
                           </div> -->
@@ -294,6 +296,7 @@
                                 <th>Brand</th>
                                 <th *ngIf="isLocationWiseChecked">Dealer</th>
                                 <th *ngIf="isLocationWiseChecked">Location</th>
+                                <th>File Type</th>
                                 <th pSortableColumn="noOfRecords" class="text-center">No. of Records <p-sortIcon field="noOfRecords" /></th>
                                 <th>Updated Date</th>
                                 <th>Updated By</th>
@@ -310,6 +313,7 @@
                                 <td>{{brand}}</td>
                                 <td  *ngIf="isLocationWiseChecked">{{dealer}}</td>
                                 <td  *ngIf="isLocationWiseChecked">{{location}}</td>
+                                <td>{{product.fileType}}</td>
                                 <td >{{product.noOfRecords}}</td>
                                 <td>{{product.updatedDate}}</td>
                                 <td>{{product.updatedBy}}</td>
