@@ -133,6 +133,7 @@ export class CreateComponent {
      this.updatedAuditLogs=[]
      this.showMapping=false;
      this.fileTypes=[];
+     this.fileNames=[];
      this.uploadForm.reset();
 
     } if(!this.isLocationWiseChecked){
@@ -143,6 +144,7 @@ export class CreateComponent {
       this.isSearchButton=false;
       this.showMapping=false;
       this.fileTypes=[];
+      this.fileNames=[];
       this.locationFormGroup.reset();
     }
     }
@@ -162,6 +164,7 @@ export class CreateComponent {
 
 onUpload(event: any, fileType: any, index: number) {
   // Clear the previous file upload instance
+  this.fileName=''
   this.updatedAuditLogs=[];
   
   this.fileUpload.clear();
@@ -174,12 +177,12 @@ onUpload(event: any, fileType: any, index: number) {
   const formData = new FormData();
   formData.append('excelFile', file, this.fileName);
 
-  // Optionally, associate the uploaded file with the file type
+  // // Optionally, associate the uploaded file with the file type
   if (!this.uploadedFiles) {
       this.uploadedFiles = [];
   }
 
-  // Store the file associated with this fileType
+
   this.uploadedFiles.length=this.fileTypes.length
   this.uploadedFiles[index] = {
       fileTypeId:fileType.id,
@@ -191,8 +194,8 @@ onUpload(event: any, fileType: any, index: number) {
     this.fileNames[index]=item.fileName;
     
   });
-  // console.log(this.fileNames)
-  // console.log(this.uploadedFiles)
+   //console.log(this.fileNames)
+  console.log(this.uploadedFiles)
   if(this.fileTypes.length !=this.uploadedFiles.length){
      console.log("size not equal for uploaded file and file types ",this.fileTypes.length ,this.uploadedFiles.length)
     this.isFileUploaded=false;
@@ -239,17 +242,17 @@ this.isLoading=true
         // console.log("this.ex" ,this.excelCount)
         this.isLoading=true;
         if(!this.isLocationWiseChecked){
-          console.log("jsfhd",fileTypeObj)
+          // console.log("jsfhd",fileTypeObj)
        logs=  await this.uploadData({brand_id:this.locationFormGroup.value.brand,filePath:res.filePath,mappedData:this.fetchData,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.fileTypeId,rowCount:this.excelCount,userId:this.userId},fileTypeObj)
           this.formData = new FormData();
         }else{
-          console.log("jsfhd upload",fileTypeObj)
+          // console.log("jsfhd upload",fileTypeObj)
         logs=await  this.uploadData({brand_id:this.uploadForm.value.brand,dealer_id:this.uploadForm.value.dealer,location:this.uploadForm.value.location,filePath:res.filePath,fileType:fileTypeObj.fileType,fileTypeId:fileTypeObj.fileTypeId,rowCount:this.excelCount,userId:this.userId},fileTypeObj)
           this.formData = new FormData();
         }
       },
     (error)=>{
-      this.messageService.add({severity:'error',summary:`You have selected the wrong file for ${fileTypeObj.fileType}`,life:3000})
+      this.messageService.add({severity:'error',summary:`You have selected the wrong file for ${fileTypeObj.fileType}`,life:100000})
     })
     
     // console.log("upload logs ",logs)
@@ -470,6 +473,7 @@ search(){
           this.updatedAuditLogs=[];
           await this.uploadFile(this.formData)        
           this.uploadedFiles=[];
+          this.fileNames=[];
             //  this.fileTypes=[];  
         }
         else{
@@ -486,6 +490,7 @@ search(){
                       this.isLoading=true;   
                       this.updatedAuditLogs=[];
            let logs= await this.uploadFile(this.formData) 
+           this.fileNames=[];
            this.uploadedFiles=[];
             // this.fileTypes=[];      
 
@@ -544,7 +549,7 @@ downloadExcel(){
    
      this.uploadService.uploadData(data).subscribe({
        next:(res)=>{
-         console.log("res",res)
+        //  console.log("res",res.data.insertResponse)
            this.isLoading=true;
             if(!this.isLocationWiseChecked){
              const brandObj=this.brands.find((obj:any)=>{
@@ -553,20 +558,20 @@ downloadExcel(){
              this.brand=brandObj.brand; 
              console.log(this.locationFormGroup.value)
              if(this.updatedAuditLogs.length!=0){
-               console.log("excuted")
+              //  console.log("excuted")
                this.updatedAuditLogs=[];
              }
              this.updatedAuditLogs=[];
-             if(res.data==true){
+             if(res.data.insertResponse==true){
               this.formData = new FormData();
                  this.showTable=false;
-                 this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be null for ${fileTypeObj.fileType}`, life: 20000 });
+                 this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be blank for ${fileTypeObj.fileType}`, life: 100000 });
                  this.isLoading=false;
                  let anotherFileObj=this.fileTypes.find((obj:any)=>{
                   return obj.id!=fileTypeObj.fileTypeId
                  })
                 //  console.log("another file type ",anotherFileObj)
-                 this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,userId:this.userId,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{
+                 this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,userId:this.userId,fileTypeId:anotherFileObj.id,insertedId:res.data.insertedId}).subscribe((res:any)=>{
                   this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
                     next:(res: any) => {
                      
@@ -628,14 +633,14 @@ downloadExcel(){
                 })
                  // this.showTable=false;
              }
-             if(!res.data){
-              
+             if(res.data.insertResponse==false){
+              console.log("excuting insrt response =false")
                this.uploadService.uploadLogs({brand:this.locationFormGroup.value.brand,fileType:data.fileType,userId:this.userId}).subscribe({
-                next:(res: any) => {
-                 
+                next:(res1: any) => {
+                 this.isLoading=true;
                   this.isScreenCollapsed=true
                   this.isSearchButton=true;
-                  this.uploadLogs = res.data;
+                  this.uploadLogs = res1.data;
                   this.updatedAuditLogs=[];
                   this.uploadLogs.forEach((item: any) => {
                     // this.updatedDate = this.datePipe.transform(item.dateTime, 'yyyy-MM-dd')!;
@@ -709,7 +714,7 @@ downloadExcel(){
                          // console.log("excuted")
                          this.updatedAuditLogs=[];
                        }
-                       if(res.data==true){
+                       if(res.data.insertResponse==true){
                         this.formData = new FormData();
                            this.showTable=false;
                            if(this.isLocationWiseChecked){
@@ -717,8 +722,8 @@ downloadExcel(){
                             let anotherFileObj=this.fileTypes.find((obj:any)=>{
                               return obj.id!=fileTypeObj.fileTypeId
                              })
-                            console.log("file obj in upload form while delete",fileTypeObj)
-                             this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand,userId:userId,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{
+                            // console.log("file obj in upload form while delete",fileTypeObj)
+                             this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand,userId:userId,fileTypeId:anotherFileObj.id,insertedId:res.data.insertedId}).subscribe((res:any)=>{
                               this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
                                 next:(res:any)=>{
                                 
@@ -769,7 +774,7 @@ downloadExcel(){
                             let anotherFileObj=this.fileTypes.find((obj:any)=>{
                               return obj.id!=fileTypeObj.fileTypeId
                              })
-                            this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand, dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,userId:this.userId,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{
+                            this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand, dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,userId:this.userId,fileTypeId:anotherFileObj.id,insertedId:res.data.insertedId}).subscribe((res:any)=>{
                               this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
                                 next:(res:any)=>{
                                 
@@ -817,13 +822,19 @@ downloadExcel(){
                                }})
                             });
                            }
-                           this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be null for ${fileTypeObj.fileType}`, life: 20000 });
+                           this.messageService.add({ severity: 'error', summary:`Part No cannot be blank for ${fileTypeObj.fileType}`, life: 100000 });
                            this.isLoading=false;
                            
                            // this.showTable=false;
                        }
-                       if(!res.data)
+                       if(res.data.insertResponse==false)
                        {
+                        let anotherFileObj=this.fileTypes.find((obj:any)=>{
+                          return obj.id!=fileTypeObj.fileTypeId
+                         })
+                        // this.uploadService.deleteUploadedData({brand_id:this.uploadForm.value.brand,userId:this.userId,fileTypeId:anotherFileObj.id,insertedId:res.data.insertedId}).subscribe((res:any)=>{
+                          
+                        // })
                         this.uploadService.uploadLogs({brand:this.uploadForm.value.brand,dealer:this.uploadForm.value.dealer,location:this.uploadForm.value.location,fileType:data.fileType,userId:this.userId}).subscribe({
                           next:(res:any)=>{
                           
@@ -875,12 +886,12 @@ downloadExcel(){
                          this.formData = new FormData();
                         }
          
-           if(res?.allColumnsPresent==false){
-             this.messageService.add({ severity: 'warn', summary:'Your uploaded does not contains with the mapped data', life: 3000 }); 
-           }
-           if(res?.fileMissMatch){
-             this.messageService.add({ severity: 'warn', summary:'Warning !!!', detail:'Your columns are not present according to the mapped data', life: 7000 });
-           }
+          //  if(res?.allColumnsPresent==false){
+          //    this.messageService.add({ severity: 'warn', summary:'Your uploaded does not contains with the mapped data', life: 100000 }); 
+          //  }
+          //  if(res?.fileMissMatch){
+          //    this.messageService.add({ severity: 'warn', summary:'Warning !!!', detail:'Your columns are not present according to the mapped data', life: 10000 });
+          //  }
            if(res.status==201)
            {
              this.isLoading=false;
@@ -895,16 +906,16 @@ downloadExcel(){
           let anotherFileObj=this.fileTypes.find((obj:any)=>{
             return obj.id!=fileTypeObj.fileTypeId
            })
-           this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{})
+          //  this.uploadService.deleteUploadedData({brand_id:this.locationFormGroup.value.brand,fileTypeId:anotherFileObj.id}).subscribe((res:any)=>{})
          }
          // this.isLoading = false;
          // console.error("Error occurred during upload:", );
-         this.messageService.add({
-           severity: 'error',
-           summary: 'Error !!',
-           detail: error.error.message,
-           life: 20000
-         });
+        //  this.messageService.add({
+        //    severity: 'error',
+        //    summary: 'Error !!',
+        //    detail: error.error.message,
+        //    life: 20000
+        //  });
          return;
        }
      })
