@@ -562,6 +562,10 @@ downloadExcel(){
                this.updatedAuditLogs=[];
              }
              this.updatedAuditLogs=[];
+             if(res.data==true){
+              this.isLoading=false;
+              this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be blank for ${fileTypeObj.fileType}`, life: 100000 });
+             }
              if(res.data.insertResponse==true){
               this.formData = new FormData();
                  this.showTable=false;
@@ -713,6 +717,10 @@ downloadExcel(){
                        if(this.updatedAuditLogs.length!=0){
                          // console.log("excuted")
                          this.updatedAuditLogs=[];
+                       }
+                       if(res.data==true){
+                        this.isLoading=false;
+                        this.messageService.add({ severity: 'error', summary:`Part No cannot be blank for ${fileTypeObj.fileType}`, life: 100000 });
                        }
                        if(res.data.insertResponse==true){
                         this.formData = new FormData();

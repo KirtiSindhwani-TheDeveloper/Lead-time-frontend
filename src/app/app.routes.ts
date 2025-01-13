@@ -5,6 +5,7 @@ import { CreateUserComponent } from './user-management/create-user/create-user.c
 import { CreateExportComponent } from './export/create-export/create-export.component';
 import { LoginComponent } from './core/login/login.component';
 import { ViewUserComponent } from './user-management/view-user/view-user.component';
+import { authGuard } from './auth.guard';
 
 
 export const routes: Routes = [
@@ -13,28 +14,33 @@ export const routes: Routes = [
       },
       {
         path: 'app-upload',
-        component: CreateComponent
+        component: CreateComponent,
+        canActivate:[authGuard]
     },
     {
         path: 'app-export',
-        component: CreateExportComponent
-
+        component: CreateExportComponent,
+        canActivate:[authGuard]
     },
+   
     {
-        path: '', redirectTo:'login',
-        pathMatch:'full'
-    },
-    {
-        path: 'user',
-        component: CreateUserComponent
+        path: 'create-user',
+        component: CreateUserComponent,
+         canActivate:[authGuard]
     },
     {
         path:'login',
-        component:LoginComponent
+        component:LoginComponent,
     },
     {
         path:'view-user',
-        component:ViewUserComponent
-    }
+        component:ViewUserComponent,
+       
+        canActivate:[authGuard]
+    },
+    {
+        path: '**', redirectTo:'login',
+        pathMatch:'full'
+    },
 
 ];

@@ -35,9 +35,13 @@ export class CreateExportComponent {
   dealers: any[] = [];
   categories: any[] = [{name:'Spare Part'},{name:'Genuine Accessory'}];
   fileTypes: any[] = [{name:'Partwise OrderType'},{name:'Partwise Summary'},{name:'Overall Summary'},{name:'M1 Month'}];
-  minDate: Date | undefined;
+  minDate: Date |undefined;
   maxDate: Date | undefined;
   currentDateTime:any;
+  minDateString:any;
+  selectedStartDate: Date | null = null;
+  selectedEndDate: Date | null = null;
+  maxDateString:any;
   exportForm: FormGroup = new FormGroup({
     brand: new FormControl('',[Validators.required]),
     dealer: new FormControl('',[]),
@@ -53,6 +57,33 @@ export class CreateExportComponent {
 
   }
 
+  onStartDateChange(event: any) {
+    if (event) {
+      let selectedStartDate = new Date(event);
+      
+      // Set to the 1st day of the selected month
+      selectedStartDate.setDate(1);
+      
+      // Ensure the start date is the 1st day of the month
+      this.selectedStartDate = selectedStartDate;
+      console.log('Start Date:', this.selectedStartDate);
+    }
+  }
+
+  // Adjust the selected month to the last day of that month (for end date)
+  onEndDateChange(event: any) {
+    if (event) {
+      let selectedEndDate = new Date(event);
+      
+      // Move to the next month and then set to the last day of the selected month
+      selectedEndDate.setMonth(selectedEndDate.getMonth() + 1);  // Move to next month
+      selectedEndDate.setDate(0);  // Set to the last day of the previous month (selected month)
+
+      // Ensure the end date is the last day of the selected month
+      this.selectedEndDate = selectedEndDate;
+      console.log('End Date:', this.selectedEndDate);
+    }
+  }
   downloadExcel() {
     
     if(this.exportForm.valid){
@@ -75,10 +106,30 @@ export class CreateExportComponent {
       })
       this.location=locationObj.Location_name
     }
-
-      this.exportService.exportExcel(this.exportForm.value).subscribe((response: any) => {
+      // console.log(this.selectedEndDate,this.selectedStartDate)
+      if (this.selectedStartDate && this.selectedEndDate) {
+        // Strip out the time part of the selectedStartDate and selectedEndDate by setting the time to 00:00:00
+        const startDate = this.setStartDate(this.selectedStartDate); // Start of the month
+      const endDate = this.setEndDate(this.selectedEndDate);  // End of the month
+  
+        // console.log("Start Date:", startDate);
+        // console.log("End Date:", endDate);
+        // console.log(startDate, endDate);
+      
+      
+      let exportValue={
+        fromMonth:startDate,
+        toMonth:endDate,
+        brand:this.exportForm.value.brand,
+    dealer:this.exportForm.value.dealer ,
+    location: this.exportForm.value.location,
+    category: this.exportForm.value.category,
+    fileType: this.exportForm.value.fileType,
+      }
+      this.exportService.exportExcel(exportValue).subscribe((response: any) => {
         // Create a URL for the blob
-        console.log(response)
+        // console.log(response)
+        this.loading=false;
         let fileName='Lead time Output_'+this.brand;
         if(this.dealer!=null){
           fileName+="_"+this.dealer+"_"
@@ -90,7 +141,7 @@ export class CreateExportComponent {
        fileName+=this.currentDateTime
       // Trigger the download for file1
       this.downloadFile(response, fileName);  // Adjust the name as needed
-      this.exportService.downloadLogs(this.exportForm.value).subscribe((res:any)=>{
+      this.exportService.downloadLogs(exportValue).subscribe((res:any)=>{
         let fileName='Error_Logs_'+this.brand;
           if(this.dealer!=null){
             fileName+="_"+this.dealer+"_"
@@ -115,7 +166,7 @@ export class CreateExportComponent {
       this.messageService.add({ severity: 'error', summary: 'Error occured in processing excel file', life: 20000 });
       console.error('Error downloading files', error);
     });
-     
+  }
     
     }
     else{
@@ -134,7 +185,23 @@ export class CreateExportComponent {
     window.URL.revokeObjectURL(url);  // Clean up after download
    
   }
+  setStartDate(date: Date): string {
+    const newDate = new Date(date);
+    newDate.setDate(1);               // Set date to the 1st of the month
+    newDate.setHours(0, 0, 0, 0);     // Set time to 00:00:00 (midnight)
+    // Return the date in YYYY-MM-DD format (local time)
+    return newDate.getFullYear() + '-' + (newDate.getMonth() + 1).toString().padStart(2, '0') + '-' + newDate.getDate().toString().padStart(2, '0');
+  }
   
+  // Utility function to set the end date to the last day of the month (local time)
+  setEndDate(date: Date): string {
+    const newDate = new Date(date);
+    const lastDay = new Date(newDate.getFullYear(), newDate.getMonth() + 1, 0); // Last day of the current month
+    lastDay.setHours(23, 59, 59, 999);  // Set time to the last moment of the last day
+    
+    // Return the date in YYYY-MM-DD format (local time)
+    return lastDay.getFullYear() + '-' + (lastDay.getMonth() + 1).toString().padStart(2, '0') + '-' + lastDay.getDate().toString().padStart(2, '0');
+  }
   
   
   
@@ -142,13 +209,6 @@ export class CreateExportComponent {
 
   ngOnInit() {
     let today = new Date();
-
-    //  this.maxDate = new Date(today);
-    //  this.maxDate.setDate(today.getDate());
-    //  this.minDate=new Date(today);
-    //  this.minDate.setDate(1);
-    //  this.maxDate.setDate(0);
-    // this.minDate.setMonth(today.getMonth() - 15);
     this.maxDate = new Date(today);
 this.maxDate.setMonth(today.getMonth() + 1);
 this.maxDate.setDate(0); // Last day of the current month
@@ -162,9 +222,19 @@ this.minDate.setDate(1); // Set minDate to the first day of the month
 const now = new Date();
     this.currentDateTime = now.toLocaleString();
   console.log(this.currentDateTime)
-this.getBrands(); 
+
+
+// Optional: log the calculated dates for debugging
+// console.log("Max Date (Last Day of Current Month):", this.maxDate);
+// console.log("Min Date (Exactly 15 Months Ago, Inclusive):", this.minDate);
+
+  
+
+    // this.minDateString=this.minDate.toISOString().split('T')[0];
+    //  this.maxDateString=this.maxDate.toISOString().split('T')[0];
     console.log('Min Date: ', this.minDate.toISOString().split('T')[0]);
     console.log('Max Date: ', this.maxDate.toISOString().split('T')[0]);
+    this.getBrands(); 
   }
 
    formatDate(date:any) {

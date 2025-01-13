@@ -11,7 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class AuthService {
 
   constructor(private router: Router,private http: HttpClient,private cookieService:CookieService) { }
-  private accessTokenKey = 'accessToken';
+  private accessTokenKey = 'authToken';
   private refreshTokenKey = 'refreshToken';
 
   private loggedIn = new BehaviorSubject<boolean>(false);
@@ -50,12 +50,6 @@ export class AuthService {
       throw new Error('Failed to refresh access token');
     }
   
-  }
-
-
-  // Check if the user is authenticated (has valid access token)
-  isAuthenticated(): boolean {
-    return !!this.getAccessToken();
   }
 
   // Store the tokens in localStorage or cookie
@@ -99,6 +93,11 @@ export class AuthService {
     return new HttpHeaders({
       Authorization: token ? `Bearer ${token}` : '',
     });
+  }
+
+  isAuthenticated(): boolean {
+    // You can check for a token in local storage or session
+    return !!localStorage.getItem('authToken'); 
   }
 
  

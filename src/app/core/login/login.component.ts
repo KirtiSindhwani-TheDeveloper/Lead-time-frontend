@@ -63,6 +63,7 @@ export class LoginComponent {
       let password=this.userLoginInputDetails.value.userPassword
       console.log(email,password)
       this.authService.login({email:email,userPassword:password}).subscribe((res:any)=>{
+
         if(res.user){
           this.cookieService.set('refreshToken',res.refreshToken)
           localStorage.setItem('authToken',res.accessToken)
@@ -79,6 +80,8 @@ export class LoginComponent {
              // Navigate to protected route
   
         }
+      },(error:any)=>{
+        this.messageService.add({severity:'error',summary:'Invalid Credentials',life:10000})
       })
       
     }

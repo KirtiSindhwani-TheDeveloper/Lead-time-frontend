@@ -127,7 +127,7 @@
                 [styleClass]="'w-[15vw] h-[30px] me-3 flex items-center'"
                 [iconDisplay]="'input'" 
                 [showIcon]="true" 
-                
+                (onSelect)="onStartDateChange($event)"
                 formControlName="fromMonth"
                 dateFormat="mm/yy"></p-calendar>
                 <div *ngIf="exportForm.get('fromMonth')?.touched && exportForm.get('fromMonth')?.invalid">
@@ -143,7 +143,7 @@
                 [styleClass]="'w-[15vw] h-[30px] me-3 flex items-center'"
                 [iconDisplay]="'input'" 
                 [showIcon]="true" 
-                
+                (onSelect)="onEndDateChange($event)"
                 formControlName="toMonth"
                 dateFormat="mm/yy"></p-calendar>
                 <!-- <p-calendar 
