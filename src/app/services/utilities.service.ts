@@ -32,6 +32,13 @@ export class UtilitiesService {
     return this .httpClient.post(`${this.url}utilities/dealers`,data)
   }
 
+  getRoles():Observable<any>{
+    return this.httpClient.get(`${this.url}utilities/roles`)
+  }
+
+  getDesignations():Observable<any>{
+    return this.httpClient.get(`${this.url}utilities/designations`)
+  }
   emitData(data: any): void {
     // console.log("data ",data);
     

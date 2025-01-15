@@ -17,6 +17,7 @@ import { UserService } from '../../services/user.service';
 import { switchMap } from 'rxjs';
 import { brandColumnObject } from '../../core/brandColumns';
 import { HeaderComponent } from '../../core/header/header.component';
+import saveAs from 'file-saver';
 @Component({
   selector: 'app-create',
   imports: [PrimengModule,SharedModule,ReactiveFormsModule,FormsModule,CommonModule,SidebarComponent,HeaderComponent],
@@ -95,6 +96,12 @@ export class CreateComponent {
     this.getFileType({brand_id:brand});
     this.fileNames=[]
     this.showDownloadFormat=true;
+    // if(!this.isLocationWiseChecked){
+    //   this.downloadExcel(this.locationFormGroup.value)
+    // }
+    // else{
+    //   this.downloadExcel(this.uploadForm.value)
+    // }
     this.uploadForm.get('fileType')?.patchValue(2);
   }
   
@@ -509,7 +516,25 @@ search(){
   }
 
 
-downloadExcel(){
+  downloadExcel(){
+   
+    if(this.isLocationWiseChecked){
+      this.uploadService.downloadBrandFormat({brand_id:this.uploadForm.value.brand}).subscribe((blob)=>{
+        const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==this.uploadForm.value.brand});
+    let brandName=brandObj.brand;
+        saveAs(blob, `${brandName}_Format.zip`);
+      })
+
+    }
+    else{
+      this.uploadService.downloadBrandFormat({brand_id:this.locationFormGroup.value.brand}).subscribe((blob)=>{
+        const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==this.locationFormGroup.value.brand});
+    let brandName=brandObj.brand;
+        saveAs(blob, `${brandName}_Format.zip`);
+      })
+    }
+  }
+  downloadWorkShopList(){
   this.isLoading=true;
   console.log("download ")
   let data ;
@@ -537,7 +562,7 @@ downloadExcel(){
     const url = window.URL.createObjectURL(response);
     const a = document.createElement('a');
     a.href = url;
-    a.download = brandName+' Format.xlsx';
+    a.download = brandName+' Workshop_List.xlsx';
     // a.download = 'multi_sheets'; // Set the name of the downloaded file
     a.click();
     window.URL.revokeObjectURL(url);

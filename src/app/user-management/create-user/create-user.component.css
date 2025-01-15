@@ -1,13 +1,16 @@
 body{
     background: var(--secondary-color) !important;
     height: 100%;
-    overflow: hidden;
+    overflow: hidden !important;
     /* background-image: url('backround-theme.svg'); */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat; 
 }
 
+.body{
+    overflow: hidden;
+}
 th {
     background-color: #d9d9d9;
 }
@@ -36,7 +39,8 @@ td{
 .card{
     background-color: var(--theme-color);
     width: 100vh !important;
-    height: 65vh !important;
+    /* height: 65vh !important; */
+    height: max-content !important;
     padding: 30px;
     border: none;
 }

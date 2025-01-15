@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PrimengModule } from '../../shared/primeng/primeng.module';
 import { SharedModule } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../core/sidebar/sidebar.component';
+import { UtilitiesService } from '../../services/utilities.service';
 
 @Component({
   selector: 'app-create-user',
@@ -79,15 +80,55 @@ export class CreateUserComponent {
 
   ];
   designations:any=[]
+  roles:any=[]
+  statuses:any=[
+   { name:'Active',id:1},
 
-  addUserForm: FormGroup = new FormGroup({
-    name: new FormControl(''),
-    designation: new FormControl(''),
-    role: new FormControl(''),
-    email: new FormControl(''),
-    mobileNo: new FormControl(''),
-    userId: new FormControl(''),
-    password: new FormControl(''),
-    status: new FormControl('')
-  })
+    {name:'InActive',id:0}
+  ]
+  addUserForm: FormGroup ;
+
+  constructor(private utilitiesService:UtilitiesService,private fb:FormBuilder){
+   this.addUserForm= this.fb.group({
+    name: ['', [Validators.required]],
+    designation: ['', [Validators.required]],
+    role: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]], // Added email validator
+    mobileNo: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], // Optional pattern for phone number validation
+    userId: ['', [Validators.required]],
+    password: ['', [Validators.required]],
+    status: ['', [Validators.required]]
+  });
+  }
+
+  
+
+  ngOnInit(){
+
+    this.getRoles();
+    this.getDesignations();
+  }
+
+  getRoles(){
+    this.utilitiesService.getRoles().subscribe((res:any)=>{
+      this.roles=res.data;
+    })
+  }
+
+  getDesignations(){
+    this.utilitiesService.getDesignations().subscribe((res:any)=>{
+      this.designations=res.data;
+    })
+  }
+
+  submit(){
+    if(this.addUserForm.valid){
+
+    }
+    else{
+      Object.keys(this.addUserForm.controls).forEach(controlName => {
+              this.addUserForm.get(controlName)?.markAsTouched();
+            });
+    }
+  }
 }

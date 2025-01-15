@@ -25,14 +25,21 @@
                  <div class="col-6 p-3 d-flex flex-column">
                     <span class="text-white">Name</span>
                     <input type="text" pInputText formControlName="name" placeholder="Enter Name" />
+                    <div *ngIf="addUserForm.get('name')?.touched && addUserForm.get('name')?.invalid">
+                      <small *ngIf="addUserForm.get('name')?.hasError('required')" style="color: red; font-size: 12px;">Name is required.</small>
+                    </div>
                  </div>
                  <div class="col-6 p-3">
                   <span class="text-white">Designation</span>
                       <p-dropdown 
         [options]="designations" 
        formControlName="designation"
-        optionLabel="name" 
+        optionLabel="designation_name" 
+        optionValue="id"
         placeholder="Enter Designation" />
+        <div *ngIf="addUserForm.get('designation')?.touched && addUserForm.get('designation')?.invalid">
+          <small *ngIf="addUserForm.get('designation')?.hasError('required')" style="color: red; font-size: 12px;">Designation is required.</small>
+        </div>
                </div>
               </div>
               <div class="row">
@@ -42,42 +49,59 @@
                    [options]="designations" 
                   formControlName="role"
                   class="dropdown"
-                   optionLabel="name" 
+                   optionLabel="role_name" 
+                   optionValue="id"
                    placeholder="Enter Role" />
+                   <div *ngIf="addUserForm.get('role')?.touched && addUserForm.get('role')?.invalid">
+                    <small *ngIf="addUserForm.get('role')?.hasError('required')" style="color: red; font-size: 12px;">Role is required.</small>
+                  </div>
                   </div>
   
                   <div class="col-6 p-3 pt-2">
                     <span class="text-white">Email ID</span>
                     <input type="text" pInputText formControlName="email" placeholder="Enter Email" />
-                   
+                    <div *ngIf="addUserForm.get('email')?.touched && addUserForm.get('email')?.invalid">
+                      <small *ngIf="addUserForm.get('email')?.hasError('required')" style="color: red; font-size: 12px;">Email is required.</small>
+                    </div>
               </div>
              </div>
              <div class="row">
               <div class="col-6 p-3 pt-2 d-flex flex-column">
                  <span class="text-white">Mobile No </span>
                  <input type="text" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
+                 <div *ngIf="addUserForm.get('mobileNo')?.touched && addUserForm.get('mobileNo')?.invalid">
+                  <small *ngIf="addUserForm.get('mobileNo')?.hasError('required')" style="color: red; font-size: 12px;">Mobile No is required.</small>
+                </div>
                 </div>
                 
                 <div class="col-6 p-3 pt-2">
                   <span class="text-white">User ID</span>
                   <input type="text" pInputText formControlName="userId" placeholder="Enter User ID"/>
-                 
+                  <div *ngIf="addUserForm.get('userId')?.touched && addUserForm.get('userId')?.invalid">
+                    <small *ngIf="addUserForm.get('userId')?.hasError('required')" style="color: red; font-size: 12px;">UserID is required.</small>
+                  </div>
             </div>
            </div>
            <div class="row">
             <div class="col-6 p-3 pt-2 d-flex flex-column">
                <span class="text-white">Password </span>
                <input type="text" pInputText formControlName="password" placeholder="Enter Password"/>
+               <div *ngIf="addUserForm.get('password')?.touched && addUserForm.get('password')?.invalid">
+                <small *ngIf="addUserForm.get('password')?.hasError('required')" style="color: red; font-size: 12px;">Password is required.</small>
+              </div>
               </div>
               
               <div class="col-6 p-3 pt-2 d-flex flex-column">
                 <span class="text-white">Status</span>
                 <p-dropdown 
-                [options]="designations" 
+                [options]="statuses" 
                formControlName="status"
                 optionLabel="name" 
+                optionValue="id"
                 placeholder="Enter Status" />
-               
+                <div *ngIf="addUserForm.get('status')?.touched && addUserForm.get('status')?.invalid">
+                  <small *ngIf="addUserForm.get('status')?.hasError('required')" style="color: red; font-size: 12px;">Status is required.</small>
+                </div>
           </div>
          </div>
   
@@ -89,7 +113,7 @@
        </div>
        <div class="">
          <p-button label="Cancel" class="btn text-white mr-5"/>
-         <p-button label="Submit" class="btn text-white "/>
+         <p-button label="Submit" class="btn text-white " (click)="submit()"/>
        </div>
      </div>
   </div>

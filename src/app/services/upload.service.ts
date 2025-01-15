@@ -27,5 +27,20 @@ export class UploadService {
     return this.http.post(`${this.url}leadtime/delete-uploaded-data`,data);
   }
 
+  downloadBrandFormat(data:any):Observable<Blob>{
+    return this.http.post(`${this.url}leadtime/download-brand`,data, { responseType: 'blob' });
+  }
+
+  // downloadZip(): Observable<Blob> {
+  //   return this.http.get(this.apiUrl, { responseType: 'blob' });
+  // }
+
+  // downloadAndSaveZip() {
+  //   this.downloadZip().subscribe((blob) => {
+  //     saveAs(blob, 'files.zip');
+  //   }, (error) => {
+  //     console.error('Error downloading the zip file', error);
+  //   });
+  // }
  
 }
