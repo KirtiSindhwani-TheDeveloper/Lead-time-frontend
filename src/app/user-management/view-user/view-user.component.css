@@ -8,17 +8,9 @@ th{
     padding: 30px;
     border: none;
 }
-
-:host ::ng-deep /deep/ div#pn_id_1{
-    width: 100% !important;
-    padding: 0px !important;
-    border-radius: 22px !important;
-    box-shadow: none;
-    outline: none;
-}
 :host ::ng-deep /deep/ span.p-element.p-dropdown-label.p-inputtext.p-placeholder.ng-star-inserted{
     padding: 5px !important;
-    padding-left: 8px !important;
+    padding-left: 15px !important;
 }
 
 :host ::ng-deep  /deep/  input.p-inputtext.p-component.p-element{
@@ -29,22 +21,7 @@ th{
     box-shadow: none !important;
     width: 100% !important;
 }
-:host ::ng-deep div#pn_id_3{
-    
-    border-radius: 22px !important;
-    outline:none !important;
-    width: 100% !important;
-    padding: 0px !important;
-    box-shadow: none !important;
-}
 
-:host ::ng-deep div#pn_id_5{
-    border-radius: 22px !important;
-    outline:none !important;
-    width: 100% !important;
-    padding: 0px !important;
-    box-shadow: none !important;
-}
 
 .btn{
     background-color: var(--tertiary-color);
@@ -54,27 +31,6 @@ th{
     border: none;
 }
 
-:host ::ng-deep div#pn_id_4{
-    border-radius: 22px !important;
-    outline:none !important;
-    width: 100% !important;
-    padding: 0px !important;
-    box-shadow: none !important;
-}
-:host ::ng-deep div#pn_id_8{
-    border-radius: 22px !important;
-    outline:none !important;
-    width: 100% !important;
-    padding: 0px !important;
-    box-shadow: none !important;
-}
-:host ::ng-deep div#pn_id_6{
-    border-radius: 22px !important;
-    outline:none !important;
-    width: 100% !important;
-    padding: 0px !important;
-    box-shadow: none !important;
-}
 
 :host ::ng-deep .div-btn{
 
@@ -96,4 +52,12 @@ th{
     border: none !important;
     box-shadow: none !important
 
+}
+
+::ng-deep .p-dropdown {
+    border-radius: 22px !important;
+    outline:none !important;
+    width: 100% !important;
+    padding: 0px !important;
+    box-shadow: none !important;
 }

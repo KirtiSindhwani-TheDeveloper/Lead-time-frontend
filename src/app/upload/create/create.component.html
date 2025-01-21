@@ -87,7 +87,8 @@
                                             
                                             chooseIcon="pi pi-upload"
                                             (onSelect)="onUpload($event, fileType, i)"
-                                            multiple="false">
+                                            multiple="false"
+                                    >
                                </p-fileUpload>
                                <p>{{fileNames[i]}}</p>
                                <!-- <div *ngIf="locationFormGroup.get('fileType' + i)?.touched && locationFormGroup.get('fileType' + i)?.invalid">
@@ -192,7 +193,6 @@
                     <div class="col-2 me-2">
 
                         <p-fileUpload #fileUpload
-                        #fileInput
                         mode="advanced"
                         multiple="true"
                         chooseIcon="pi pi-upload"
@@ -285,15 +285,16 @@
                     <p-button [styleClass]="'text-white'" class="" label="Download Logs File" (click)="downloadExcelFile()" />
                 </div> -->
             </div>
-            <div class="row  mt-4" *ngIf="showTable">
+            <div class="row  mt-4" >
                 <div class="col-12 d-flex justify-content-center">
                     <p-table 
-                   [value]="updatedAuditLogs"
+                   [value]="updatedAuditLogs" *ngIf="showTable"
                    [responsive]="true"
-                    dataKey="code" *ngIf="showTable"
+                   responsiveLayout="scroll"
+                    dataKey="code"
                     [tableStyle]="{'min-width': '40rem'}"  [scrollable]="true"
-                    [scrollHeight]="isScreenCollapsed ? '350px' : '250px'" >
-                        <ng-template pTemplate="header" >
+                    [scrollHeight]="isScreenCollapsed ? '350px' : '350px'" >
+                        <ng-template pTemplate="header" *ngIf="showTable">
                             <tr>
                                 <!-- <th style="width: 4rem"><p-tableHeaderCheckbox /></th> -->
                                 <th>Brand</th>

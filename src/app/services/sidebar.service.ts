@@ -15,7 +15,7 @@ export class SidebarService {
     // { id:1 ,label: 'Dashboard', route: '/', roles: ['admin', 'user'] },
     { id:2 ,label: 'LT Upload', route: '/app-upload', roles: ['admin', 'user'] },
     { id:3 ,label: 'LT Export', route: '/app-export', roles: ['admin','user'] },
-    // { id:4 ,label: 'User', route: '/create-user', roles: ['admin','user'] },
+    // { id:4 ,label: 'User', route: '/view-user', roles: ['admin','user'] },
     // { id:4 ,label: 'LT Mapping master', route: '/create', roles: ['user','admin'] },
 
   ];

@@ -5,6 +5,7 @@ import { SharedModule } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../core/sidebar/sidebar.component';
 import { UtilitiesService } from '../../services/utilities.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-user',
@@ -88,7 +89,9 @@ export class CreateUserComponent {
   ]
   addUserForm: FormGroup ;
 
-  constructor(private utilitiesService:UtilitiesService,private fb:FormBuilder){
+  constructor(private utilitiesService:UtilitiesService,private fb:FormBuilder,
+  private router:Router
+  ){
    this.addUserForm= this.fb.group({
     name: ['', [Validators.required]],
     designation: ['', [Validators.required]],
@@ -108,6 +111,8 @@ export class CreateUserComponent {
     this.getRoles();
     this.getDesignations();
   }
+
+ 
 
   getRoles(){
     this.utilitiesService.getRoles().subscribe((res:any)=>{
@@ -130,5 +135,9 @@ export class CreateUserComponent {
               this.addUserForm.get(controlName)?.markAsTouched();
             });
     }
+  }
+
+  cancel(){
+  this.router.navigate(['/view-user'])
   }
 }
