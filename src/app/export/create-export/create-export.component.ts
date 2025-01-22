@@ -84,7 +84,7 @@ export class CreateExportComponent {
       console.log('End Date:', this.selectedEndDate);
     }
   }
-  downloadExcel() {
+   downloadExcel() {
     
     if(this.exportForm.valid){
      
@@ -126,7 +126,7 @@ export class CreateExportComponent {
     category: this.exportForm.value.category,
     fileType: this.exportForm.value.fileType,
       }
-      this.exportService.exportExcel(exportValue).subscribe((response: any) => {
+      this.exportService.exportExcel(exportValue).subscribe(async (response: any) => {
         // Create a URL for the blob
         // console.log(response)
         this.loading=false;
@@ -140,8 +140,10 @@ export class CreateExportComponent {
         }
        fileName+=this.currentDateTime
       // Trigger the download for file1
-      this.downloadFile(response, fileName);  // Adjust the name as needed
-      this.exportService.downloadLogs(exportValue).subscribe((res:any)=>{
+     await this.downloadFile(response, fileName);  // Adjust the name as needed
+      this.messageService.add({severity:'success',summary:'Lead Time Output File has been generated successfully',life:3000000})
+      this.loading=true;
+      this.exportService.downloadLogs(exportValue).subscribe(async (res:any)=>{
         let fileName='Error_Logs_'+this.brand;
           if(this.dealer!=null){
             fileName+="_"+this.dealer+"_"
@@ -151,7 +153,8 @@ export class CreateExportComponent {
             fileName+=this.location+'_';
           }
          fileName+=this.currentDateTime
-        this.downloadFile(res,fileName);
+         this.messageService.add({severity:'success',summary:'Error Logs File has been generated successfully',life:3000000})
+       await this.downloadFile(res, fileName);
         this.loading=false;
        }
       //  , error => {
@@ -176,13 +179,14 @@ export class CreateExportComponent {
       console.log('Form is invalid');
     }
   }
-  private downloadFile(blob: Blob, filename: string): void {
+  async downloadFile(blob: Blob, filename: string) {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;  // Set the filename for the download
     a.click();
     window.URL.revokeObjectURL(url);  // Clean up after download
+
    
   }
   setStartDate(date: Date): string {

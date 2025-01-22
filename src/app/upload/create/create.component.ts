@@ -183,7 +183,8 @@ export class CreateComponent {
 onUpload(event: any, fileType: any, index: number) {
   // Clear the previous file upload instance
   this.fileName=''
-  console.log("index ",index)
+  //this.formData=new FormData();
+  // console.log("index ",index)
   this.updatedAuditLogs=[];
   this.fileUpload.clear();
 
@@ -214,7 +215,8 @@ onUpload(event: any, fileType: any, index: number) {
     this.fileNames[index]=item.fileName;
     
   });
-  console.log("the uploaded files ",this.uploadedFiles)
+
+  // console.log("the uploaded files ",this.uploadedFiles)
   if(this.fileTypes.length !=this.uploadedFiles.length){
     console.log("size not equal for uploaded file and file types ",this.fileTypes.length ,this.uploadedFiles.length)
    this.isFileUploaded=false;
@@ -608,17 +610,22 @@ search(){
   });
 }
  async uploadData(data:any,fileTypeObj:any,responses:any,uploadedFiles:any){
-    this.isLoading=true;
- 
-    const response= await this.uploadService.uploadData(data).toPromise();
-    responses.push(response)
+   try{
+      this.isLoading=true;
+      const response= await this.uploadService.uploadData(data).toPromise();
+      responses.push(response)
+  
+      if (responses.length === 2) {
+        await this.handleMultipleApiResponses(responses,fileTypeObj);
+      }
+     
+    else if(responses.length==1 && uploadedFiles.length==1){
+       await this.handleUploadLogsForSingleFile(responses[0])
+      }
 
-    if (responses.length === 2) {
-      await this.handleMultipleApiResponses(responses,fileTypeObj);
     }
-   
-  else if(responses.length==1 && uploadedFiles.length==1){
-     await this.handleUploadLogsForSingleFile(responses[0])
+    catch(error){
+      this.isLoading=false;
     }
    
   }
@@ -634,7 +641,7 @@ search(){
         insertedId:0
       }
     }];
-    console.log(firstResponse,secondResponse,fileTypeObj)
+    //console.log(firstResponse,secondResponse,fileTypeObj)
      // Check conditions based on the first and second response
       if (firstResponse.data.insertResponse.poFailed === true && secondResponse.data.insertResponse==false) {
         // console.log("First API - PO Failed", firstResponse);

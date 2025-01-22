@@ -2,12 +2,12 @@
     <img
     src="Background_image.png"
     alt="Background"
-    class="absolute inset-0 w-full h-full object-cover -z-10"
+    class=" w-full h-full object-cover -z-10 fixed"
   />
     <div>
         <app-sidebar></app-sidebar>
     </div>
-    <div class="mt-5 ">
+    <div class="mt-5 mx-5">
       <div class="d-flex justify-content-between">
 
         <div class="mb-3">
@@ -21,9 +21,9 @@
         <p-table 
         [value]="users" 
         [responsive]="true"
-        styleClass="p-datatable-gridlines" 
-        scrollable="true" [tableStyle]="{'width': '100%'}">
-            <ng-template pTemplate="header">
+        styleClass="p-datatable-gridlines" [scrollable]="true"
+        [tableStyle]="{'width': '100%'}" responsiveLayout="scroll">
+            <ng-template pTemplate="header" >
                 <tr>
                     <th>Name</th>
                     <th>Designation</th>

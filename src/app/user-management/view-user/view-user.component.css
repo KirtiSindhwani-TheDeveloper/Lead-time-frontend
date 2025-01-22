@@ -1,5 +1,6 @@
 th{
     background-color: var(--theme-color);
+    color: white !important;
 }
 .card{
     background-color: var(--theme-color);
@@ -60,4 +61,8 @@ th{
     width: 100% !important;
     padding: 0px !important;
     box-shadow: none !important;
+}
+
+.p-table{
+    overflow-x: auto;
 }

@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SidebarComponent } from './core/sidebar/sidebar.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorService } from './core/interceptors/http-interceptor.service';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { HttpInterceptorService } from './core/interceptors/http-interceptor.ser
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
       multi: true  // Ensures multiple interceptors can be used
-    }
+    },
+ 
   ],
 })
 export class AppModule { }

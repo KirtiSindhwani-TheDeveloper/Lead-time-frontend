@@ -5,12 +5,14 @@ import { BehaviorSubject, catchError, Observable, switchMap, tap } from 'rxjs';
 import { apiUrl } from '../../../config';
 import { CookieService } from 'ngx-cookie-service';
 
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
 
-  constructor(private router: Router,private http: HttpClient,private cookieService:CookieService) { }
+  constructor(private router: Router,private http: HttpClient,
+    private cookieService:CookieService) { }
   private accessTokenKey = 'authToken';
   private refreshTokenKey = 'refreshToken';
 
@@ -35,12 +37,13 @@ export class AuthService {
     const refreshToken = localStorage.getItem(this.refreshTokenKey);
 
     if (!refreshToken) {
+      // this.messageService.add({severity:'warn',summary:'Kindly re-login Again !!!',life:20000000})
       throw new Error('No refresh token available');
     }
 
     try {
       return this.http
-        .post<{ accessToken: string }>(`${this.apiUrl}/refresh`, { refreshToken })
+        .post<{ accessToken: string }>(`${this.apiUrl}/auth-user/refresh`, { refreshToken })
         
       // Store the new access token and return it
       // this.storeAccessToken(response.accessToken);
@@ -52,26 +55,12 @@ export class AuthService {
   
   }
 
-  // Store the tokens in localStorage or cookie
-  private storeTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem(this.accessTokenKey, accessToken);
-    localStorage.setItem(this.refreshTokenKey, refreshToken);
-  }
-
-  // Store only access token (refresh token can be in HTTP-only cookie)
-  private storeAccessToken(accessToken: string): void {
-    localStorage.setItem(this.accessTokenKey, accessToken);
-  }
 
   // Get the access token from localStorage
   getAccessToken(): string | null {
     return localStorage.getItem(this.accessTokenKey);
   }
 
-  // Get the refresh token from localStorage
-  private getRefreshToken(): string | null {
-    return localStorage.getItem(this.refreshTokenKey);
-  }
 
   // Logout the user by clearing the tokens
   logout(): void {
