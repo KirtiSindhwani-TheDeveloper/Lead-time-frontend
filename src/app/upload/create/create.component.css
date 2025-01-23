@@ -1,9 +1,9 @@
 body{
-    background: var(--secondary-color) !important;
+    /* background: var(--secondary-color) !important; */
     height: 100vh;
 }
 .body{
-    background-color: var(--secondary-color) !important;
+    /* background-color: var(--secondary-color) !important; */
     height: 130vh;
     overflow-x: hidden;
     overflow-y: auto;
@@ -14,7 +14,7 @@ body{
 }
 :host ::ng-deep .p-fileupload-buttonbar{
     padding: 0%;
-    background-color: var(--secondary-color) !important;
+    /* background-color: var(--secondary-color) !important; */
 }
 
 :host ::ng-deep span.p-ripple.p-element.p-button.p-component.p-fileupload-choose{
@@ -27,8 +27,8 @@ margin-left: 64px; */
 
 :host ::ng-deep p-dropdown .p-dropdown.p-component.p-inputwrapper{
     border-radius:22px !important;
-    /* width:-webkit-fill-available !important; */
-    width:550px !important
+    width:-webkit-fill-available !important;
+    /* width:550px !important */
 }
 
 :host ::ng-deep .p-dropdown:not(.p-disabled):hover {
@@ -55,7 +55,7 @@ margin-left: 64px; */
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 70px !important;
+    width: 115px !important;
     height: 40px !important;
 
 }
@@ -81,12 +81,14 @@ margin-left: 64px; */
 
 :host ::ng-deep .btn-export{
 
-    background-color: #198754;
+    background-color: var(--theme-color) !important;
     border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px;
+    height: 40px !important;
+    width: 215px !important;
 }
 
 :host ::ng-deep th.p-element.p-sortable-column{
@@ -112,3 +114,63 @@ margin-left: 64px; */
     overflow-x: auto; /* Enable horizontal scrolling */
     width: 100% !important;
   }
+
+:host ::ng-deep .p-fileupload .p-fileupload-buttonbar{
+    background: none;
+}
+
+/* :host ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even){
+    background-color: var(--theme-color);
+
+} */
+
+:host ::ng-deep div#pn_id_6{
+    display: flex !important;
+    align-items: center !important;
+}
+
+:host ::ng-deep th{
+    font-size: 12px;
+}
+:host ::ng-deep div#pn_id_8{
+    width: auto;
+}
+:host ::ng-deep td{
+    font-size: 12px;
+    padding: 7px;
+}
+@media (min-width:768px) and (max-width:1023px){
+    label{
+        font-size:14px !important
+    }
+
+    .btn-export{
+        width:130px !important
+    }
+
+    .div-btn{
+        padding-left: 0px !important;
+        gap: 17px !important;
+        margin-left: 0px !important;
+    }
+    .btn-search{
+        margin-left: 0px !important;
+    }
+    /* .col-4{
+        width: 0% !important;
+    } */
+    .col-sm-1{
+        width:0% !important
+    }
+    .col-4-div{
+        width: 0%  !important;
+    }
+
+
+}
+
+@media (min-width:1023px ) and(max-width:1439px){
+    .col-4.col-4-div{
+        width: 0%  !important;
+    }
+}

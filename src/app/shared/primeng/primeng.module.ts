@@ -16,6 +16,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BlockUIModule } from 'primeng/blockui';
 import { PasswordModule } from 'primeng/password';
 import { InputOtpModule } from 'primeng/inputotp';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 const modules=[
   DropdownModule,
   InputTextModule,
@@ -32,7 +33,8 @@ const modules=[
   ProgressSpinnerModule,
   BlockUIModule,  
   PasswordModule,
-  InputOtpModule
+  InputOtpModule,
+  TieredMenuModule
 ]
 @NgModule({
   declarations: [],

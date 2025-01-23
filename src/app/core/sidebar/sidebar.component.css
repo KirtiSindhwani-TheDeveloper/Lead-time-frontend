@@ -25,3 +25,8 @@
     background-color: #34495e;
   }
   
+  @media (min-width:768px) and (max-width:1023px){
+    .sidebar{
+      height: 170vh !important;
+    }
+  }

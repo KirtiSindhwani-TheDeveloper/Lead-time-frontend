@@ -49,7 +49,7 @@ export class CreateComponent {
   ref: DynamicDialogRef | undefined;
   showMapping:boolean=false;
   showTable:boolean=false;
-  showDownloadFormat:boolean=false;
+  showDownloadFormat:boolean=true;
   uploadedDetails:any=[]
   uploadedData:any;
   uploadedFiles:any;
@@ -98,7 +98,7 @@ export class CreateComponent {
     this.getFileType({brand_id:brand});
     this.isFileUploaded=false;
     this.fileNames=[]
-    this.showDownloadFormat=true;
+      this.showDownloadFormat=false;
     this.showTable=false;
     this.formData=new FormData();
     // if(!this.isLocationWiseChecked){
@@ -148,8 +148,9 @@ export class CreateComponent {
      this.fileTypes=[];
      this.fileNames=[];
      this.uploadedFiles=[];
+     this.showDownloadFormat=true;
      this.uploadForm.reset();
-     this.locationFormGroup.reset();
+     //this.locationFormGroup.reset();
 
     } if(!this.isLocationWiseChecked){
       this.showTable=false;
@@ -161,9 +162,10 @@ export class CreateComponent {
       this.showMapping=false;
       this.fileTypes=[];
       this.fileNames=[];
-      this.uploadedFiles=[]
+      this.uploadedFiles=[];
+      this.showDownloadFormat=true;
       this.locationFormGroup.reset();
-      this.uploadForm.reset();
+     // this.uploadForm.reset();
     }
     }
 //   onUpload(event: any) {
@@ -560,6 +562,7 @@ search(){
    
     if(this.isLocationWiseChecked){
       this.uploadService.downloadBrandFormat({brand_id:this.uploadForm.value.brand}).subscribe((blob)=>{
+        //this.showDownloadFormat=true;
         const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==this.uploadForm.value.brand});
     let brandName=brandObj.brand;
         saveAs(blob, `${brandName}_Format.zip`);
@@ -568,6 +571,7 @@ search(){
     }
     else{
       this.uploadService.downloadBrandFormat({brand_id:this.locationFormGroup.value.brand}).subscribe((blob)=>{
+        //this.showDownloadFormat=true;
         const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==this.locationFormGroup.value.brand});
     let brandName=brandObj.brand;
         saveAs(blob, `${brandName}_Format.zip`);

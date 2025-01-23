@@ -12,7 +12,11 @@
     <app-header></app-header>
 </div> -->
   <div class="body d-flex">
-   
+    <img
+    src="Background_image.png"
+    alt="Background"
+    class=" w-full h-full object-cover -z-10 fixed"
+  />
     <div class="h-[100vh]">
         
         <app-sidebar class="h-[100vh]"></app-sidebar>
@@ -20,10 +24,10 @@
     <div class="h-100">
   
     <i class='bx bx-collapse-alt bx-md cursor-pointer' (click)="collapseScreen()"></i>
-        <div class="font-bold row col-3">
+        <!-- <div class="font-bold row col-3">
             <span class="d-flex justify-content-end align-items-center">Lead Time</span>
-        </div>
-           <div class="row" [ngClass]="!isLocationWiseChecked?'ms-3':''">
+        </div> -->
+           <div class="row" [ngClass]="!isLocationWiseChecked?'ms-3':'ms-3'">
                 <div class="" [hidden]="isScreenCollapsed">
                     <div class="row my-4">
                        <div class="col-2 d-flex justify-content-end">
@@ -117,7 +121,7 @@
                     <p-dropdown
                 [styleClass]=""
                 [options]="brands"
-    
+                (ngModelChange)="onBrandSelect($event)"
                 id="brand"
                 formControlName="brand"
                 optionLabel="brand"
@@ -212,58 +216,26 @@
                 
 
             </div>
-            <!-- <div class="row ">
-                <div class="col-2">
-                    <label class="d-flex justify-content-end align-items-center" for="fileType">File Type :</label>
-                </div>
-                <div class="col-10">
-                    <p-dropdown
-                [styleClass]=""
-                [options]="fileTypes"
-                id="fileType"
-                formControlName="fileType"
-                optionLabel="fileType"
-                optionValue="id"
-                placeholder="Select File Type"
-              >
-              </p-dropdown>
-              <div *ngIf="uploadForm.get('fileType')?.touched && uploadForm.get('fileType')?.invalid">
-                <small *ngIf="uploadForm.get('fileType')?.hasError('required')" style="color: red; font-size: 12px;">File Type is required.</small>
-              </div>
-                </div>
-            </div> -->
+          
         </div>
     </div>
         </form>
             <div class="row " [ngClass]="isLocationWiseChecked?'mt-4 ms-1 ':'mt-4'">
-                <!-- <div class="" [ngClass]="isScreenCollapsed?'col-4':'col-2'">
-                    <span class="d-flex justify-content-end align-items-center">Upload Excel :</span>
+                <div class="" [ngClass]="isScreenCollapsed?'col-4 col-4-div':'col-2 col-sm-1 col-lg-2'">
+                    <!-- <span class="d-flex justify-content-end align-items-center">Upload Excel :</span> -->
                     
-                </div> -->
-                <div class=" d-flex flex-row gap-5" [ngClass]="isScreenCollapsed?'col-8':'col-10'">
-                    <!-- <div class="row col-2 me-2">
-    
-                        <p-fileUpload #fileUpload
-                        #fileInput
-                        mode="advanced"
-                        name="demo[]"
-                        multiple="true"
-                        chooseIcon="pi pi-upload"
-                        accept=".xlsx, .xls,.csv"
-                        [auto]="true"
-                        chooseLabel="Upload"
-                        (onSelect)="onUpload($event)" 
-                          />
-                    </div> -->
-                    <div class=" btn-search ms-5 " [ngClass]="isScreenCollapsed?'col-3':'col-2'">
+                </div>
+                <div class=" d-flex flex-row gap-5 div-btn" [ngClass]="isScreenCollapsed?'col-8':'col-10'">
+        
+                    <div class=" btn-search  " [ngClass]="isScreenCollapsed?'col-3':'col-3'">
                         <p-button [styleClass]="'text-white'" label="Submit"  [disabled]="!isFileUploaded" (click)="submit()" />
                     </div>
-                    <div class="d-flex col-8 row justify-content-end gap-4">
-                         <div class=" btn-export"  [ngClass]="isScreenCollapsed?'col-8':'col-4'">
-                            <p-button [styleClass]="'text-white'" class="" label="Download Format" [disabled]="!showDownloadFormat"  (click)="downloadExcel()" />
+                    <div class="d-flex justify-content-end ">
+                         <div class=" btn-export mr-4"  [ngClass]="isScreenCollapsed?'col-8':''">
+                            <p-button [styleClass]="'text-white'" class="" label="Download Format" [disabled]="showDownloadFormat"  (click)="downloadExcel()" />
                         </div>
-                        <div class=" btn-export" *ngIf="!isLocationWiseChecked " [ngClass]="isScreenCollapsed?'col-8':'col-4'">
-                            <p-button [styleClass]="'text-white'" class="" label="Download Workshop List" [disabled]="!showDownloadFormat"  (click)="downloadWorkShopList()" />
+                        <div class=" btn-export" *ngIf="!isLocationWiseChecked " [ngClass]="isScreenCollapsed?'col-8':''">
+                            <p-button [styleClass]="'text-white'" class="" label="Download Workshop List" [disabled]="showDownloadFormat"  (click)="downloadWorkShopList()" />
                         </div>
                         <!-- <div class=" btn-search" [ngClass]="isScreenCollapsed?'col-3':'col-2'">
                             <p-button [styleClass]="'text-white'" label="Search" [disabled]="!isSearchButton" (click)="search()" />
@@ -285,14 +257,18 @@
                     <p-button [styleClass]="'text-white'" class="" label="Download Logs File" (click)="downloadExcelFile()" />
                 </div> -->
             </div>
-            <div class="row  mt-4" >
+            <div class="row  mt-4 "  >
                 <div class="col-12 d-flex justify-content-center">
                     <p-table 
                    [value]="updatedAuditLogs" *ngIf="showTable"
                    [responsive]="true"
+                   [paginator]="true" 
+                   [rows]="15"
+                   styleClass="p-datatable-gridlines" 
+                   
                    responsiveLayout="scroll"
                     dataKey="code"
-                    [tableStyle]="{'min-width': '40rem'}"  [scrollable]="true"
+                    class="w-full !rounded-lg-border border-gray-200 shadow-md"  [scrollable]="true"
                     [scrollHeight]="isScreenCollapsed ? '350px' : '350px'" >
                         <ng-template pTemplate="header" >
                             <tr>

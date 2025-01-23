@@ -1,9 +1,9 @@
 body{
-    background: var(--secondary-color) !important;
+    /* background: var(--secondary-color) !important; */
     height: 100%;
 }
 .body{
-    background-color: var(--secondary-color) !important;
+    /* background-color: var(--secondary-color) !important; */
     height: 100vh;
     overflow: hidden;
 }
@@ -13,7 +13,7 @@ body{
 }
 :host ::ng-deep .p-fileupload-buttonbar{
     padding: 0%;
-    background-color: var(--secondary-color) !important;
+    /* background-color: var(--secondary-color) !important; */
 }
 
 :host ::ng-deep span.p-ripple.p-element.p-button.p-component.p-fileupload-choose{
@@ -77,7 +77,7 @@ margin-left: 64px; */
 
 :host ::ng-deep .btn-export{
 
-    background-color: #198754;
+    background-color: var(--theme-color);
     border-radius: 4px;
     display: flex;
     justify-content: center;
@@ -156,3 +156,8 @@ margin-left: 64px; */
     width: 100% !important;
     border-radius:22px !important;
   }
+  @media (min-width:768px) and (max-width:1024px){
+    label{
+        font-size:15px !important
+    }
+} 

@@ -11,5 +11,9 @@
   .button.is-danger {
     background-color: #FF4C4C;
     color: white;
+  
   }
+  :host ::ng-deep  button.p-ripple.p-button.p-component.p-button-icon-only.p-button-rounded {
+    background-color: #5a9fa3;
+}
   

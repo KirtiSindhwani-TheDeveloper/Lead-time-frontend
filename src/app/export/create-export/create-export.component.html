@@ -8,16 +8,21 @@
 
   </p-blockUI>
   <div class="body d-flex">
+    <img
+    src="Background_image.png"
+    alt="Background"
+    class=" w-full h-full object-cover -z-10 fixed"
+  />
     <div>
       <app-sidebar></app-sidebar>
     </div>
-    <div class="row col-10">
+    <div class="row col">
 
    
       <form [formGroup]="exportForm">
     
-        <div class="font-bold row col-2">
-            <span class="d-flex justify-content-end align-items-center mt-3">Lead Time</span></div>
+        <!-- <div class="font-bold ms-5 row col-2">
+            <span class=" mt-3 ms-2 justify-content-end d-flex align-items-center">Lead Time</span></div> -->
       <div class="row mt-4">
         <div class="col-12 d-flex flex-column gap-4">
             <div class="row ">

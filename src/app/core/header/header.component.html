@@ -1,4 +1,4 @@
-<header class="app-header">
+<!-- <header class="app-header">
     <nav class="navbar">
       <div class="navbar-brand">
         <a href="/" class="navbar-item">MyApp</a>
@@ -6,17 +6,27 @@
       
       <div class="navbar-menu">
         <div class="navbar-end">
-          <!-- <ng-container *ngIf="isAuthenticated(); else guest"> -->
+          <ng-container *ngIf="isAuthenticated(); else guest"> -->
             <!-- Show logout button if user is authenticated -->
-            <button class="button is-danger" (click)="onLogout()">Logout</button>
+            <!-- <button class="button is-danger" (click)="onLogout()">Logout</button> -->
           <!-- </ng-container> -->
           
-          <ng-template #guest>
+          <!-- <ng-template #guest> -->
             <!-- Optionally show login/register buttons for guest users -->
-            <a class="navbar-item" href="/login">Login</a>
+            <!-- <a class="navbar-item" href="/login">Login</a>
           </ng-template>
         </div>
       </div>
     </nav>
-  </header>
+  </header> -->
+  <div class="w-[100vw] h-[10vh] bg-customBlue mx-auto flex justify-between overflow-x-hidden">
+    <div class="flex  h-full p-1 ">
+        <img src="sparecarelogo.png" alt="sparcare logo">
+        <h2 class="text-white text-xs mr-10 p-1 sm:text-3xl font-semibold">Lead Time</h2>
+    </div>
+    <div class="flex h-full p-1 justify-end ">
+        <p-button icon="pi pi-ellipsis-v" class="!text-customeGreen" raised="true" [rounded]="true" (click)="menu.toggle($event)" />
+        <p-tieredMenu #menu [model]="items"  [popup]="true" />
+    </div>
+</div>
   
