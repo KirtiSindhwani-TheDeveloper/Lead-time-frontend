@@ -18,7 +18,8 @@ export class HeaderComponent {
           
           {
               label: 'Log Out',
-              icon: 'pi pi-sign-out'
+              icon: 'pi pi-sign-out',
+              command: () => this.onLogout()
           },
           {
               separator: true

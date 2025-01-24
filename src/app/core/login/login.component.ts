@@ -61,13 +61,13 @@ export class LoginComponent {
     if(this.userLoginInputDetails.valid){
       let email=this.userLoginInputDetails.value.email;
       let password=this.userLoginInputDetails.value.userPassword
-      console.log(email,password)
+      // console.log(email,password)
       this.authService.login({email:email,userPassword:password}).subscribe((res:any)=>{
 
         if(res.user){
           this.cookieService.set('refreshToken',res.refreshToken)
           localStorage.setItem('authToken',res.accessToken)
-              this.messageService.add({ severity: 'info', summary:'Login Successfully', life: 3000 });
+              this.messageService.add({ severity: 'success', summary:'Login Successfully', life: 3000 });
               localStorage.setItem('userId',res.user.userId)
               // localStorage.setItem('authToken', res.data);
               localStorage.setItem('designationId',res.user.designationId)

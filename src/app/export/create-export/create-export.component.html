@@ -1,18 +1,22 @@
 <p-toast></p-toast>
   <p-blockUI [blocked]="loading">
-    <p-progressSpinner 
+    <!-- <p-progressSpinner 
       styleClass="w-4rem h-4rem" 
       strokeWidth="8" 
       fill="var(--surface-ground)" 
-      animationDuration=".5s" />
-
+      animationDuration=".5s" /> -->
+      <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
   </p-blockUI>
-  <div class="body d-flex">
+  <div>
     <img
     src="Background_image.png"
     alt="Background"
     class=" w-full h-full object-cover -z-10 fixed"
   />
+    <app-header></app-header>
+</div>
+  <div class="body d-flex">
+   
     <div>
       <app-sidebar></app-sidebar>
     </div>
@@ -111,7 +115,7 @@
           </div>
           <div class="row ">
             <div class="col-2">
-                <label class="d-flex justify-content-end align-items-center" for="orderingMonths">Ordering Months :</label>
+                <label class="d-flex justify-content-end align-items-center label-ordering-months" for="orderingMonths">Ordering Months :</label>
             </div>
             <div class="col-10 d-flex ">
               <div>

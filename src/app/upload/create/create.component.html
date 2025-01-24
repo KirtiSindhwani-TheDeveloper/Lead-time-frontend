@@ -1,22 +1,23 @@
 
   <p-toast position="top-center"></p-toast>
   <p-blockUI [blocked]="isLoading">
-    <p-progressSpinner 
+    <!-- <p-progressSpinner 
       styleClass="w-4rem h-4rem" 
       strokeWidth="8" 
       fill="var(--surface-ground)" 
-      animationDuration=".5s" />
-
+      animationDuration=".5s" /> -->
+      <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
   </p-blockUI>
-  <!-- <div>
-    <app-header></app-header>
-</div> -->
-  <div class="body d-flex">
+  <div>
     <img
     src="Background_image.png"
     alt="Background"
     class=" w-full h-full object-cover -z-10 fixed"
   />
+    <app-header></app-header>
+</div>
+  <div class="body d-flex">
+   
     <div class="h-[100vh]">
         
         <app-sidebar class="h-[100vh]"></app-sidebar>
@@ -269,7 +270,7 @@
                    responsiveLayout="scroll"
                     dataKey="code"
                     class="w-full !rounded-lg-border border-gray-200 shadow-md"  [scrollable]="true"
-                    [scrollHeight]="isScreenCollapsed ? '350px' : '350px'" >
+                    [scrollHeight]="isScreenCollapsed ? '285px' : '285px'" >
                         <ng-template pTemplate="header" >
                             <tr>
                                 <!-- <th style="width: 4rem"><p-tableHeaderCheckbox /></th> -->

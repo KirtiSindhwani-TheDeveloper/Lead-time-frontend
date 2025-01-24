@@ -61,7 +61,7 @@
               <input
                 formControlName="email"
                 type="text"
-                class="md:w-[70vw] lg:w-[20vw] w-[70vw] h-8 rounded p-4 shadow-xl"
+                class="md:w-[70vw] lg:w-[20vw] w-[70vw] h-8 rounded p-4"
               />
               <div *ngIf="userLoginInputDetails.get('email')?.touched && userLoginInputDetails.get('email')?.invalid">
                 <small *ngIf="userLoginInputDetails.get('email')?.hasError('required')" style="color: red; font-size: 12px;">Email is required.</small>
@@ -75,7 +75,7 @@
                 type="password"
                 class="md:w-[70vw] lg:w-[20vw] w-[70vw] h-8 rounded p-4 shadow-xl"
               /> -->
-              <p-password [toggleMask]="true" formControlName="userPassword"   />
+              <p-password [toggleMask]="true" formControlName="userPassword"  class=""  />
               <div *ngIf="userLoginInputDetails.get('userPassword')?.touched && userLoginInputDetails.get('userPassword')?.invalid">
                 <small *ngIf="userLoginInputDetails.get('userPassword')?.hasError('required')" style="color: red; font-size: 12px;">Password is required.</small>
               </div>
@@ -166,7 +166,7 @@
         <form  class="" [formGroup]="updateInfoForm">
             <div class="flex flex-col w-auto h-auto justify-center ">
                 <label  class="email">Email</label>
-                <input type="text" pInputText  class=" " formControlName="email" />
+                <input type="text" pInputText  class="email-input " formControlName="email" />
                 <div *ngIf="updateInfoForm.get('email')?.touched && updateInfoForm.get('email')?.invalid">
                     <small *ngIf="updateInfoForm.get('email')?.hasError('required')" style="color: red; font-size: 12px;">Email is required.</small>
                   </div> 

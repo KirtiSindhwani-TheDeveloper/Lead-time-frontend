@@ -1,6 +1,6 @@
 .sidebar {
     width: 250px;
-    background-color: var(--theme-color);
+    background-color: var(--theme2-color);
     color: white;
     padding-top: 20px;
     height: 130vh !important;
@@ -12,13 +12,14 @@
   }
   
   .sidebar li {
-    padding: 15px;
+    padding: 7px;
   }
   
   .sidebar li a {
     text-decoration: none;
     color: white;
     display: block;
+    padding: 10px;
   }
   
   .sidebar li a.active {

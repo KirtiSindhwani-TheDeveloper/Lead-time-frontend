@@ -13,6 +13,8 @@ import { UtilitiesService } from '../../services/utilities.service';
 import { ExportService } from '../../services/export.service';
 import { SidebarComponent } from '../../core/sidebar/sidebar.component';
 import * as FileSaver from 'file-saver';
+import { CoreModule } from '../../core/core.module';
+import { HeaderComponent } from '../../core/header/header.component';
 @Component({
   selector: 'app-create-export',
   imports: [
@@ -21,7 +23,8 @@ import * as FileSaver from 'file-saver';
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
-    SidebarComponent
+    SidebarComponent,
+    HeaderComponent
   ],
   providers:[MessageService],
   templateUrl: './create-export.component.html',

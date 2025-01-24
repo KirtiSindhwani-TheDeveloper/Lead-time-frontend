@@ -1,6 +1,7 @@
 body{
     /* background: var(--secondary-color) !important; */
     height: 100vh;
+
 }
 .body{
     /* background-color: var(--secondary-color) !important; */
@@ -108,7 +109,8 @@ margin-left: 64px; */
 }
 
 ::ng-deep body{
-    overflow: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
 }
 .p-table {
     overflow-x: auto; /* Enable horizontal scrolling */
@@ -169,8 +171,8 @@ margin-left: 64px; */
 
 }
 
-@media (min-width:1023px ) and(max-width:1439px){
-    .col-4.col-4-div{
+@media (min-width:1020px ) and (max-width:1439px){
+   div .col-4.col-4-div{
         width: 0%  !important;
     }
 }

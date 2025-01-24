@@ -4,6 +4,14 @@
     padding-left: 20px !important;
 } */
 
+input{
+  background-color: #E8F0FE;
+}
+
+input:focus-visible{
+  border:none;
+  outline: none;
+}
 .btn-edit{
     width: 80px;
     height: 40px;
@@ -76,6 +84,13 @@
     display: inline-block;
     margin: 0 20px; /* Add spacing between images */
   }
+  :host ::ng-deep  input.p-inputtext.p-component.p-element.email-input{
+    width:25vw !important
+  }
+
+  body{
+    overflow-y: auto !important;
+  }
   @keyframes scroll-left {
     from {
       transform: translateX(0%); /* Start from outside the container */
@@ -87,6 +102,11 @@
 :host ::ng-deep .ng-tns-c1946505645-2.p-dialog-mask.p-component-overlay.p-component-overlay-enter.p-dialog-mask-scrollblocker.ng-star-inserted{
     z-index:0 !important;
 }
+:host ::ng-deep  input.p-inputtext.p-component.p-element.email-input:focus{
+ /* width: 28vw !important; */
+  outline: none;
+  box-shadow:none
+}
 /* :host ::ng-deep input.p-inputtext.p-component.p-element.ng-tns-c3237098745-1.p-password-input {
     width: 555px !important;
 } */
@@ -97,6 +117,9 @@
         padding: 10px !important;
         width: 70vw !important;
         padding-left: 20px !important;
+    }
+    :host ::ng-deep  input.p-inputtext.p-component.p-element.email-input{
+      width:45vw !important
     }
 }
 

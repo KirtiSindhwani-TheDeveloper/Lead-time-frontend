@@ -1,5 +1,6 @@
 :root{
-    --theme-color:#2f667f !important;
+    --theme-color:#34495e !important;
+    --theme2-color: #5a9fa3 !important;
     --secondary-color:#f2f2f2 !important;
     --tertiary-color:#2f667f !important
 }
@@ -10,4 +11,11 @@
 
 .f-18{
     font-size: 18px !important;
+}
+
+.custom-icon {
+    position: absolute;
+    font-size: 3rem;
+    color: #ccc; /* You can adjust the color */
+    animation: spin 1s infinite linear;
 }

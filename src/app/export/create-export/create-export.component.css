@@ -1,11 +1,12 @@
 body{
     /* background: var(--secondary-color) !important; */
     height: 100%;
+    overflow: hidden !important;
 }
 .body{
     /* background-color: var(--secondary-color) !important; */
     height: 100vh;
-    overflow: hidden;
+    /* overflow: auto; */
 }
 
 :host ::ng-deep .p-fileupload-content{
@@ -83,6 +84,7 @@ margin-left: 64px; */
     justify-content: center;
     align-items: center;
     padding: 10px;
+    width: 70px;
 }
 
 :host ::ng-deep input#icondisplay{
@@ -107,33 +109,7 @@ margin-left: 64px; */
     padding: 5px;
     padding-left: 10px;
 }
-/* 
-:host ::ng-deep input.p-element.ng-tns-c1685646730-0.p-inputtext.p-component.ng-star-inserted {
-    padding: 3px !important;
-    padding-left: 10px !important;
-    border-radius: 22px !important;
-}
 
-:host ::ng-deep input.p-element.ng-tns-c1685646730-1.p-inputtext.p-component.ng-star-inserted{
-    padding: 3px !important;
-    padding-left: 10px !important;
-    border-radius: 22px !important;
-}
-:host ::ng-deep input.p-element.ng-tns-c1685646730-2.p-inputtext.p-component.ng-star-inserted{
-    padding: 3px !important;
-    padding-left: 10px !important;
-    border-radius: 22px !important;
-} */
-
-/* :host ::ng-deep div#pn_id_25{
- padding: 0px !important;
- border-radius: 22px !important;
- width: 100% !important;
-}
-:host ::ng-deep div#pn_id_10{
-    border-radius: 22px !important;
-    width: 100% !important;
-} */
 :host ::ng-deep input.p-element {
     padding: 3px !important;
     padding-left: 10px !important;
@@ -156,8 +132,37 @@ margin-left: 64px; */
     width: 100% !important;
     border-radius:22px !important;
   }
+
+  @media (min-width:768px) and (max-width:900px){
+    :host ::ng-deep .label-ordering-months{
+        margin-left:27px;
+     }
+  }
   @media (min-width:768px) and (max-width:1024px){
     label{
-        font-size:15px !important
+        font-size:13px !important
     }
+    :host ::ng-deep span.p-element.p-dropdown-label.p-inputtext.p-placeholder.ng-star-inserted{
+        padding: 3px !important;
+        padding-left:10px !important;
+        font-size: 14px !important;
+    }
+     
+    :host ::ng-deep span.p-element.p-dropdown-label.p-inputtext.ng-star-inserted{
+        padding: 3px !important;
+        padding-left:10px !important;
+        font-size: 14px !important;
+    }
+     :host ::ng-deep input.p-element{
+        padding:2px !important;
+        padding-left:10px !important;
+        font-size: 14px !important;
+     }
+     :host ::ng-deep .p-multiselect-label{
+        padding: 1px;
+    padding-left: 10px;
+    font-size: 14px;
+     }
+
+    
 } 
