@@ -62,6 +62,7 @@ export class CreateComponent {
   isSearchButton:boolean=false;
   locationFormGroup:FormGroup;
   insertedId:any;
+  userName:any;
   @ViewChild('fileUpload') fileUpload!: FileUpload;
   uploadForm: FormGroup = new FormGroup({
 
@@ -92,6 +93,7 @@ export class CreateComponent {
   ngOnInit(){
    this.getBrands(); 
    this.getUsers();
+   this.userName=localStorage.getItem('name');
   }
   onBrandSelect(brand: string): void {
     this.fileTypes=[]
@@ -220,7 +222,7 @@ onUpload(event: any, fileType: any, index: number) {
 
   // console.log("the uploaded files ",this.uploadedFiles)
   if(this.fileTypes.length !=this.uploadedFiles.length){
-    console.log("size not equal for uploaded file and file types ",this.fileTypes.length ,this.uploadedFiles.length)
+    // console.log("size not equal for uploaded file and file types ",this.fileTypes.length ,this.uploadedFiles.length)
    this.isFileUploaded=false;
  }
  else{
@@ -315,7 +317,7 @@ this.isLoading=true
 
 show() {
 
-  console.log('Form Submitted:', this.uploadForm.value);
+  // console.log('Form Submitted:', this.uploadForm.value);
 
   this.ref = this.dialogService.open(MappingComponent, {
      
@@ -531,7 +533,7 @@ search(){
                 this.locationFormGroup.get(controlName)?.markAsTouched();
               });
               // this.messageService.add({severity:'error',summary:'Kindly fill all the information.',life:3000})
-              console.log('Form is invalid');
+             // console.log('Form is invalid');
             }
       }
         else{
@@ -580,7 +582,7 @@ search(){
   }
   downloadWorkShopList(){
   this.isLoading=true;
-  console.log("download ")
+  // console.log("download ")
   let data ;
   let fileObj;
   let brandName='';
@@ -590,7 +592,7 @@ search(){
    
     let id=this.locationFormGroup.value.brand;
     data=brandColumnObject[id];
-    console.log(data);
+    // console.log(data);
 
       const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==id});
        brandName=brandObj.brand;
@@ -647,77 +649,77 @@ search(){
     }];
     //console.log(firstResponse,secondResponse,fileTypeObj)
      // Check conditions based on the first and second response
-      if (firstResponse.data.insertResponse.poFailed === true && secondResponse.data.insertResponse==false) {
+      if (firstResponse?.data?.insertResponse?.poFailed === true && secondResponse?.data?.insertResponse==false) {
         // console.log("First API - PO Failed", firstResponse);
         this.messageService.add({severity: 'error', summary: `Part Number cannot be found for PO`, life: 100000});
         await this.handleUploadLogs(secondResponse,true);
       }
-      if (secondResponse.data.insertResponse.poFailed === true && firstResponse.data.insertResponse==false) {
+      if (secondResponse?.data?.insertResponse?.poFailed === true && firstResponse?.data?.insertResponse==false) {
         //console.log("First API - PO Failed", firstResponse);
         this.messageService.add({severity: 'error', summary: `Part Number cannot be found for PO`, life: 100000});
         await this.handleUploadLogs(firstResponse,true);
       }
-      if (secondResponse.data.insertResponse.poFailed === true && firstResponse.data.insertResponse==true) {
-        //console.log("First API - PO Failed", firstResponse);
-        this.messageService.add({severity: 'error', summary: `Part Number cannot be found for PO`, life: 100000});
-        this.messageService.add({severity: 'error', summary: `Part Number,Dealer and Location cannot be Blank for MRN`, life: 100000});
-        await this.handleUploadLogs(firstResponse,true);
-      }
-      if (firstResponse.data.insertResponse.poFailed === true && secondResponse.data.insertResponse==true) {
+      if (secondResponse?.data?.insertResponse?.poFailed === true && firstResponse?.data?.insertResponse==true) {
         //console.log("First API - PO Failed", firstResponse);
         this.messageService.add({severity: 'error', summary: `Part Number cannot be found for PO`, life: 100000});
         this.messageService.add({severity: 'error', summary: `Part Number,Dealer and Location cannot be Blank for MRN`, life: 100000});
         await this.handleUploadLogs(firstResponse,true);
       }
-      if (secondResponse.data.insertResponse.mrnFailed === true && firstResponse.data.insertResponse==true) {
+      if (firstResponse?.data?.insertResponse?.poFailed === true && secondResponse?.data?.insertResponse==true) {
+        //console.log("First API - PO Failed", firstResponse);
+        this.messageService.add({severity: 'error', summary: `Part Number cannot be found for PO`, life: 100000});
+        this.messageService.add({severity: 'error', summary: `Part Number,Dealer and Location cannot be Blank for MRN`, life: 100000});
+        await this.handleUploadLogs(firstResponse,true);
+      }
+      if (secondResponse?.data?.insertResponse?.mrnFailed === true && firstResponse?.data?.insertResponse==true) {
         //console.log("First API - PO Failed", firstResponse);
         this.messageService.add({severity: 'error', summary: `Part Number cannot be found for MRN`, life: 100000});
         this.messageService.add({severity: 'error', summary: `Part Number,Dealer and Location cannot be Blank for PO`, life: 100000});
         await this.handleUploadLogs(firstResponse,true);
       }
-      if (firstResponse.data.insertResponse.mrnFailed === true && secondResponse.data.insertResponse==true) {
+      if (firstResponse?.data?.insertResponse?.mrnFailed === true && secondResponse?.data?.insertResponse==true) {
         //console.log("First API - PO Failed", firstResponse);
         this.messageService.add({severity: 'error', summary: `Part Number cannot be found for MRN`, life: 100000});
         this.messageService.add({severity: 'error', summary: `Part Number,Dealer and Location cannot be Blank for PO`, life: 100000});
         await this.handleUploadLogs(firstResponse,true);
       }
-      if (firstResponse.data.insertResponse.mrnFailed === true && secondResponse.data.insertResponse==false) {
+      if (firstResponse?.data?.insertResponse.mrnFailed === true && secondResponse?.data?.insertResponse==false) {
        // console.log("First API - PO Failed", firstResponse);
         this.messageService.add({severity: 'error', summary: `Part Number cannot be found for MRN`, life: 100000});
         await this.handleUploadLogs(secondResponse,true);
       }
-      if (secondResponse.data?.insertResponse?.mrnFailed === true && firstResponse?.data?.insertResponse==false) {
+      if (secondResponse?.data?.insertResponse?.mrnFailed === true && firstResponse?.data?.insertResponse==false) {
       //  console.log("First API - PO Failed", firstResponse);
         this.messageService.add({severity: 'error', summary: `Part Number cannot be found for MRN`, life: 100000});
         await this.handleUploadLogs(firstResponse,true);
       }
-      if(firstResponse.data?.insertResponse?.poFailed==true && secondResponse?.data?.insertResponse?.mrnFailed==true){
+      if(firstResponse?.data?.insertResponse?.poFailed==true && secondResponse?.data?.insertResponse?.mrnFailed==true){
        // console.log("happens")
         this.messageService.add({severity: 'error', summary: 'Part Number cannot be found for PO', life: 100000});
         this.messageService.add({severity: 'error', summary: 'Part Number cannot be found for MRN', life: 100000});
         await this.handleUploadLogs(noResponse,false);
       }
-      if(firstResponse.data?.insertResponse?.mrnFailed==true && secondResponse.data?.insertResponse?.poFailed==true){
+      if(firstResponse?.data?.insertResponse?.mrnFailed==true && secondResponse.data?.insertResponse?.poFailed==true){
         //console.log("happens")
         this.messageService.add({severity: 'error', summary: 'Part Number cannot be found for PO', life: 100000});
         this.messageService.add({severity: 'error', summary: 'Part Number cannot be found for MRN', life: 100000});
         await this.handleUploadLogs(noResponse,false);
       }
 
-      if(firstResponse.data?.insertResponse==false && secondResponse.data?.insertResponse==true){
+      if(firstResponse?.data?.insertResponse==false && secondResponse.data?.insertResponse==true){
         this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be blank for ${fileTypeObj?.fileType}`, life: 100000 });
         await this.handleUploadLogs(firstResponse,true);
       }
-      if(firstResponse.data?.insertResponse==true && secondResponse.data?.insertResponse==false){
+      if(firstResponse?.data?.insertResponse==true && secondResponse.data?.insertResponse==false){
         this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be blank for ${fileTypeObj.fileType}`, life: 100000 });
         await this.handleUploadLogs(secondResponse,true);
       }
-      if(firstResponse.data?.insertResponse==true && secondResponse.data?.insertResponse==true){
+      if(firstResponse?.data?.insertResponse==true && secondResponse?.data?.insertResponse==true){
         this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be blank for PO`, life: 100000 });
         this.messageService.add({ severity: 'error', summary:`Part No ,Dealer and Location cannot be blank for MRN`, life: 100000 });
         await this.handleUploadLogs(noResponse,true);
       }
-      if(firstResponse.data?.insertResponse==false && secondResponse.data?.insertResponse==false){
+      if(firstResponse.data?.insertResponse==false && secondResponse?.data?.insertResponse==false){
         this.messageService.add({ severity: 'success', summary:`Your data has been successfully uploaded`, life: 100000 });
        
         await this.handleUploadLogs(noResponse,false);
@@ -739,10 +741,10 @@ search(){
       if(response.data?.insertResponse?.poFailed==true){
         this.messageService.add({ severity: 'error', summary:`Part Number cannot be found`, life: 1000000 });
       }
-      if(response.data?.insertResponse==true){
+      if(response?.data?.insertResponse==true){
         this.messageService.add({ severity: 'error', summary:`Part Number,Dealer and Location cannot be blank`, life: 1000000 });
       }
-      if(response.data?.insertResponse==false){
+      if(response?.data?.insertResponse==false){
         this.messageService.add({ severity: 'success', summary:`Your data has been successfully uploaded`, life: 1000000 });
       }
 
@@ -915,6 +917,13 @@ search(){
       this.fileUpload.clear();
       console.error('Error during log handling:', error);
     }
+  }
+
+  getRowClass(fileLength:any) {
+    if(fileLength<this.fileTypes.length){
+      return 'latest-rows'
+    }
+    return 'previous-rows'
   }
   
   resetForm() {

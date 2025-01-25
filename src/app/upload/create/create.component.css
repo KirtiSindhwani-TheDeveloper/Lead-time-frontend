@@ -27,9 +27,9 @@ margin-left: 64px; */
 }
 
 :host ::ng-deep p-dropdown .p-dropdown.p-component.p-inputwrapper{
-    border-radius:22px !important;
-    width:-webkit-fill-available !important;
-    /* width:550px !important */
+    border-radius:5px !important;
+    /* width:-webkit-fill-available !important; */
+    width:90% !important
 }
 
 :host ::ng-deep .p-dropdown:not(.p-disabled):hover {
@@ -131,6 +131,22 @@ margin-left: 64px; */
     align-items: center !important;
 }
 
+:host ::ng-deep li{
+    padding-bottom: 4px;
+}
+
+:host ::ng-deep .p-dropdown-items-wrapper{
+    max-height:400px !important;
+}
+:host ::ng-deep ul{
+    padding-top:10px
+}
+.latest-rows {
+    background-color: #5a9fa396;
+  }
+.previous-rows{
+    background-color: white;
+}
 :host ::ng-deep th{
     font-size: 12px;
 }

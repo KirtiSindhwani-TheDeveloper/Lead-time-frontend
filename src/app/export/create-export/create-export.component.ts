@@ -69,7 +69,7 @@ export class CreateExportComponent {
       
       // Ensure the start date is the 1st day of the month
       this.selectedStartDate = selectedStartDate;
-      console.log('Start Date:', this.selectedStartDate);
+      // console.log('Start Date:', this.selectedStartDate);
     }
   }
 
@@ -84,7 +84,7 @@ export class CreateExportComponent {
 
       // Ensure the end date is the last day of the selected month
       this.selectedEndDate = selectedEndDate;
-      console.log('End Date:', this.selectedEndDate);
+     // console.log('End Date:', this.selectedEndDate);
     }
   }
    downloadExcel() {
@@ -169,7 +169,7 @@ export class CreateExportComponent {
       
     }, error => {
       this.loading=false;
-      this.messageService.add({ severity: 'error', summary: 'Error occured in processing excel file', life: 20000 });
+      this.messageService.add({ severity: 'error', summary: 'Base Data is not available for this Brand/Dealer', life: 20000 });
       console.error('Error downloading files', error);
     });
   }
@@ -179,7 +179,7 @@ export class CreateExportComponent {
       Object.keys(this.exportForm.controls).forEach(controlName => {
         this.exportForm.get(controlName)?.markAsTouched();
       });
-      console.log('Form is invalid');
+     // console.log('Form is invalid');
     }
   }
   async downloadFile(blob: Blob, filename: string) {
@@ -228,7 +228,7 @@ this.minDate.setDate(1); // Set minDate to the first day of the month
 
 const now = new Date();
     this.currentDateTime = now.toLocaleString();
-  console.log(this.currentDateTime)
+//  console.log(this.currentDateTime)
 
 
 // Optional: log the calculated dates for debugging
@@ -239,8 +239,8 @@ const now = new Date();
 
     // this.minDateString=this.minDate.toISOString().split('T')[0];
     //  this.maxDateString=this.maxDate.toISOString().split('T')[0];
-    console.log('Min Date: ', this.minDate.toISOString().split('T')[0]);
-    console.log('Max Date: ', this.maxDate.toISOString().split('T')[0]);
+    // console.log('Min Date: ', this.minDate.toISOString().split('T')[0]);
+    // console.log('Max Date: ', this.maxDate.toISOString().split('T')[0]);
     this.getBrands(); 
   }
 

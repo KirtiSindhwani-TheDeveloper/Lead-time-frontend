@@ -12,7 +12,8 @@
   }
   
   .sidebar li {
-    padding: 7px;
+    /* padding: 7px; */
+    height:30px;
   }
   
   .sidebar li a {
@@ -20,12 +21,66 @@
     color: white;
     display: block;
     padding: 10px;
+    padding-bottom: 5px;
+    padding-top: 3px;
   }
   
   .sidebar li a.active {
-    background-color: #34495e;
+    /* background-color: #34495e; */
+    background-color: #34495e7d;
+    
   }
-  
+
+  a.active {
+    color: #fff; /* White text color for active item */
+   
+  }
+.f-18{
+  font-size: 18px;
+}
+.f-16{
+  font-size: 16px;
+}
+
+  /* Style for the icon */
+.icon {
+  margin-right: 8px;  /* Space between icon and text */
+  cursor: pointer;    /* Make the icon clickable */
+}
+
+.submenu-title{
+  padding-left:15px
+}
+li.subsidebar{
+  padding-left:30px
+}
+
+/* li.subsidebar:active{
+  padding-left:0;
+} */
+/* Icon when the submenu is open */
+/* .icon-open::before {
+  content: '\f077';  /* FontAwesome icon for a minus (collapsed state) */
+  /* font-family: 'FontAwesome';
+}  */
+
+/* Icon when the submenu is closed */
+/* .icon-closed::before {
+  content: '\f078'; 
+  font-family: 'FontAwesome';
+} */
+
+/* Style for the submenu */
+/* .submenu {
+  padding-left: 20px;
+  list-style-type: none;
+  display: block;
+}
+
+.submenu li {
+  padding: 5px 0;
+} */
+
   @media (min-width:768px) and (max-width:1023px){
     .sidebar{
       height: 170vh !important;

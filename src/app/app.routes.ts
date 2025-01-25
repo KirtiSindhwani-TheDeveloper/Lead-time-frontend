@@ -6,12 +6,18 @@ import { CreateExportComponent } from './export/create-export/create-export.comp
 import { LoginComponent } from './core/login/login.component';
 import { ViewUserComponent } from './user-management/view-user/view-user.component';
 import { authGuard } from './auth.guard';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 export const routes: Routes = [
     {
         path:'create',component:CreateMappingComponent
       },
+      {
+        path:'dashboard',
+        component:DashboardComponent,
+        canActivate:[authGuard]
+    },
       {
         path: 'app-upload',
         component: CreateComponent,
@@ -42,5 +48,6 @@ export const routes: Routes = [
         path: '**', redirectTo:'login',
         pathMatch:'full'
     },
+   
 
 ];

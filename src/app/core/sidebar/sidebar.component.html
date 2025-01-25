@@ -1,18 +1,43 @@
-<!-- <div class="w-[15vw] h-[100vh] bg-[#2f667f] flex flex-col pt-3">
-    <div
-      *ngFor="let item of sideBarList; let i = index"
-      class="w-full h-8 flex items-center justify-center cursor-pointer bg-black text-white hover:text-black hover:bg-white"
-      [ngClass]="{ 'bg-white text-black': activeIndex === i, 'bg-black text-white': activeIndex !== i }"
-      (click)="ActiveMenu(i,item)" 
-    >
-      <h1 class="text">{{ item.value }}</h1>
-    </div>
-  </div> -->
 
-  <div class="sidebar h-[100vh]">
+
+  <!-- <div class="sidebar h-[100vh]">
     <ul>
       <li *ngFor="let item of sidebarItems">
         <a [routerLink]="item.route" routerLinkActive="active">{{ item.label }}</a>
       </li>
     </ul>
-  </div> 
+  </div>  -->
+
+  <div class="sidebar h-[100vh]">
+    <ul>
+      <li *ngFor="let item of sidebarItems" class="f-18">
+        <!-- Normal Menu Item without Submenu -->
+        <a *ngIf="!item.submenu" class="cursor-pointer " [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [class.active]="item.isActive">
+          {{ item.label }}
+        </a>
+  
+        <!-- Menu Item with Submenu (with icon to toggle) -->
+        <div *ngIf="item.submenu">
+          <!-- href="javascript:void(0)" -->
+          <a  class="submenu-title cursor-pointer" (click)="toggleSubmenu(item)">
+            <!-- Display icon if submenu exists -->
+            <!-- <i class='bx bx-chevron-down'></i> -->
+            <i class="icon" [ngClass]="item.isOpen ? 'bx bx-chevron-up' : 'bx bx-chevron-down '"></i>
+            {{ item.label }}
+          </a>
+  
+          <!-- Show submenu if it's open -->
+          <ul *ngIf="item.isOpen" class="submenu">
+            <li *ngFor="let subItem of item.submenu" class="subsidebar f-16">
+              <a [routerLink]="subItem.route" routerLinkActive="active">
+                {{ subItem.label }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+  
+  
+  

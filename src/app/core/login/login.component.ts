@@ -75,7 +75,7 @@ export class LoginComponent {
               localStorage.setItem('name',res.user.name)
               localStorage.setItem('status',res.user.status)
               setTimeout(() => {
-                this.router.navigate(['/app-upload']);
+                this.router.navigate(['/dashboard']);
               },1000);
              // Navigate to protected route
   
