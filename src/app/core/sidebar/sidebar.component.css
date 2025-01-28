@@ -1,38 +1,12 @@
-.sidebar {
-    width: 250px;
-    background-color: var(--theme2-color);
-    color: white;
-    padding-top: 20px;
-    height: 130vh !important;
-  }
-  
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sidebar li {
-    /* padding: 7px; */
-    height:30px;
-  }
-  
-  .sidebar li a {
-    text-decoration: none;
-    color: white;
-    display: block;
-    padding: 10px;
-    padding-bottom: 5px;
-    padding-top: 3px;
-  }
-  
+
   .sidebar li a.active {
-    /* background-color: #34495e; */
-    background-color: #34495e7d;
-    
+    /* background-color: #34495e;  */
+      background-color: #34495e7d;
+     
   }
 
   a.active {
-    color: #fff; /* White text color for active item */
+    color: #fff; 
    
   }
 .f-18{
@@ -44,8 +18,8 @@
 
   /* Style for the icon */
 .icon {
-  margin-right: 8px;  /* Space between icon and text */
-  cursor: pointer;    /* Make the icon clickable */
+  margin-right: 8px; 
+  cursor: pointer;    
 }
 
 .submenu-title{
@@ -55,34 +29,78 @@ li.subsidebar{
   padding-left:30px
 }
 
-/* li.subsidebar:active{
-  padding-left:0;
-} */
-/* Icon when the submenu is open */
-/* .icon-open::before {
-  content: '\f077';  /* FontAwesome icon for a minus (collapsed state) */
-  /* font-family: 'FontAwesome';
-}  */
+.submenu {
+  z-index: 1;
+} 
 
-/* Icon when the submenu is closed */
-/* .icon-closed::before {
-  content: '\f078'; 
-  font-family: 'FontAwesome';
-} */
-
-/* Style for the submenu */
-/* .submenu {
-  padding-left: 20px;
-  list-style-type: none;
-  display: block;
-}
-
-.submenu li {
-  padding: 5px 0;
-} */
 
   @media (min-width:768px) and (max-width:1023px){
     .sidebar{
       height: 170vh !important;
     }
-  }
+  }  
+
+
+  /* Sidebar Styles */
+.sidebar {
+  /* width: 250px;
+  height: 100%; 
+   background-color: #333;
+  color: #fff; 
+  position: fixed;
+  top: 0;
+  left: 0; 
+   padding-top: 20px;
+  overflow-y: auto; */
+  width: 250px;
+  background-color: var(--theme2-color);
+  color: white;
+  /* padding-top: 20px; */
+  height: 130vh !important;
+
+}
+
+.menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu > li {
+  /* padding: 10px 15px; */
+  cursor: pointer;
+  position: relative;
+}
+
+.submenu {
+  list-style-type: none;
+  /* padding-left: 20px; */
+  padding-left:15px;
+  /* background-color: #555; */
+  /* display: none; */
+  /* margin-top: 5px; */
+}
+
+.submenu li {
+  /* padding: 8px 10px; */
+  cursor: pointer;
+ 
+}
+
+.submenu li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+
+.menu > li.active .submenu {
+  display: block; 
+  
+  
+} 
+
+
+:host ::ng-deep .submenu li.active {
+  background-color: #34495e7d; /* Add your desired active background color */
+  color: white;
+}

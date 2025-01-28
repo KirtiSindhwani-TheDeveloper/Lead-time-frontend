@@ -1,28 +1,43 @@
-<div class="body d-flex">
-    <img
-    src="Background_image.png"
-    alt="Background"
-    class=" w-full h-full object-cover -z-10 fixed"
-  />
-    <div>
-        <app-sidebar></app-sidebar>
-    </div>
-    <div class="mt-5 mx-5">
-      <div class="d-flex justify-content-between">
+
+<div>
+  <img
+  src="Background_image.png"
+  alt="Background"
+  class=" w-full h-full object-cover -z-10 fixed"
+/>
+<div>
+<app-header></app-header>
+</div>
+
+
+</div>
+<div class="body d-flex ">   
+  <div>
+    <app-sidebar></app-sidebar>
+  </div>
+    <div class="mt-5 mx-5 overflow-hidden">
+   
+      <div class="d-flex justify-content-between ">
 
         <div class="mb-3">
             <span class="font-bold f-18">View Users</span>
         </div>
         <div>
-          <i class="pi pi-user cursor-pointer" style="font-size: 1.5rem;font-weight:bold" (click)="addUser()"></i>
+          <i class="pi pi-user cursor-pointer" style="font-size: 1.5rem;font-weight:bold" (click)="showDialog('Add User')"></i>
         </div>
       </div>
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
         <p-table 
         [value]="users" 
         [responsive]="true"
-        styleClass="p-datatable-gridlines" [scrollable]="true"
-        [tableStyle]="{'width': '100%'}" responsiveLayout="scroll">
+        [paginator]="true" 
+        [rows]="15"
+        styleClass="p-datatable-gridlines" 
+        
+        responsiveLayout="scroll"
+         dataKey="code"
+         class="w-full !rounded-lg-border border-gray-200 shadow-md"  [scrollable]="true"
+         responsiveLayout="scroll">
             <ng-template pTemplate="header" >
                 <tr>
                     <th>Name</th>
@@ -41,7 +56,7 @@
                     <td>{{ product.associatedBusiness }}</td>
                     <td>{{ product.email }}</td>
                     <td>{{ product.mobile }}</td>
-                    <td class="text-center" ><i class='bx bx-edit cursor-pointer' (click)="showDialog(product)"></i></td>
+                    <td class="text-center" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
                     <td>{{ product.status }}</td>
                 </tr>
             </ng-template>
@@ -50,22 +65,23 @@
 </div>
 
 <div>
-<p-dialog header="Edit User" [modal]="true" [(visible)]="visible" [style]="{ width: '55rem' }">
+<p-dialog [header]=actionName  [(visible)]="visible" [style]="{ width: '80vh'  }" class="header edit-add-user">
     <!-- <span class="p-text-secondary block mb-5">Update your information.</span> -->
     <div class="card">
         <div class="row">
          <div class="col-12">
            <form [formGroup]="editUserForm">
+            
              <div class="row">
-                <div class="col-6 p-3 d-flex flex-column">
-                   <span class="text-white">Name</span>
+                <div class="col-6 p-2 d-flex flex-column">
+                   <span class="font-semibold">Name</span>
                    <input type="text" pInputText formControlName="name" placeholder="Enter Name" />
                    <div *ngIf="editUserForm.get('name')?.touched && editUserForm.get('name')?.invalid">
                     <small *ngIf="editUserForm.get('name')?.hasError('required')" style="color: red; font-size: 12px;">Name is required.</small>
                   </div>
                 </div>
-                <div class="col-6 p-3 d-flex flex-column">
-                 <span class="text-white">Designation</span>
+                <div class="col-6 p-2 d-flex flex-column">
+                 <span class="font-semibold">Designation</span>
                      <p-dropdown 
        [options]="designations" 
       formControlName="designation"
@@ -78,8 +94,8 @@
               </div>
              </div>
              <div class="row">
-               <div class="col-6 p-3 pt-2 d-flex flex-column">
-                  <span class="text-white">Role</span>
+               <div class="col-6 p-2 d-flex flex-column">
+                  <span class="font-semibold">Role</span>
                   <p-dropdown 
                   [options]="roles" 
                  formControlName="role"
@@ -91,8 +107,8 @@
                   </div>
                  </div>
  
-                 <div class="col-6 p-3 pt-2">
-                   <span class="text-white">Email ID</span>
+                 <div class="col-6 p-2">
+                   <span class="font-semibold">Email ID</span>
                    <input type="text" pInputText formControlName="email" placeholder="Enter Email" />
                    <div *ngIf="editUserForm.get('email')?.touched && editUserForm.get('email')?.invalid">
                     <small *ngIf="editUserForm.get('email')?.hasError('required')" style="color: red; font-size: 12px;">Email is required.</small>
@@ -103,9 +119,9 @@
              </div>
             </div>
             <div class="row">
-             <div class="col-6 p-3 pt-2 d-flex flex-column">
-                <span class="text-white">Mobile No </span>
-                <input type="text" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
+             <div class="col-6 p-2  d-flex flex-column">
+                <span class="font-semibold">Mobile No </span>
+                <input type="number" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
                 <div *ngIf="editUserForm.get('mobileNo')?.touched && editUserForm.get('mobileNo')?.invalid">
                   <small *ngIf="editUserForm.get('mobileNo')?.hasError('required')" style="color: red; font-size: 12px;">Mobile No is required.</small>
                 </div>
@@ -114,25 +130,30 @@
                 </div>
                </div>
                
-               <div class="col-6 p-3 pt-2">
-                 <span class="text-white">User ID</span>
-                 <input type="text" pInputText formControlName="userId" placeholder="Enter User ID"/>
-                 <div *ngIf="editUserForm.get('userId')?.touched && editUserForm.get('userId')?.invalid">
-                  <small *ngIf="editUserForm.get('userId')?.hasError('required')" style="color: red; font-size: 12px;">User ID is required.</small>
+               <div class="col-6 p-2 pt-2">
+                 <span class="font-semibold">Associated Business</span>
+                 <p-dropdown 
+       [options]="associatedBusinesses" 
+      formControlName="associatedBusiness"
+       optionLabel="label" 
+       optionValue="id"
+       placeholder="Enter Associated Business"/>
+                 <div *ngIf="editUserForm.get('associatedBusiness')?.touched && editUserForm.get('associatedBusiness')?.invalid">
+                  <small *ngIf="editUserForm.get('associatedBusiness')?.hasError('required')" style="color: red; font-size: 12px;">Associated Business is required.</small>
                 </div>
            </div>
           </div>
           <div class="row">
-           <div class="col-6 p-3 pt-2 d-flex flex-column">
-              <span class="text-white">Password </span>
+           <div class="col-6 p-2 d-flex flex-column">
+              <span class="font-semibold">Password </span>
               <input type="text" pInputText formControlName="password" placeholder="Enter Password"/>
               <div *ngIf="editUserForm.get('password')?.touched && editUserForm.get('password')?.invalid">
                 <small *ngIf="editUserForm.get('password')?.hasError('required')" style="color: red; font-size: 12px;">Password is required.</small>
               </div>
              </div>
              
-             <div class="col-6 p-3 pt-2 d-flex flex-column">
-               <span class="text-white">Status</span>
+             <div class="col-6 p-2 d-flex flex-column">
+               <span class="font-semibold">Status</span>
                <p-dropdown 
                [options]="statuses" 
               formControlName="status"
@@ -143,17 +164,14 @@
               </div>
          </div>
         </div>
- 
+
            </form>
          </div>
-   
-        </div>
- 
-      
-      <div class="div-btn">
-        <p-button label="Cancel" class="btn text-white mr-5" (click)="cancel()"/>
-        <p-button label="Submit" class="btn text-white " (click)="submit()"/>
-      </div>
+        </div>  
+    </div>
+    <div class="div-btn">
+      <p-button label="Cancel" class="btn text-white mr-5" (click)="cancel()"/>
+      <p-button label="Submit" class="btn text-white " (click)="submit()"/>
     </div>
 </p-dialog>
 </div>

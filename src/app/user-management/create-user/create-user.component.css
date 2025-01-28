@@ -37,24 +37,26 @@ td{
     width: 100%; /* Ensure container uses full width */
   }
 .card{
-    background-color: var(--theme-color);
+    background-color: #34495e26;
     width: 100vh !important;
     /* height: 65vh !important; */
     height: max-content !important;
-    padding: 30px;
+    padding: 15px;
     border: none;
 }
 :host ::ng-deep /deep/ span.p-element.p-dropdown-label.p-inputtext.p-placeholder.ng-star-inserted{
-    padding: 5px !important;
-    padding-left: 15px !important;
+    padding: 7px !important;
+    padding-left: 6px !important;
+    font-size: 14px;
 }
  :host ::ng-deep  /deep/  input.p-inputtext.p-component.p-element{
-    padding: 5px !important;
-    border-radius: 22px !important;
-    padding-left: 15px !important;
+    padding: 7px !important;
+    border-radius: 6px !important;
+    padding-left: 7px !important;
     outline:none !important;
     box-shadow: none !important;
     width: 100% !important;
+    font-size: 14px;
 }
 
 .btn{
@@ -65,7 +67,7 @@ td{
 }
 
 :host ::ng-deep .dropdown{
-    border-radius: 22px !important;
+    border-radius: 4px !important;
     outline:none !important;
     width: 100% !important;
     padding: 0px !important;
@@ -73,7 +75,7 @@ td{
 }
 
 ::ng-deep .p-dropdown {
-    border-radius: 22px !important;
+    border-radius: 4px !important;
     outline:none !important;
     width: 100% !important;
     padding: 0px !important;

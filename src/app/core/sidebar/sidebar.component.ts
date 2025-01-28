@@ -42,36 +42,43 @@ export class SidebarComponent {
 
     // this.router.navigate(item.route)
   }
-  // highlightActiveMenu() {
-  //   const currentRoute = this.router.url; // Get the current route path
 
-  //   // Iterate over sidebar items and submenus to set the active state
-  //   this.sidebarItems.forEach((item:any) => {
-  //     // Reset active state for main menu and submenus
-  //     item.isActive = false;
-  //     if (item.submenu) {
-  //       item.submenu.forEach((subItem:any) => {
-  //         // Highlight submenus if their route matches the current route
-  //         if (currentRoute === subItem.route) {
-  //           subItem.isActive = true;
-  //           item.isActive = true;  // Highlight main item if any submenu is active
-  //         } else {
-  //           subItem.isActive = false;
-  //         }
-  //       });
-  //     }
-  //     // Highlight the main item if its route matches the current route
-  //     if (currentRoute === item.route) {
-  //       item.isActive = true;
-  //     }
-  //   });
-  // }
 
-  // Toggle submenu visibility on click
-  toggleSubmenu(item: any): void {
-    console.log("item ",item)
-    item.isOpen = !item.isOpen;
-    //this.highlightActiveMenu(); // Re-check active state after submenu toggle
+
+  // Toggle the submenu visibility and active state
+  toggleSubMenu(item: any) {
+    item.isOpen = !item.isOpen;  // Toggle submenu visibility
+    // Close other submenus if needed (optional)
+
+    this.sidebarItems.forEach((subItem:any) => {
+      if (subItem !== item) {
+        subItem.isOpen = false;  // Close other submenus
+      }
+    });
   }
+
+   setActive(item: any) {
+    // Reset the active state for all menu items and submenus
+    this.sidebarItems.forEach((menuItem: any) => {
+      menuItem.isActive = false;  // Reset active state for main items
+
+      if (menuItem.submenu) {
+        menuItem.submenu.forEach((subItem: any) => {
+          subItem.isActive = false;  // Reset active state for submenus
+        });
+      }
+    });
+
+    // Set the clicked item as active
+    item.isActive = true;
+
+    // If it's a submenu item, set its parent item as active as well
+    if (item.submenu) {
+      item.submenu.forEach((subItem: any) => {
+        subItem.isActive = true;  // Mark active state for submenus if needed
+      });
+    }
+  }
+
   
 }

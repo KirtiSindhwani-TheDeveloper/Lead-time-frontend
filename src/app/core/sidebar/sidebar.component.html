@@ -8,36 +8,67 @@
     </ul>
   </div>  -->
 
-  <div class="sidebar h-[100vh]">
+  <!-- <div class="sidebar h-[100vh]">
     <ul>
-      <li *ngFor="let item of sidebarItems" class="f-18">
+      <li *ngFor="let item of sidebarItems" class="f-18"> -->
         <!-- Normal Menu Item without Submenu -->
-        <a *ngIf="!item.submenu" class="cursor-pointer " [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [class.active]="item.isActive">
+        <!--  <a *ngIf="!item.submenu" class="cursor-pointer " [routerLink]="item.route" routerLinkActive="active" >
           {{ item.label }}
-        </a>
+        </a> 
   
-        <!-- Menu Item with Submenu (with icon to toggle) -->
+        
         <div *ngIf="item.submenu">
-          <!-- href="javascript:void(0)" -->
-          <a  class="submenu-title cursor-pointer" (click)="toggleSubmenu(item)">
-            <!-- Display icon if submenu exists -->
-            <!-- <i class='bx bx-chevron-down'></i> -->
+           <a  class="submenu-title cursor-pointer" (click)="toggleSubmenu(item)">
+         
             <i class="icon" [ngClass]="item.isOpen ? 'bx bx-chevron-up' : 'bx bx-chevron-down '"></i>
             {{ item.label }}
           </a>
   
-          <!-- Show submenu if it's open -->
-          <ul *ngIf="item.isOpen" class="submenu">
+          <ul *ngIf="item.isOpen" class="submenu ">
             <li *ngFor="let subItem of item.submenu" class="subsidebar f-16">
               <a [routerLink]="subItem.route" routerLinkActive="active">
                 {{ subItem.label }}
               </a>
             </li>
           </ul>
+         
         </div>
       </li>
     </ul>
+  </div> -->
+
+
+  <div class="sidebar">
+    <ul class="menu">
+      <li *ngFor="let item of sidebarItems" [class.active]="item.isActive" class="f-18" routerLinkActive="active">
+        
+        <!-- Main Menu Item -->
+        <a class="submenu-title cursor-pointer" (click)="toggleSubMenu(item)" [ngClass]="item.isActive ? 'active-item' : ''">
+          <!-- Chevron Icon -->
+          <i class="icon" [ngClass]="item.isOpen ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"></i>
+          {{ item.label }}
+        </a>
+        
+        <!-- Submenu -->
+        <ul  *ngIf="item.isOpen" class="submenu">
+          <li *ngFor="let subItem of item.submenu"  class="subsidebar f-16" routerLinkActive="active">
+            <a [routerLink]="subItem.route"  (click)="setActive(subItem)" [ngClass]="subItem.isActive ? 'active-item' : ''">
+              {{ subItem.label }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </div>
+
+
+
+
+
+  
+  
+
+  
   
   
   

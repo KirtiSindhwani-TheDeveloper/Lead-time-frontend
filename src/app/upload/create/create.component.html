@@ -30,7 +30,7 @@
     <!-- <i class='bx bx-collapse-alt bx-md cursor-pointer' (click)="collapseScreen()"></i> -->
     <i [ngClass]="isScreenCollapsed?'bx bx-chevron-down bx-md':'bx bx-chevron-up bx-md'" class="cursor-pointer"  (click)="collapseScreen()"></i>
         <div class="font-semibold ms-4">
-            <span class="d-flex align-items-center text-[20px]">Upload</span>
+            <span class="d-flex align-items-center text-[20px]">Lead Time Upload</span>
         </div>
            <div class="row" [ngClass]="!isLocationWiseChecked?'ms-3':'ms-3'">
                 <div class="" [hidden]="isScreenCollapsed">
@@ -116,7 +116,7 @@
             </div>
             
             <form [formGroup]="uploadForm" *ngIf="isLocationWiseChecked">
-      <div class="row mt-4" [hidden]="isScreenCollapsed">
+      <div class="row " [hidden]="isScreenCollapsed">
         <div class="col-12 d-flex flex-column gap-4">
             <div class="row ">
                 <div class="col-2">

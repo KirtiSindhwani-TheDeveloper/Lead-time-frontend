@@ -88,7 +88,7 @@ input:focus-visible{
     width:25vw !important
   }
 
-  body{
+ :host ::ng-deep body{
     overflow-y: auto !important;
   }
   @keyframes scroll-left {

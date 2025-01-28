@@ -22,14 +22,14 @@
           <div class="col-12">
             <form [formGroup]="addUserForm">
               <div class="row">
-                 <div class="col-6 p-3 d-flex flex-column">
+                 <div class="col-6 p-2 d-flex flex-column">
                     <span class="text-white">Name</span>
                     <input type="text" pInputText formControlName="name" placeholder="Enter Name" />
                     <div *ngIf="addUserForm.get('name')?.touched && addUserForm.get('name')?.invalid">
                       <small *ngIf="addUserForm.get('name')?.hasError('required')" style="color: red; font-size: 12px;">Name is required.</small>
                     </div>
                  </div>
-                 <div class="col-6 p-3">
+                 <div class="col-6 p-2">
                   <span class="text-white">Designation</span>
                       <p-dropdown 
         [options]="designations" 
@@ -43,7 +43,7 @@
                </div>
               </div>
               <div class="row">
-                <div class="col-6 p-3 pt-2 d-flex flex-column">
+                <div class="col-6 p-2 pt-2 d-flex flex-column">
                    <span class="text-white">Role</span>
                    <p-dropdown 
                    [options]="designations" 
@@ -57,7 +57,7 @@
                   </div>
                   </div>
   
-                  <div class="col-6 p-3 pt-2">
+                  <div class="col-6 p-2 pt-2">
                     <span class="text-white">Email ID</span>
                     <input type="text" pInputText formControlName="email" placeholder="Enter Email" />
                     <div *ngIf="addUserForm.get('email')?.touched && addUserForm.get('email')?.invalid">
@@ -66,7 +66,7 @@
               </div>
              </div>
              <div class="row">
-              <div class="col-6 p-3 pt-2 d-flex flex-column">
+              <div class="col-6 p-2 pt-2 d-flex flex-column">
                  <span class="text-white">Mobile No </span>
                  <input type="text" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
                  <div *ngIf="addUserForm.get('mobileNo')?.touched && addUserForm.get('mobileNo')?.invalid">
@@ -74,7 +74,7 @@
                 </div>
                 </div>
                 
-                <div class="col-6 p-3 pt-2">
+                <div class="col-6 p-2 pt-2">
                   <span class="text-white">User ID</span>
                   <input type="text" pInputText formControlName="userId" placeholder="Enter User ID"/>
                   <div *ngIf="addUserForm.get('userId')?.touched && addUserForm.get('userId')?.invalid">
@@ -83,7 +83,7 @@
             </div>
            </div>
            <div class="row">
-            <div class="col-6 p-3 pt-2 d-flex flex-column">
+            <div class="col-6 p-2 pt-2 d-flex flex-column">
                <span class="text-white">Password </span>
                <input type="text" pInputText formControlName="password" placeholder="Enter Password"/>
                <div *ngIf="addUserForm.get('password')?.touched && addUserForm.get('password')?.invalid">
@@ -91,7 +91,7 @@
               </div>
               </div>
               
-              <div class="col-6 p-3 pt-2 d-flex flex-column">
+              <div class="col-6 p-2 pt-2 d-flex flex-column">
                 <span class="text-white">Status</span>
                 <p-dropdown 
                 [options]="statuses" 

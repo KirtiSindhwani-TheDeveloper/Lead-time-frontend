@@ -118,7 +118,7 @@ margin-left: 64px; */
 }
 
 :host ::ng-deep .p-dropdown-items-wrapper{
-    max-height:400px !important;
+    max-height:350px !important;
 }
 :host ::ng-deep ul{
     padding-top:10px
