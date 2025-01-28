@@ -7,10 +7,12 @@ import { SidebarComponent } from '../../core/sidebar/sidebar.component';
 import { Router } from '@angular/router';
 import { UtilitiesService } from '../../services/utilities.service';
 import { HeaderComponent } from "../../core/header/header.component";
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { UserManagementModule } from '../user-management.module';
 
 @Component({
   selector: 'app-view-user',
-  imports: [PrimengModule, SharedModule, FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent, HeaderComponent],
+  imports: [PrimengModule, MatSlideToggleModule, SharedModule, FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent, HeaderComponent],
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'
 })
