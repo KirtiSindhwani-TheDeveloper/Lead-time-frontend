@@ -79,6 +79,31 @@ th{
     padding-left: 24px;
 }
 
+
+:host ::ng-deep .mdc-switch:enabled:hover:not(:focus):not(:active) .mdc-switch__track::before{
+    background: red !important;
+}
+:host ::ng-deep .mdc-switch:enabled:focus:not(:active) .mdc-switch__track::before{
+    background-color: red !important;
+}
+:host ::ng-deep .mdc-switch__track::before{
+    background-color: red !important;
+}
+:host ::ng-deep .mdc-switch:enabled:hover:not(:focus):not(:active) .mdc-switch__track::after{
+    background: green !important;
+}
+:host ::ng-deep .mdc-switch__track::after{
+    background-color: green !important;
+}
+:host ::ng-deep .mdc-switch:enabled:active .mdc-switch__track::after{
+    background: green !important;
+}
+:host ::ng-deep .mdc-switch:enabled:focus:not(:active) .mdc-switch__track::after{
+    background: green !important;
+}
+
+
+
 @media (min-width:768px) and (max-width:1024px) {
 
     /* .p-element.ng-trigger.ng-trigger-animation.ng-tns-c1946505645-0.p-dialog.p-component.p-dialog-draggable.p-dialog-resizable.ng-star-inserted{

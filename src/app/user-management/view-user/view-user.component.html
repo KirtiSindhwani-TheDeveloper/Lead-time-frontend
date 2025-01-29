@@ -23,7 +23,8 @@
             <span class="font-bold f-18">View Users</span>
         </div>
         <div>
-          <i class="pi pi-user cursor-pointer" style="font-size: 1.5rem;font-weight:bold" (click)="showDialog('Add User')"></i>
+          <i class="pi pi-user cursor-pointer me-3" style="font-size: 1.5rem;font-weight:bold " (click)="showDialog('Add User')"></i>
+          <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold"></i>
         </div>
       </div>
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
@@ -57,7 +58,8 @@
                     <td>{{ product.email }}</td>
                     <td>{{ product.mobile }}</td>
                     <td class="text-center" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
-                    <td><mat-slide-toggle [aria-label]="product.status=='Active'?'Active':'Inactive'">
+                    <td><mat-slide-toggle [aria-label]="product.status=='Active'?'Active':'Inactive'"
+                     >
                     </mat-slide-toggle></td>
                 </tr>
             </ng-template>
