@@ -32,6 +32,16 @@ export class SidebarService {
       submenu: [
         { id: 5, label: 'View User', route: '/view-user', roles: ['admin', 'user'], isActive: false }
       ]
+    },
+    {
+      id: 7,
+      label: 'Role Based Access Management',
+      route: '',
+      roles: ['admin', 'user'],
+      isActive: true,
+      submenu: [
+        { id: 5, label: 'Create Role', route: '/create-role', roles: ['admin', 'user'], isActive: false }
+      ]
     }
   ];
 

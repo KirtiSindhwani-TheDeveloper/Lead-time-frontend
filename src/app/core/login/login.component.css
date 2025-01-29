@@ -3,10 +3,15 @@
     width: 20vw !important;
     padding-left: 20px !important;
 } */
+ ::ng-deep body{
+  
+  overflow-y: auto !important;
 
+}
 input{
   background-color: #E8F0FE;
 }
+
 
 input:focus-visible{
   border:none;
@@ -88,9 +93,7 @@ input:focus-visible{
     width:25vw !important
   }
 
- :host ::ng-deep body{
-    overflow-y: auto !important;
-  }
+
   @keyframes scroll-left {
     from {
       transform: translateX(0%); /* Start from outside the container */

@@ -108,6 +108,10 @@ export class ViewUserComponent {
       this.router.navigate(['/create-user'])
     }
 
+    ngOnInit(){
+      this.getRoles();
+    this.getDesignations();
+    }
     getRoles(){
       this.utilitiesService.getRoles().subscribe((res:any)=>{
         this.roles=res.data;

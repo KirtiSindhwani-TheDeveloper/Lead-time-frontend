@@ -1,0 +1,9 @@
+:host ::ng-deep .p-datatable-table-container {
+    height: 49vh;
+}
+
+:host ::ng-deep .p-checkbox-box{
+    border: 2px solid #bec1c7 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}

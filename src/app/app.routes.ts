@@ -7,6 +7,7 @@ import { LoginComponent } from './core/login/login.component';
 import { ViewUserComponent } from './user-management/view-user/view-user.component';
 import { authGuard } from './auth.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { CreateRoleComponent } from './role-based/create-role/create-role.component';
 
 
 export const routes: Routes = [
@@ -41,6 +42,12 @@ export const routes: Routes = [
     {
         path:'view-user',
         component:ViewUserComponent,
+       
+        canActivate:[authGuard]
+    },
+    {
+        path:'create-role',
+        component:CreateRoleComponent,
        
         canActivate:[authGuard]
     },
