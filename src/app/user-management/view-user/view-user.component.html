@@ -124,7 +124,7 @@
             <div class="row">
              <div class="col-6 p-2  d-flex flex-column">
                 <span class="font-semibold">Mobile No </span>
-                <input type="number" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
+                <input type="text" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
                 <div *ngIf="editUserForm.get('mobileNo')?.touched && editUserForm.get('mobileNo')?.invalid">
                   <small *ngIf="editUserForm.get('mobileNo')?.hasError('required')" style="color: red; font-size: 12px;">Mobile No is required.</small>
                 </div>
@@ -138,7 +138,7 @@
                  <p-dropdown 
        [options]="associatedBusinesses" 
       formControlName="associatedBusiness"
-       optionLabel="label" 
+       optionLabel="business_vertical" 
        optionValue="id"
        placeholder="Enter Associated Business"/>
                  <div *ngIf="editUserForm.get('associatedBusiness')?.touched && editUserForm.get('associatedBusiness')?.invalid">

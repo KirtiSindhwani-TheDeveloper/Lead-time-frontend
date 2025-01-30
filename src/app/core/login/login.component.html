@@ -1,5 +1,8 @@
  <p-toast></p-toast>
+ <p-blockUI [blocked]="isLoading">
 
+    <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
+</p-blockUI>
 <div class="flex flex-col lg:flex-row w-auto h-auto overflow-auto">
     <!-- First Div -->
     <div class="w-full lg:w-[70vw] h-auto">

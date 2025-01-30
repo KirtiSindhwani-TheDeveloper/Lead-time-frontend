@@ -8,6 +8,7 @@ import { ViewUserComponent } from './user-management/view-user/view-user.compone
 import { authGuard } from './auth.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateRoleComponent } from './role-based/create-role/create-role.component';
+import { ViewRoleComponent } from './role-based/view-role/view-role.component';
 
 
 export const routes: Routes = [
@@ -48,6 +49,12 @@ export const routes: Routes = [
     {
         path:'create-role',
         component:CreateRoleComponent,
+       
+        canActivate:[authGuard]
+    },
+    {
+        path:'view-role',
+        component:ViewRoleComponent,
        
         canActivate:[authGuard]
     },

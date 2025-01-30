@@ -29,30 +29,6 @@ export class ViewUserComponent {
     },]
     visible: boolean = false;
     associatedBusinesses:any=[
-      {
-      id:1,
-      label:'SIMS',
-    },
-    {
-      id:2,
-      label:'Audit',
-    },
-    {
-      id:3,
-      label:'Gainer',
-    },
-    {
-      id:4,
-      label:'IT',
-    },
-    {
-      id:5,
-      label:'HR',
-    },
-    {
-      id:6,
-      label:'Others',
-    }
   ];
     roles:any=[];
     designations:any=[];
@@ -111,6 +87,7 @@ export class ViewUserComponent {
     ngOnInit(){
       this.getRoles();
     this.getDesignations();
+    this.getBusinessVertical();
     }
     getRoles(){
       this.utilitiesService.getRoles().subscribe((res:any)=>{
@@ -123,7 +100,11 @@ export class ViewUserComponent {
         this.designations=res.data;
       })
     }
-
+    getBusinessVertical(){
+      this.utilitiesService.getBusinessVertical().subscribe((res:any)=>{
+        this.associatedBusinesses=res.data;
+      })
+    }
     cancel(){
        this.editUserForm.reset();  // Resets form values to their initial state
       

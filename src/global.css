@@ -19,3 +19,16 @@
     color: #ccc; /* You can adjust the color */
     animation: spin 1s infinite linear;
 }
+/* :host ::ng-deep ::-webkit-scrollbar {
+    width:2px !important;
+     height: 2px !important;
+   }
+ 
+ :host ::ng-deep ::-webkit-scrollbar-track {
+     background-color: #bdb8b8 !important; 
+     
+     border-radius: 10px !important;
+   }
+.host ::ng-deep     ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  } */

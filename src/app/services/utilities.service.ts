@@ -39,6 +39,10 @@ export class UtilitiesService {
   getDesignations():Observable<any>{
     return this.httpClient.get(`${this.url}utilities/designations`)
   }
+
+  getBusinessVertical():Observable<any>{
+    return this.httpClient.get(`${this.url}utilities/business-vertical`);
+  }
   emitData(data: any): void {
     // console.log("data ",data);
     

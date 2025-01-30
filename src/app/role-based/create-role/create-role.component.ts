@@ -17,6 +17,7 @@ import { MessageService } from 'primeng/api';
 })
 export class CreateRoleComponent {
   isLoading:boolean=false;
+  visible:boolean=false;
   customers = [
     {
       name: 'John Doe',
@@ -133,6 +134,7 @@ export class CreateRoleComponent {
   ];
   userId:any;
   roleForm:FormGroup
+  token:any;
   constructor(private roleService:RoleBasedService,
     private fb:FormBuilder,private messageService:MessageService
   ){
@@ -147,11 +149,18 @@ export class CreateRoleComponent {
     }, { validators: atLeastOneCheckedValidator() });
   
     this.userId=localStorage.getItem('userId');
+    this.token=localStorage.getItem('authToken')
   }
 
   get rolename() {
     return this.roleForm.get('rolename');
   }
+
+  showDialog(){
+    this.visible=true;
+  }
+
+  
   submit(){
     if(this.roleForm.valid){
 
@@ -167,7 +176,7 @@ export class CreateRoleComponent {
   
       this.isLoading=true;
       // console.log(formValues);
-      this.roleService.createRole({...formValues,userId:this.userId}).subscribe((res:any)=>{
+      this.roleService.createRole({...formValues,userId:this.userId,token:this.token}).subscribe((res:any)=>{
         this.isLoading=false;
         this.roleForm.reset();
         this.messageService.add({severity:'success' ,summary:'Role has created Successfully',life:30000000})

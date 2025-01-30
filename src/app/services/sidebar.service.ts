@@ -40,7 +40,8 @@ export class SidebarService {
       roles: ['admin', 'user'],
       isActive: true,
       submenu: [
-        { id: 5, label: 'Create Role', route: '/create-role', roles: ['admin', 'user'], isActive: false }
+        { id: 5, label: 'Create Role', route: '/create-role', roles: ['admin', 'user'], isActive: false },
+        { id: 8, label: 'View & Edit Role', route: '/view-role', roles: ['admin', 'user'], isActive: false }
       ]
     }
   ];

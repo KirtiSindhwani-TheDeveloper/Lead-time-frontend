@@ -157,6 +157,11 @@ margin-left: 64px; */
     font-size: 12px;
     padding: 7px;
 }
+
+:host ::ng-deep span.p-element.p-dropdown-label.p-inputtext{
+    padding:5px !important
+}
+
 @media (min-width:768px) and (max-width:1023px){
     label{
         font-size:14px !important

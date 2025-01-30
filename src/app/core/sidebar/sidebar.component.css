@@ -76,6 +76,7 @@ li.subsidebar{
   list-style-type: none;
   /* padding-left: 20px; */
   padding-left:15px;
+  padding-top:5px !important
   /* background-color: #555; */
   /* display: none; */
   /* margin-top: 5px; */

@@ -16,4 +16,12 @@ export class RoleBasedService {
     return this.http.post(`${this.apiUrl}roles/create`,data)
   }
 
+  viewRole(data:any):Observable<any>{
+    return this.http.get(`${this.apiUrl}roles/view`,data)
+  }
+
+  editRole(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}roles/edit`,data)
+  }
+
 }

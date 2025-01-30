@@ -72,6 +72,8 @@ margin-left: 64px; */
     box-shadow: none;
 }
 
+
+
 :host ::ng-deep span.p-element.p-dropdown-label.p-inputtext.ng-star-inserted{
     padding: 4px !important;
     padding-left:10px !important;
@@ -107,7 +109,7 @@ margin-left: 64px; */
 } */
 
 :host ::ng-deep .p-multiselect-label {
-    padding: 5px;
+    padding: 3px;
     padding-left: 10px;
 }
 
@@ -117,6 +119,9 @@ margin-left: 64px; */
     border-radius: 5px !important;
 }
 
+:host ::ng-deep .p-element.p-multiselect-label-container{
+    padding:3px !important;
+}
 :host ::ng-deep .p-dropdown-items-wrapper{
     max-height:350px !important;
 }
@@ -147,6 +152,9 @@ margin-left: 64px; */
     width: 100% !important;
     border-radius:5px !important;
   }
+  :host ::ng-deep span.p-element.p-dropdown-label.p-inputtext{
+    padding:5px !important
+}
 
   @media (min-width:768px) and (max-width:900px){
     :host ::ng-deep .label-ordering-months{
@@ -175,7 +183,7 @@ margin-left: 64px; */
      }
      :host ::ng-deep .p-multiselect-label{
         padding: 1px;
-    padding-left: 10px;
+    padding-left: 1px;
     font-size: 14px;
      }
 

@@ -17,6 +17,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  isLoading:boolean=false
   visible: boolean = false;
   formSubmitted:boolean = false;
   isPasswordFilledVisible:boolean=false;
@@ -62,8 +63,9 @@ export class LoginComponent {
       let email=this.userLoginInputDetails.value.email;
       let password=this.userLoginInputDetails.value.userPassword
       // console.log(email,password)
+      this.isLoading=true;
       this.authService.login({email:email,userPassword:password}).subscribe((res:any)=>{
-
+       
         if(res.user){
           this.cookieService.set('refreshToken',res.refreshToken)
           localStorage.setItem('authToken',res.accessToken)
@@ -80,7 +82,9 @@ export class LoginComponent {
              // Navigate to protected route
   
         }
+        this.isLoading=false;
       },(error:any)=>{
+        this.isLoading=false;
         this.messageService.add({severity:'error',summary:'Invalid Credentials',life:10000})
       })
       
@@ -113,6 +117,7 @@ submit(){
 if(this.updateInfoForm.get('email')?.valid){
   this.formSubmitted = true;
   if(this.getOtp){
+    
     this.loginService.forgotPassword({email:this.updateInfoForm.value.email}).subscribe( {next: (res: any) => {
       if(res.status==200){
          this.getOtp=false;

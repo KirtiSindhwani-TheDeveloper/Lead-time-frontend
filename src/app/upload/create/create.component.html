@@ -29,9 +29,16 @@
         </div> -->
     <!-- <i class='bx bx-collapse-alt bx-md cursor-pointer' (click)="collapseScreen()"></i> -->
     <i [ngClass]="isScreenCollapsed?'bx bx-chevron-down bx-md':'bx bx-chevron-up bx-md'" class="cursor-pointer"  (click)="collapseScreen()"></i>
-        <div class="font-semibold ms-4">
+        <!-- <div class="font-semibold ms-4">
             <span class="d-flex align-items-center text-[20px]">Lead Time Upload</span>
-        </div>
+        </div> -->
+        <div class="flex justify-center">
+            <div
+              class="flex flex-row w-[80vw] md:w-[54vw] py-2 md:px-0 justify-between"
+            >
+              <h3 class="font-semibold text-base text-md md:text-xl">Lead Time Upload</h3>
+            </div>
+          </div>
            <div class="row" [ngClass]="!isLocationWiseChecked?'ms-3':'ms-3'">
                 <div class="" [hidden]="isScreenCollapsed">
                     <div class="row my-2">

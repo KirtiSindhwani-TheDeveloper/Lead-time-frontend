@@ -1,0 +1,31 @@
+:host ::ng-deep .p-checkbox-box{
+    border: 2px solid #bec1c7 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+::ng-deep .p-table{
+    overflow-x: auto !important;
+}
+::ng-deep td{
+    padding: 10px;
+    text-align: center;
+    font-size: 15px;
+} 
+
+::ng-deep th{
+    padding: 5px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+} 
+.btn-submit{
+    background-color: var(--theme-color);
+    border-radius: 4px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+

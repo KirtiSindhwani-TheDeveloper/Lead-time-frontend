@@ -1,0 +1,126 @@
+<div class="h-[100vh] w-[100vw] overflow-y-auto overflow-x-hidden">
+   
+    <p-toast position="top-center"></p-toast>
+    <p-blockUI [blocked]="isLoading">
+        <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
+    </p-blockUI>
+    <div>
+      <img
+      src="Background_image.png"
+      alt="Background"
+      class=" w-full h-full object-cover -z-10 fixed"
+    />
+      <app-header></app-header>
+  </div>
+  <div class="body d-flex">
+   
+    <div class="h-[100vh]">
+        
+        <app-sidebar class="h-[100vh]"></app-sidebar>
+    </div>
+    <div class="w-[100vw]">
+
+        <div class="flex justify-center">
+            <div
+        class="flex flex-row w-[100vw] md:w-[65vw] sm:w-[65vw] lg:w-[63vw]  !py-3 !px-5 justify-between"
+      >
+        <h3 class="font-semibold text-base text-md md:text-xl ">
+          View & Edit Roles
+        </h3>
+        </div>
+        </div>
+        <div class="flex justify-center " style="width: 100%; overflow-x: auto;">
+           <div class="card p-3   w-[100vw] w-[80vw] h-auto  md:w-[60vw] bg-[#FDF5E6] rounded-lg shadow-lg">
+
+               <p-table 
+       styleClass="p-datatable-striped"
+           [scrollHeight]="'300px'"
+            [scrollable]="true"
+            responsiveLayout="scroll"
+            [scrollable]="true"
+           [value]="roles"
+           [paginator]="true"
+           [rows]="20"
+           styleClass="{width:100%}"
+           class="bg-white   !rounded-lg border !h-auto  border-gray-200 shadow-md"
+      >
+       <ng-template pTemplate="header">
+           <tr>
+               <th>Role Name</th>
+               <th class="text-center">SIMS</th>
+               <th class="text-center">AUDIT</th>
+               <th class="text-center">GAINER</th>
+               <th class="text-center">IT</th>
+               <th class="text-center">HR</th>
+               <th class="text-center">OTHERS</th>
+               <th class="text-center">Action</th>
+               <th class="text-center">Submit</th>
+           </tr>
+       </ng-template>
+       <ng-template pTemplate="body" let-role let-i="rowIndex">
+           <tr [class.selected]="selectedRow === i">
+               <td>{{role.name}}</td>
+               <td class="text-center">
+                   <p-checkbox 
+                       [(ngModel)]="role.sims" 
+                       (onChange)="updateRoleState(role, 'sims', $event)"
+                       [disabled]="selectedRow !== i"
+                       binary="true">
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.audit" 
+                       (onChange)="updateRoleState(role, 'audit', $event)"
+                       [disabled]="selectedRow !== i">
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.gainer" 
+                       (onChange)="updateRoleState(role, 'gainer', $event)"
+                       [disabled]="selectedRow !== i">
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.it" 
+                       (onChange)="updateRoleState(role, 'it', $event)"
+                       [disabled]="selectedRow !== i">
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.hr" 
+                       (onChange)="updateRoleState(role, 'hr', $event)"
+                       [disabled]="selectedRow !== i">
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <p-checkbox 
+                   binary="true"
+                       [(ngModel)]="role.others" 
+                       (onChange)="updateRoleState(role, 'others', $event)"
+                       [disabled]="selectedRow !== i">
+                   </p-checkbox>
+               </td>
+               <td class="text-center">
+                   <i class="bx bx-edit cursor-pointer" (click)="editRow(i)"></i>
+               </td>
+               <td>
+                   <button pButton type="button" label="Update" class="btn-submit cursor-pointer" [disabled]="selectedRow !== i || !isSubmitEnabled" (click)="submit(role)"></button>
+               </td>
+           </tr>
+       </ng-template>
+   </p-table>
+           </div>
+
+        
+        
+
+          </div>
+  </div>
