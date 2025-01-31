@@ -9,38 +9,40 @@ import { UtilitiesService } from '../../services/utilities.service';
 import { HeaderComponent } from "../../core/header/header.component";
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UserManagementModule } from '../user-management.module';
+import { UserService } from '../../services/user.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-view-user',
   imports: [PrimengModule, MatSlideToggleModule, SharedModule, FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent, HeaderComponent],
+  providers:[MessageService],
   templateUrl: './view-user.component.html',
   styleUrl: './view-user.component.css'
 })
 export class ViewUserComponent {
-  users = [
-    {
-      name: 'John Doe',
-      designation: 'Software Engineer',
-      associatedBusiness: 'Tech Solutions',
-      email: 'john.doe@example.com',
-      mobile: '+1 234 567 890',
-      action: 'Edit',
-      status: 'Active'
-    },]
+  users:any = [
+]
     visible: boolean = false;
     associatedBusinesses:any=[
   ];
+  designationName:any;
+  roleName:any;
+  businessVertical:any;
+  isLoading:boolean=false;
     roles:any=[];
     designations:any=[];
     actionName:any;
   editUserForm:FormGroup;
+  token:any;
+  userId:any;
     statuses:any=[
       { name:'Active',id:1},
    
        {name:'InActive',id:0}
      ]
     constructor(private router:Router,private utilitiesService:UtilitiesService,
-      private fb:FormBuilder,private cdr:ChangeDetectorRef
+      private fb:FormBuilder,private cdr:ChangeDetectorRef,
+      private userService:UserService,private messageService:MessageService
   
     ){
  this.editUserForm= this.fb.group({
@@ -84,10 +86,13 @@ export class ViewUserComponent {
       this.router.navigate(['/create-user'])
     }
 
-    ngOnInit(){
-      this.getRoles();
-    this.getDesignations();
-    this.getBusinessVertical();
+    async ngOnInit(){
+     this.getRoles();
+   this.getDesignations();
+   this.getBusinessVertical();
+  await  this.viewUser();
+    this.userId=localStorage.getItem('userId');
+    this.token=localStorage.getItem('authToken')
     }
     getRoles(){
       this.utilitiesService.getRoles().subscribe((res:any)=>{
@@ -128,11 +133,54 @@ export class ViewUserComponent {
         }
       });
     }
-    
+  
+    viewUser(){
+       this.isLoading=true;
+      this.userService.viewUser().subscribe((res:any)=>{
+         this.isLoading=false;
+        for(let item of res.data){
+          //console.log(this.roles,this.associatedBusinesses,this.designations)
+          let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
+         // console.log("designation ", item.designationId ,designationObj);
+          this.designationName=designationObj?.designation_name
+
+          let businessVerticalObj=this.associatedBusinesses.find((obj:any)=>  { return item.business_vertical==obj.id})
+          // console.log("designation ",businessVerticalObj);
+          this.businessVertical=businessVerticalObj?.business_vertical
+
+          let roleObj=this.roles.find((obj:any)=>  {return item.roleId==obj.id})
+          //console.log("designation ",roleObj);
+          this.roleName=roleObj?.role_name
+
+          this.users.push({
+            ...item,
+            designationName:designationObj?.designation_name,
+            roleName:roleObj?.role_name,
+            associatedBusiness:businessVerticalObj?.business_vertical
+          
+        })
+        
+      }
+      console.log("users ",this.users)
+       
+      },(error:any)=>{
+        this.isLoading=false;
+      })
+    }
     submit(){
-      this.editUserForm.reset();
       if(this.editUserForm.valid){
-        this.visible = false;
+        console.log(this.editUserForm.value)
+       
+        if(this.actionName=='Add User'){
+          this.isLoading=true;
+          this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token}).subscribe((res:any)=>{
+            this.isLoading=false;
+            
+            this.messageService.add({severity:'success',life:300000,summary:'User is Created Succesfully'})
+            this.visible = false;
+          })
+        }
+       
       }
       else{
         Object.keys(this.editUserForm.controls).forEach(controlName=>{

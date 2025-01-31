@@ -1,4 +1,13 @@
 
+<p-toast position="top-center"></p-toast>
+<p-blockUI [blocked]="isLoading">
+  <!-- <p-progressSpinner 
+    styleClass="w-4rem h-4rem" 
+    strokeWidth="8" 
+    fill="var(--surface-ground)" 
+    animationDuration=".5s" /> -->
+    <i class='bx bx-loader-circle fa-spin custom-icon fa-spinner'></i>
+</p-blockUI>
 <div>
   <img
   src="Background_image.png"
@@ -30,19 +39,20 @@
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
         <p-table 
         [value]="users" 
-        [responsive]="true"
         [paginator]="true" 
         [rows]="15"
         styleClass="p-datatable-gridlines" 
-        
-        responsiveLayout="scroll"
          dataKey="code"
-         class="w-full !rounded-lg-border border-gray-200 shadow-md"  [scrollable]="true"
-         responsiveLayout="scroll">
+         class="w-full !rounded-lg-border border-gray-200 shadow-md"  
+         responsiveLayout="scroll"
+         [scrollHeight]="'350px'"
+          [scrollable]="true"
+        >
             <ng-template pTemplate="header" >
                 <tr>
                     <th>Name</th>
                     <th>Designation</th>
+                    <th>Role</th>
                     <th>Associated Business</th>
                     <th>Email</th>
                     <th>Mobile</th>
@@ -53,10 +63,11 @@
             <ng-template pTemplate="body" let-product>
                 <tr>
                     <td>{{ product.name }}</td>
-                    <td>{{ product.designation }}</td>
+                    <td>{{ product.designationName }}</td>
+                    <td>{{product.roleName}}</td>
                     <td>{{ product.associatedBusiness }}</td>
-                    <td>{{ product.email }}</td>
-                    <td>{{ product.mobile }}</td>
+                    <td>{{ product.emailId }}</td>
+                    <td>{{ product.mobileNo }}</td>
                     <td class="text-center" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
                     <td><mat-slide-toggle [aria-label]="product.status=='Active'?'Active':'Inactive'"
                      >

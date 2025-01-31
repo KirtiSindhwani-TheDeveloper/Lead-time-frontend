@@ -14,4 +14,12 @@ export class UserService {
   getUsers():Observable<any>{
     return this.http.get(`${this.url}user/get-user`)
   }
+
+  createUser(data:any):Observable<any>{
+    return this.http.post(`${this.url}user/create-user`,data)
+  }
+
+  viewUser():Observable<any>{
+    return this.http.get(`${this.url}user/view-user`);
+  }
 }
