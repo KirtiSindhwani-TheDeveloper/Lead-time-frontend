@@ -69,16 +69,17 @@ export class LoginComponent {
         if(res.user){
           this.cookieService.set('refreshToken',res.refreshToken)
           localStorage.setItem('authToken',res.accessToken)
-              this.messageService.add({ severity: 'success', summary:'Login Successfully', life: 3000 });
+              
               localStorage.setItem('userId',res.user.userId)
               // localStorage.setItem('authToken', res.data);
               localStorage.setItem('designationId',res.user.designationId)
               localStorage.setItem('roleId',res.user.roleId)
               localStorage.setItem('name',res.user.name)
               localStorage.setItem('status',res.user.status)
-              setTimeout(() => {
-                this.router.navigate(['/dashboard']);
-              },1000);
+              this.router.navigate(['/dashboard']);
+              // setTimeout(() => {
+               
+              // },1000);
              // Navigate to protected route
   
         }

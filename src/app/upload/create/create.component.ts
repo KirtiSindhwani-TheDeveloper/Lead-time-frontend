@@ -568,6 +568,9 @@ search(){
         const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==this.uploadForm.value.brand});
     let brandName=brandObj.brand;
         saveAs(blob, `${brandName}_Format.zip`);
+      },(error:any)=>{
+        this.isLoading=false;
+        this.messageService.add({severity:'error',summary:'Format is not available for this brand',life:300000})
       })
 
     }
@@ -577,6 +580,9 @@ search(){
         const brandObj=this.brands.find((obj:any)=> {return obj.brand_id==this.locationFormGroup.value.brand});
     let brandName=brandObj.brand;
         saveAs(blob, `${brandName}_Format.zip`);
+      },(error:any)=>{
+        this.isLoading=false;
+        this.messageService.add({severity:'error',summary:'Format is not available for this brand',life:300000})
       })
     }
   }
@@ -613,6 +619,9 @@ search(){
     a.click();
     window.URL.revokeObjectURL(url);
     this.isLoading=false;
+  },(error:any)=>{
+    this.isLoading=false;
+    // this.messageService.add({severity:'error',summary:'Erro'})
   });
 }
  async uploadData(data:any,fileTypeObj:any,responses:any,uploadedFiles:any){

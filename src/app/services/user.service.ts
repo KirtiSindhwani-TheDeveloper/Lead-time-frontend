@@ -22,4 +22,12 @@ export class UserService {
   viewUser():Observable<any>{
     return this.http.get(`${this.url}user/view-user`);
   }
+
+  deleteUser(data:any):Observable<any>{
+    return this.http.post(`${this.url}user/delete-user`,data);
+  }
+
+  editUser(data:any):Observable<any>{
+    return this.http.post(`${this.url}user/edit-user`,data);
+  }
 }

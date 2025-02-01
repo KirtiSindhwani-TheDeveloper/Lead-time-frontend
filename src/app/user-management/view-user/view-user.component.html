@@ -39,13 +39,13 @@
       <!-- [tableStyle]="{ 'min-width': '40rem' }" -->
         <p-table 
         [value]="users" 
-        [paginator]="true" 
+        [paginator]="true"
         [rows]="15"
         styleClass="p-datatable-gridlines" 
          dataKey="code"
          class="w-full !rounded-lg-border border-gray-200 shadow-md"  
          responsiveLayout="scroll"
-         [scrollHeight]="'350px'"
+         [scrollHeight]="'380px'"
           [scrollable]="true"
         >
             <ng-template pTemplate="header" >
@@ -69,9 +69,11 @@
                     <td>{{ product.emailId }}</td>
                     <td>{{ product.mobileNo }}</td>
                     <td class="text-center" ><i class='bx bx-edit cursor-pointer' (click)="showDialog('Edit User',product)"></i></td>
-                    <td><mat-slide-toggle [aria-label]="product.status=='Active'?'Active':'Inactive'"
-                     >
-                    </mat-slide-toggle></td>
+                    <td class="p-2"><mat-slide-toggle 
+                    
+                    [ngModel]="setToggleState(product)" 
+                    (ngModelChange)="onStatusChange(product,product.status)">
+                </mat-slide-toggle></td>
                 </tr>
             </ng-template>
     </p-table>
@@ -158,13 +160,13 @@
            </div>
           </div>
           <div class="row">
-           <div class="col-6 p-2 d-flex flex-column">
+           <!-- <div class="col-6 p-2 d-flex flex-column">
               <span class="font-semibold">Password </span>
               <input type="text" pInputText formControlName="password" placeholder="Enter Password"/>
               <div *ngIf="editUserForm.get('password')?.touched && editUserForm.get('password')?.invalid">
                 <small *ngIf="editUserForm.get('password')?.hasError('required')" style="color: red; font-size: 12px;">Password is required.</small>
               </div>
-             </div>
+             </div> -->
              
              <div class="col-6 p-2 d-flex flex-column">
                <span class="font-semibold">Status</span>
@@ -172,6 +174,7 @@
                [options]="statuses" 
               formControlName="status"
                optionLabel="name" 
+               optionValue="name"
                placeholder="Enter Status" />
                <div *ngIf="editUserForm.get('status')?.touched && editUserForm.get('status')?.invalid">
                 <small *ngIf="editUserForm.get('status')?.hasError('required')" style="color: red; font-size: 12px;">Status is required.</small>

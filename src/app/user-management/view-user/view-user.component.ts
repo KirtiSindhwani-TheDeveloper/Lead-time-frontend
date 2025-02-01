@@ -11,6 +11,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UserManagementModule } from '../user-management.module';
 import { UserService } from '../../services/user.service';
 import { MessageService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-view-user',
@@ -33,18 +34,20 @@ export class ViewUserComponent {
     designations:any=[];
     actionName:any;
   editUserForm:FormGroup;
+  rowId:any;
   token:any;
   userId:any;
     statuses:any=[
       { name:'Active',id:1},
    
-       {name:'InActive',id:0}
+       {name:'Inactive',id:0}
      ]
     constructor(private router:Router,private utilitiesService:UtilitiesService,
       private fb:FormBuilder,private cdr:ChangeDetectorRef,
       private userService:UserService,private messageService:MessageService
   
     ){
+     
  this.editUserForm= this.fb.group({
     // Define each form control with validators combined using Validator.compose
     name: ['', Validators.compose([Validators.required])],
@@ -53,26 +56,32 @@ export class ViewUserComponent {
     email: ['', Validators.compose([Validators.required, Validators.email])],
     mobileNo: ['', Validators.compose([Validators.required, Validators.pattern('^[0-9]{10}$')])],
     associatedBusiness: ['', Validators.required],
-    password: ['', Validators.required],
     status: ['', Validators.required]
   });
 }
   
 
   showDialog(action:any,rowData?:any) {
-
+ //  console.log(rowData)
     this.actionName=action;
     if(this.actionName=='Add User'){
       this.editUserForm.reset();
     }else{
+      this.rowId=rowData.userId;
+      let designationObj=this.designations.find((obj:any)=>{ return obj.id==rowData.designationId})
+      let roleObj=this.roles.find((obj:any)=>{return obj.id==rowData.roleId})
+      let verticalObj=this.associatedBusinesses.find((obj:any)=>{return obj.id==rowData.business_vertical})
+      let statusObj=this.statuses.find((obj:any)=>{return obj.name==rowData.status})
+      console.log(roleObj,designationObj,verticalObj,statusObj)
       this.editUserForm.patchValue({
         name: rowData.name,
-        email: rowData.email,
-        designation:rowData.designation,
-        mobileNo:rowData.mobile,
-        userId:rowData.userId,
-        password:rowData.password,
-        status:rowData.status
+        email: rowData.emailId,
+        designation: designationObj ? designationObj.id : null,  // Patch the ID, not the name
+        role: roleObj ? roleObj.id : null,  // Patch the ID, not the name
+        associatedBusiness: verticalObj ? verticalObj.id : null,  // Patch the ID, not the name
+        mobileNo: rowData.mobileNo,
+        userId: rowData.userId,
+        status: statusObj?statusObj?.name:null
       });
     }
     this.visible = true;
@@ -86,30 +95,79 @@ export class ViewUserComponent {
       this.router.navigate(['/create-user'])
     }
 
-    async ngOnInit(){
-     this.getRoles();
-   this.getDesignations();
-   this.getBusinessVertical();
-  await  this.viewUser();
+     ngOnInit(){
+    
+      this.getRoles();
+      this.getDesignations();
+      this.getBusinessVertical();
+   setTimeout(()=>{
+
+     this.viewUser();
+   },7000)
+
+   
+
+ 
+  
     this.userId=localStorage.getItem('userId');
     this.token=localStorage.getItem('authToken')
     }
+
+    getToggleStatus(product: any): boolean {
+      return product.status === 'Active';
+    }
+  
+    setToggleStatus(product: any, value: boolean): void {
+      product.status = value ? 'Active' : 'Inactive';
+    }
+    setToggleState(product: any): boolean {
+      return product.status === 'Active'; // true if 'Active', false if 'Inactive'
+    }
+  
+    onStatusChange(product: any,status:any) {
+      // this.setToggleStatus(product, this.getToggleStatus(product));
+      //let status=product.status === 'Active' ? 'Inactive' : 'Active'
+      // This ensures that the status is updated correctly when toggling
+      product.status = product.status === 'Active' ? 'Inactive' : 'Active';
+
+      console.log(product);
+      this.userService.deleteUser({...product,token:this.token,loginUserId:this.userId}).subscribe((res:any)=>{
+        this.viewUser();
+      })
+  }
     getRoles(){
+      this.isLoading=true;
       this.utilitiesService.getRoles().subscribe((res:any)=>{
+        // this.isLoading=false;
         this.roles=res.data;
+      },(error:any)=>{
+        this.isLoading=false;
+        console.log("roles error ",error)
       })
     }
   
     getDesignations(){
+      this.isLoading=true;
       this.utilitiesService.getDesignations().subscribe((res:any)=>{
+        // this.isLoading=false;;
         this.designations=res.data;
+      },(error:any)=>{
+        this.isLoading=false;
+        console.log("designtion error ",error)
       })
     }
+
     getBusinessVertical(){
+      this.isLoading=true;
       this.utilitiesService.getBusinessVertical().subscribe((res:any)=>{
+        // this.isLoading=false;
         this.associatedBusinesses=res.data;
+      },(error:any)=>{
+        this.isLoading=false
+        console.log("vertical error ",error)
       })
     }
+
     cancel(){
        this.editUserForm.reset();  // Resets form values to their initial state
       
@@ -138,6 +196,7 @@ export class ViewUserComponent {
        this.isLoading=true;
       this.userService.viewUser().subscribe((res:any)=>{
          this.isLoading=false;
+         let userArray=[];
         for(let item of res.data){
           //console.log(this.roles,this.associatedBusinesses,this.designations)
           let designationObj=this.designations.find((obj:any)=> {return item.designationId==obj.id})
@@ -152,7 +211,7 @@ export class ViewUserComponent {
           //console.log("designation ",roleObj);
           this.roleName=roleObj?.role_name
 
-          this.users.push({
+          userArray.push({
             ...item,
             designationName:designationObj?.designation_name,
             roleName:roleObj?.role_name,
@@ -161,12 +220,14 @@ export class ViewUserComponent {
         })
         
       }
-      console.log("users ",this.users)
+      this.users=userArray;
+     // console.log("users ",this.users)
        
       },(error:any)=>{
         this.isLoading=false;
       })
     }
+
     submit(){
       if(this.editUserForm.valid){
         console.log(this.editUserForm.value)
@@ -175,9 +236,26 @@ export class ViewUserComponent {
           this.isLoading=true;
           this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token}).subscribe((res:any)=>{
             this.isLoading=false;
+            this.messageService.add({severity:'success',life:300000,summary:'User is created Succesfully'})
             
-            this.messageService.add({severity:'success',life:300000,summary:'User is Created Succesfully'})
+            this.viewUser();
             this.visible = false;
+          },(error:any)=>{
+            this.isLoading=false;
+            this.messageService.add({severity:'error',life:30000000,summary:'Error in creating User...'})
+          })
+        }
+        else{
+          this.isLoading=true;
+          this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token}).subscribe((res:any)=>{
+            this.isLoading=false;
+            this.messageService.add({severity:'success',life:30000000,summary:'User is updated Succesfully.'})
+            console.log(this.roles,this.designations)
+            this.viewUser();
+            this.visible=false;
+          },(error:any)=>{
+            this.isLoading=false;
+            this.messageService.add({severity:'error',life:30000000,summary:'Error in updating User...'})
           })
         }
        
@@ -188,4 +266,5 @@ export class ViewUserComponent {
         })
       }
     }
+
 }

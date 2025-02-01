@@ -1,6 +1,12 @@
 th{
     background-color: var(--theme-color);
     color: white !important;
+    font-size: 12px;
+    padding: 7px;
+}
+td{
+    font-size: 12px;
+    padding: 7px;
 }
 .card{
     /* background-color: var(--theme-color); */
@@ -102,9 +108,10 @@ th{
     background: green !important;
 }
 
-:host ::ng-deep span.p-element.p-dropdown-label.p-inputtext.p-placeholder{
+:host ::ng-deep span.p-element.p-dropdown-label.p-inputtext{
     padding: 8px !important;
 }
+
 
 @media (min-width:768px) and (max-width:1024px) {
 
