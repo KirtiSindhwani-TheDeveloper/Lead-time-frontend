@@ -70,6 +70,7 @@ export class AuthService {
     localStorage.removeItem('roleId')
     localStorage.removeItem('status')
     localStorage.removeItem('name')
+    localStorage.setItem('isLoggedIn','false')
     this.cookieService.deleteAll()
     // localStorage.removeItem(this.refreshTokenKey);
     this.loggedIn.next(false);

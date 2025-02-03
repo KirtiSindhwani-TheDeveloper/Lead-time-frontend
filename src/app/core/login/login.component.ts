@@ -76,6 +76,7 @@ export class LoginComponent {
               localStorage.setItem('roleId',res.user.roleId)
               localStorage.setItem('name',res.user.name)
               localStorage.setItem('status',res.user.status)
+              localStorage.setItem('isLoggedIn','true')
               this.router.navigate(['/dashboard']);
               // setTimeout(() => {
                

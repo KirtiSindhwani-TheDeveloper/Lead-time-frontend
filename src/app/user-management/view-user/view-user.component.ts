@@ -12,7 +12,7 @@ import { UserManagementModule } from '../user-management.module';
 import { UserService } from '../../services/user.service';
 import { MessageService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
-
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-view-user',
   imports: [PrimengModule, MatSlideToggleModule, SharedModule, FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent, HeaderComponent],
@@ -98,16 +98,6 @@ export class ViewUserComponent {
      ngOnInit(){
     
       this.getRoles();
-      this.getDesignations();
-      this.getBusinessVertical();
-   setTimeout(()=>{
-
-     this.viewUser();
-   },7000)
-
-   
-
- 
   
     this.userId=localStorage.getItem('userId');
     this.token=localStorage.getItem('authToken')
@@ -140,6 +130,7 @@ export class ViewUserComponent {
       this.utilitiesService.getRoles().subscribe((res:any)=>{
         // this.isLoading=false;
         this.roles=res.data;
+        this.getDesignations();
       },(error:any)=>{
         this.isLoading=false;
         console.log("roles error ",error)
@@ -151,6 +142,7 @@ export class ViewUserComponent {
       this.utilitiesService.getDesignations().subscribe((res:any)=>{
         // this.isLoading=false;;
         this.designations=res.data;
+        this.getBusinessVertical();
       },(error:any)=>{
         this.isLoading=false;
         console.log("designtion error ",error)
@@ -162,6 +154,7 @@ export class ViewUserComponent {
       this.utilitiesService.getBusinessVertical().subscribe((res:any)=>{
         // this.isLoading=false;
         this.associatedBusinesses=res.data;
+        this.viewUser();
       },(error:any)=>{
         this.isLoading=false
         console.log("vertical error ",error)
@@ -169,19 +162,42 @@ export class ViewUserComponent {
     }
 
     cancel(){
+      this.markFormControlsAsUntouched();
+      this.visible=false
        this.editUserForm.reset();  // Resets form values to their initial state
       
-      this.markFormControlsAsUntouched();
 
     // Step 2: Trigger change detection to apply changes
     this.cdr.detectChanges();
 
-      this.visible=false
+      
       // this.editUserForm.markAsUntouched(); // Marks all controls as untouched
       // this.editUserForm.markAsPristine(); // Marks all controls as pristine
   
     }
      
+
+    exportToExcel(): void {
+
+      let data:any=[];
+      this.users.forEach((item:any)=>{
+        data.push({
+          Name:item.name,
+        Role:item.roleName,
+        Designation:item.designationName,
+        'Email Id':item.emailId,
+        'Mobile No':item.mobileNo,
+        'Business Vertical':item.associatedBusiness
+        })
+        
+      })
+      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data); // Convert JSON data to worksheet
+      const wb: XLSX.WorkBook = XLSX.utils.book_new(); // Create a new workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); // Append worksheet to workbook
+  
+      // Export the workbook to a file
+      XLSX.writeFile(wb, 'Users List.xlsx');
+    }
     private markFormControlsAsUntouched() {
       Object.keys(this.editUserForm.controls).forEach(controlName => {
         const control = this.editUserForm.get(controlName);

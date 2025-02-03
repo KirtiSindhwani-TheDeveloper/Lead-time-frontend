@@ -20,19 +20,21 @@ export class DashboardComponent {
 
    
   }
-  ngOnInit(){
+  ngAfterViewInit(){
     this.userName=localStorage.getItem('name');
-    // this.router.events.subscribe(event => {
-    //   if (event instanceof NavigationStart) {
-    //     // Trigger the toast when a route change starts
-    //     this.messageService.add({
-    //       severity: 'info',
-    //       summary: 'Navigating',
-    //       detail: `You are navigating to: ${event.url}`,
-    //       life: 3000
-    //     });
-    //   }
-    // });
-    this.messageService.add({ severity: 'success', summary:'Login Successfully', life: 300000 });
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      // Show a toast message
+      // console.log("taost is appearing")
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Welcome!',
+        detail: 'You are now logged in.',
+        life: 300000
+      });
+    } else {
+      // Redirect to login page if not logged in
+      this.router.navigate(['/login']);
+    }
+
   }
 }

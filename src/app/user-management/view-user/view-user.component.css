@@ -1,6 +1,6 @@
 th{
-    background-color: var(--theme-color);
-    color: white !important;
+    /* background-color: var(--theme-color);
+    color: white !important; */
     font-size: 12px;
     padding: 7px;
 }
@@ -50,7 +50,9 @@ td{
     align-items: center !important;
 
 }
-
+:host ::ng-deep .p-dialog-header.ng-tns-c1946505645-1.ng-star-inserted{
+    padding-block: 8px;
+}
 :host::ng-deep button.p-ripple.p-element.p-button.p-component:focus-visible{
     outline: none !important;
     border: none !important;

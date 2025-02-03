@@ -1,4 +1,4 @@
-<div class="h-[100vh] w-[100vw] overflow-y-auto overflow-x-hidden">
+<div class="h-[100vh] w-[100vw]  overflow-hidden">
    
     <p-toast position="top-center"></p-toast>
     <p-blockUI [blocked]="isLoading">
@@ -103,7 +103,7 @@
                <td class="text-center">
                    <p-checkbox 
                    binary="true"
-                       [(ngModel)]="role.others" 
+                       [(ngModel)]="role.other" 
                        (onChange)="updateRoleState(role, 'others', $event)"
                        [disabled]="selectedRow !== i">
                    </p-checkbox>
@@ -112,8 +112,16 @@
                    <i class="bx bx-edit cursor-pointer" (click)="editRow(i)"></i>
                </td>
                <td>
-                   <button pButton type="button" label="Update" class="btn-submit cursor-pointer" [disabled]="selectedRow !== i || !isSubmitEnabled" (click)="submit(role)"></button>
-               </td>
+                   <button pButton type="button" label="Update" class="btn-submit cursor-pointer" [disabled]="selectedRow !== i || !isSubmitEnabled" (click)="submit(role,role.id)"></button>
+                  
+                </td>
+           </tr>
+           <tr class="text-center">
+            <td >
+                <div *ngIf="role.showErrorMessage" class="text-red-500 mt-1 " style="font-size: 12px;">
+                    One of the bussiness vertical must be selected !
+                </div>
+            </td>
            </tr>
        </ng-template>
    </p-table>
