@@ -190,4 +190,22 @@
         </form>
     </p-dialog>
 </div> 
+
+<p-dialog 
+    header="Two Factor Authentication" 
+    [(visible)]="visibleTwoFactor" 
+    [modal]="true" 
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
+    [style]="{ width: '50vw' }" 
+    [draggable]="false" 
+    [resizable]="false">
+    <div *ngIf="qrCodeUrl" class="d-flex justify-center align-items-center flex-column">
+      <h3>Scan this QR code with Google Authenticator</h3>
+      <img [src]="qrCodeUrl" alt="QR Code">
+      <div>
+        <input type="text" [(ngModel)]="OTP" name="token" placeholder="Enter OTP" class="p-2 me-4">
+        <button (click)="verifyOTP()" class="w-30 h-50 btn verify-btn">Verify OTP</button>
+      </div>
+    </div>
+</p-dialog>
   

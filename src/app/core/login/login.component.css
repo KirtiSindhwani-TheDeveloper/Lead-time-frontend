@@ -114,6 +114,22 @@ input:focus-visible{
     width: 555px !important;
 } */
 
+.verify-btn{
+  background-color: var(--theme2-color);
+  color: white;
+  font-weight: 500;
+}
+
+.verify-btn:active{
+  background-color: var(--theme2-color);
+  color: white;
+  font-weight: 500;
+  border: none;
+}
+
+:host::ng-deep .p-dialog-header.ng-tns-c1946505645-4.ng-star-inserted{
+  padding-block: 8px !important;
+}
 @media (min-width: 768px) and (max-width: 992px) {
     :host ::ng-deep input.p-inputtext.p-component.p-element {
         background-color: #E8F0FE !important;

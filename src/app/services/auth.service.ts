@@ -90,6 +90,10 @@ export class AuthService {
     return !!localStorage.getItem('authToken'); 
   }
 
+  twoFactorAuthentication(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}auth-user/verify`,data)
+  }
+
  
 
 }

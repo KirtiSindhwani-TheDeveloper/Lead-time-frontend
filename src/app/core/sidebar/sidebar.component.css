@@ -105,3 +105,9 @@ li.subsidebar{
   background-color: #34495e7d; /* Add your desired active background color */
   color: white;
 }
+
+
+a.submenu-title:hover{
+  display: block;
+ 
+}

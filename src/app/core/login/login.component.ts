@@ -21,8 +21,13 @@ export class LoginComponent {
   visible: boolean = false;
   formSubmitted:boolean = false;
   isPasswordFilledVisible:boolean=false;
+  visibleTwoFactor:boolean=false;
   otp:any;
+  secretKey:any;
   token:any;
+  qrCodeUrl: string = '';
+  OTP: string = '';
+  loginUser:any=[];
   private modalVisibilitySubscription: any;
   getOtp:boolean=true;
   userLoginInputDetails : FormGroup = new FormGroup({
@@ -66,24 +71,26 @@ export class LoginComponent {
       this.isLoading=true;
       this.authService.login({email:email,userPassword:password}).subscribe((res:any)=>{
        
+        this.visibleTwoFactor=true;
+        this.secretKey=res.secret
+        this.loginUser={...res.user,refreshToken:res.refreshToken,accessToken:res.accessToken};
         if(res.user){
-          this.cookieService.set('refreshToken',res.refreshToken)
-          localStorage.setItem('authToken',res.accessToken)
+          // this.cookieService.set('refreshToken',res.refreshToken)
+          // localStorage.setItem('authToken',res.accessToken)
               
-              localStorage.setItem('userId',res.user.userId)
-              // localStorage.setItem('authToken', res.data);
-              localStorage.setItem('designationId',res.user.designationId)
-              localStorage.setItem('roleId',res.user.roleId)
-              localStorage.setItem('name',res.user.name)
-              localStorage.setItem('status',res.user.status)
-              localStorage.setItem('isLoggedIn','true')
-              this.router.navigate(['/dashboard']);
-              // setTimeout(() => {
-               
-              // },1000);
-             // Navigate to protected route
+          //     localStorage.setItem('userId',res.user.userId)
+          //     // localStorage.setItem('authToken', res.data);
+          //     localStorage.setItem('designationId',res.user.designationId)
+          //     localStorage.setItem('roleId',res.user.roleId)
+          //     localStorage.setItem('name',res.user.name)
+          //     localStorage.setItem('status',res.user.status)
+          //     localStorage.setItem('isLoggedIn','true')
+             this.qrCodeUrl=res.qr
+            
   
         }
+
+        
         this.isLoading=false;
       },(error:any)=>{
         this.isLoading=false;
@@ -97,6 +104,48 @@ export class LoginComponent {
       });
     }
      
+  }
+
+  verifyOTP(){
+    //console.log(this.token)
+    if(!this.OTP){
+      
+      this.messageService.add({severity:'error',life:30000,detail:'OTP cannot be Blank...'})
+      return;
+    }
+    else{
+      this.isLoading=true;
+      this.authService.twoFactorAuthentication({token:this.OTP,secret:this.secretKey}).subscribe( (response) => {
+        // this.messageService.add({severity:'success',life:300000,summary:'Invalid OTP',detail:'Try Again!!'})
+         this.isLoading=false;
+         console.log("loginUser ",this.loginUser)
+         this.cookieService.set('refreshToken',this.loginUser?.refreshToken)
+          localStorage.setItem('authToken',this.loginUser?.accessToken)
+              
+              localStorage.setItem('userId',this.loginUser?.userId)
+              // localStorage.setItem('authToken', this.loginUser?.data);
+              localStorage.setItem('designationId',this.loginUser?.designationId)
+              localStorage.setItem('roleId',this.loginUser?.roleId)
+              localStorage.setItem('name',this.loginUser?.name)
+              localStorage.setItem('status',this.loginUser?.status)
+              localStorage.setItem('isLoggedIn','true');
+              this.userLoginInputDetails.reset();
+              this.router.navigate(['/dashboard']);
+              this.OTP=''
+        // alert('2FA verified successfully!');
+      },
+      (error) => {
+        this.isLoading=false;
+        this.OTP=''
+        this.messageService.add({severity:'error',life:300000,summary:'Invalid OTP',detail:'Try re-scanning QR Code Again!!'})
+        // alert('Invalid OTP');
+      })
+
+    }
+  }
+
+  showAuthDialog(){
+    this.visibleTwoFactor=true;
   }
 
 cancel(){

@@ -116,10 +116,10 @@
                   
                 </td>
            </tr>
-           <tr class="text-center">
-            <td >
-                <div *ngIf="role.showErrorMessage" class="text-red-500 mt-1 " style="font-size: 12px;">
-                    One of the bussiness vertical must be selected !
+           <tr class="text-center" *ngIf="role.showErrorMessage">
+            <td colspan="8" class="text-center">
+                <div class="text-red-500 mt-1" style="font-size: 12px;">
+                    One of the business verticals must be selected!
                 </div>
             </td>
            </tr>

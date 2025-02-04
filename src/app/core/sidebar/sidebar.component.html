@@ -40,14 +40,15 @@
 
   <div class="sidebar">
     <ul class="menu">
-      <li *ngFor="let item of sidebarItems" [class.active]="item.isActive" class="f-18" routerLinkActive="active">
+      <li *ngFor="let item of sidebarItems" [class.active]="item.isActive" class="f-18" routerLinkActive="active" >
         
         <!-- Main Menu Item -->
-        <a class="submenu-title cursor-pointer" (click)="toggleSubMenu(item)" [ngClass]="item.isActive ? 'active-item' : ''">
+
+        <a class="submenu-title cursor-pointer text-balance line-clamp-1 full-name" (click)="toggleSubMenu(item)" [ngClass]="item.isActive ? 'active-item' : ''">
           <!-- Chevron Icon -->
-          <i class="icon" [ngClass]="item.isOpen ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"></i>
-          {{ item.label }}
-        </a>
+          <i class="icon " [ngClass]="item.isOpen ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"></i>
+             {{ item.label }}
+           </a>
         
         <!-- Submenu -->
         <ul  *ngIf="item.isOpen" class="submenu">
