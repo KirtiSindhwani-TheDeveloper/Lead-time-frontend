@@ -202,7 +202,7 @@ export class CreateRoleComponent {
       this.roleService.createRole({...formValues,...formValues.checkboxes,userId:this.userId,token:this.token}).subscribe((res:any)=>{
         this.isLoading=false;
         this.roleForm.reset();
-        this.messageService.add({severity:'success' ,summary:'Role has created Successfully',life:30000000})
+        this.messageService.add({severity:'success' ,summary:'Role has created Successfully',life:10000})
       },(error:any)=>{
         this.isLoading=false;
         this.roleForm.reset();

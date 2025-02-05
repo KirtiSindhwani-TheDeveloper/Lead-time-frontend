@@ -729,7 +729,7 @@ search(){
         await this.handleUploadLogs(noResponse,true);
       }
       if(firstResponse.data?.insertResponse==false && secondResponse?.data?.insertResponse==false){
-        this.messageService.add({ severity: 'success', summary:`Your data has been successfully uploaded`, life: 100000 });
+        this.messageService.add({ severity: 'success', summary:`Your data has been successfully uploaded`, life: 10000 });
        
         await this.handleUploadLogs(noResponse,false);
       }
@@ -754,7 +754,7 @@ search(){
         this.messageService.add({ severity: 'error', summary:`Part Number,Dealer and Location cannot be blank`, life: 1000000 });
       }
       if(response?.data?.insertResponse==false){
-        this.messageService.add({ severity: 'success', summary:`Your data has been successfully uploaded`, life: 1000000 });
+        this.messageService.add({ severity: 'success', summary:`Your data has been successfully uploaded`, life: 10000 });
       }
 
       let uploadLogsResponse;

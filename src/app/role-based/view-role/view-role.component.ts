@@ -68,7 +68,7 @@ export class ViewRoleComponent {
       this.isLoading=true;
       this.roleService.editRole({...rowData,token:this.token,userId:this.userId}).subscribe((res:any)=>{
         this.isLoading=false;
-        this.messageService.add({severity:'success',summary:'Role updated successfully',life:30000})
+        this.messageService.add({severity:'success',summary:'Role updated successfully',life:10000})
         this.viewRole();
       },(error:any)=>{
         this.isLoading=false;

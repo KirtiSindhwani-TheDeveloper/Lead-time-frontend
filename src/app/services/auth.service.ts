@@ -94,6 +94,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}auth-user/verify`,data)
   }
 
+  generateQR():Observable<any>{
+    return this.http.get(`${this.apiUrl}auth-user/generate-qr`)
+  }
+
  
 
 }

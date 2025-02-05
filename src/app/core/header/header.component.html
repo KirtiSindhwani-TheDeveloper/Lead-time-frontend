@@ -19,6 +19,7 @@
       </div>
     </nav>
   </header> -->
+  <p-toast></p-toast>
   <div class="w-[100vw] h-[10vh] bg-customBlue mx-auto flex justify-between overflow-x-hidden ">
     <div class="flex  h-full p-1 ">
         <img src="sparecarelogo.png" alt="sparcare logo">
@@ -30,4 +31,22 @@
         <p-tieredMenu #menu [model]="items"  [popup]="true" />
     </div>
 </div>
+
+<p-dialog header="Update Password" [(visible)]="showDialog" [style]="{ width: '25rem' }">
+
+  <form [formGroup]="updatePassForm">
+
+    <span>Email Id</span>
+    <input type="text" pInputText formControlName="email" />
+    <div *ngIf="updatePassForm.get('email')?.touched && updatePassForm.get('email')?.invalid">
+      <small *ngIf="updatePassForm.get('email')?.hasError('required')" style="color: red; font-size: 12px;">Email is required.</small>
+    </div>
+    <div *ngIf="updatePassForm.get('email')?.touched && updatePassForm.get('email')?.invalid">
+      <small *ngIf="updatePassForm.get('email')?.hasError('email')" style="color: red; font-size: 12px;">Enter a Valid Email.</small>
+    </div> 
+    <button (click)="onSubmit()">Submit</button>
+  </form>
+
+  <!-- <span class="font-semibold">Email has been sent to your registred ID.</span> -->
+</p-dialog>
   

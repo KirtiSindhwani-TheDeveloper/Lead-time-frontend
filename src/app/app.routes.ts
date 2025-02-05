@@ -9,6 +9,7 @@ import { authGuard } from './auth.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreateRoleComponent } from './role-based/create-role/create-role.component';
 import { ViewRoleComponent } from './role-based/view-role/view-role.component';
+import { UpdatePasswordWhileCreateUserComponent } from './core/update-password-while-create-user/update-password-while-create-user.component';
 
 
 export const routes: Routes = [
@@ -57,6 +58,12 @@ export const routes: Routes = [
         component:ViewRoleComponent,
        
         canActivate:[authGuard]
+    },
+    {
+        path:'update-user-password',
+        component:UpdatePasswordWhileCreateUserComponent,
+       
+       
     },
     {
         path: '**', redirectTo:'login',

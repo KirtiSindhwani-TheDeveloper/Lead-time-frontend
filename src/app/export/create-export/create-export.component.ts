@@ -144,7 +144,7 @@ export class CreateExportComponent {
        fileName+=this.currentDateTime
       // Trigger the download for file1
      await this.downloadFile(response, fileName);  // Adjust the name as needed
-      this.messageService.add({severity:'success',summary:'Lead Time Output File has been generated successfully',life:3000000})
+      this.messageService.add({severity:'success',summary:'Lead Time Output File has been generated successfully',life:10000})
       this.loading=true;
       this.exportService.downloadLogs(exportValue).subscribe(async (res:any)=>{
         let fileName='Error_Logs_'+this.brand;
@@ -156,7 +156,7 @@ export class CreateExportComponent {
             fileName+=this.location+'_';
           }
          fileName+=this.currentDateTime
-         this.messageService.add({severity:'success',summary:'Error Logs File has been generated successfully',life:3000000})
+         this.messageService.add({severity:'success',summary:'Error Logs File has been generated successfully',life:10000})
        await this.downloadFile(res, fileName);
         this.loading=false;
        }

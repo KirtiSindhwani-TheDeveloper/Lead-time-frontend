@@ -245,14 +245,15 @@ export class ViewUserComponent {
     }
 
     submit(){
+
       if(this.editUserForm.valid){
         console.log(this.editUserForm.value)
-       
+       let link="http://localhost:4200/update-user-password";
         if(this.actionName=='Add User'){
           this.isLoading=true;
-          this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token}).subscribe((res:any)=>{
+          this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token,link:link}).subscribe((res:any)=>{
             this.isLoading=false;
-            this.messageService.add({severity:'success',life:300000,summary:'User is created Succesfully'})
+            this.messageService.add({severity:'success',life:10000,summary:'User is created Succesfully'})
             
             this.viewUser();
             this.visible = false;
@@ -265,7 +266,7 @@ export class ViewUserComponent {
           this.isLoading=true;
           this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token}).subscribe((res:any)=>{
             this.isLoading=false;
-            this.messageService.add({severity:'success',life:30000000,summary:'User is updated Succesfully.'})
+            this.messageService.add({severity:'success',life:10000,summary:'User is updated Succesfully.'})
             console.log(this.roles,this.designations)
             this.viewUser();
             this.visible=false;
