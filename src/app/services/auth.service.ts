@@ -98,6 +98,14 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}auth-user/generate-qr`)
   }
 
+  checkEmail(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}auth-user/check-email`,data)
+  }
+
+  updatePasswordWhileCreatingUser(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}auth-user/update-user`,data)
+  }
+
  
 
 }
