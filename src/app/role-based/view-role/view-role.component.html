@@ -54,7 +54,7 @@
                <th class="text-center">HR</th>
                <th class="text-center">OTHERS</th>
                <th class="text-center">Action</th>
-               <th class="text-center">Submit</th>
+               <th class="text-center">Delete</th>
            </tr>
        </ng-template>
        <ng-template pTemplate="body" let-role let-i="rowIndex">
@@ -64,8 +64,9 @@
                    <p-checkbox 
                        [(ngModel)]="role.sims" 
                        (onChange)="updateRoleState(role, 'sims', $event)"
-                       [disabled]="selectedRow !== i"
+                      
                        binary="true">
+                       <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
                <td class="text-center">
@@ -73,7 +74,8 @@
                    binary="true"
                        [(ngModel)]="role.audit" 
                        (onChange)="updateRoleState(role, 'audit', $event)"
-                       [disabled]="selectedRow !== i">
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
                <td class="text-center">
@@ -81,7 +83,8 @@
                    binary="true"
                        [(ngModel)]="role.gainer" 
                        (onChange)="updateRoleState(role, 'gainer', $event)"
-                       [disabled]="selectedRow !== i">
+                      >
+                      <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
                <td class="text-center">
@@ -89,7 +92,8 @@
                    binary="true"
                        [(ngModel)]="role.it" 
                        (onChange)="updateRoleState(role, 'it', $event)"
-                       [disabled]="selectedRow !== i">
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
                <td class="text-center">
@@ -97,7 +101,8 @@
                    binary="true"
                        [(ngModel)]="role.hr" 
                        (onChange)="updateRoleState(role, 'hr', $event)"
-                       [disabled]="selectedRow !== i">
+                      >
+                      <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
                <td class="text-center">
@@ -105,16 +110,22 @@
                    binary="true"
                        [(ngModel)]="role.other" 
                        (onChange)="updateRoleState(role, 'others', $event)"
-                       [disabled]="selectedRow !== i">
+                       >
+                       <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
                <td class="text-center">
                    <i class="bx bx-edit cursor-pointer" (click)="editRow(i)"></i>
                </td>
-               <td>
-                   <button pButton type="button" label="Update" class="btn-submit cursor-pointer" [disabled]="selectedRow !== i || !isSubmitEnabled" (click)="submit(role,role.id)"></button>
+               
+                   <!-- <button pButton type="button" label="Update" class="btn-submit cursor-pointer" [disabled]="selectedRow !== i || !isSubmitEnabled" (click)="submit(role,role.id)"></button> -->
+                   <td class="p-2"><mat-slide-toggle 
+                     
+                    [ngModel]="setToggleState(role)" 
+                    (ngModelChange)="onStatusChange(role,role.status)">
+                </mat-slide-toggle></td>
                   
-                </td>
+            
            </tr>
            <tr class="text-center" *ngIf="role.showErrorMessage">
             <td colspan="8" class="text-center">
@@ -126,9 +137,59 @@
        </ng-template>
    </p-table>
            </div>
-
-        
-        
-
           </div>
   </div>
+
+  <p-dialog header="Edit Role" [modal]="true" [(visible)]="visible" [style]="{ width: '80%' }">
+    <div
+    class="card w-[80vw] h-auto md:w-[80vw] flex flex-col justify-start p-3 bg-[#FDF5E6] rounded-lg shadow-lg">
+    <p-table
+    styleClass="p-datatable-striped"
+      [scrollHeight]="'280px'"
+       [scrollable]="true"
+       [paginator]="true"
+    [rows]="15"
+      [value]="roles"
+      class="bg-white w-full !rounded-lg border !h-[50vh]  border-gray-200 shadow-md"
+    >
+      <!-- Table Header -->
+      <ng-template  pTemplate="header">
+        <tr class="bg-gray-200 text-gray-700 text-sm font-semibold">
+          <th class=" text-left">Business Vertical</th>
+          <th class=" text-left">Module</th>             
+          <th class=" text-left">Sub Module</th>
+          <th class=" text-left">View</th>
+          <th class=" text-left">Edit</th>
+          <th class=" text-left">Add</th>
+          <th class=" text-left">Delete</th>
+          <th class=" text-left">All</th>
+        </tr>
+      </ng-template>
+
+      <!-- Table Body -->
+      <ng-template pTemplate="body" let-customer>
+        <tr
+          class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14"
+        >
+        <td class="!p-3 text-left">SIMS</td>
+          <td class="!p-3 text-left">{{ customer.name }}</td>
+          <td class="!p-3 text-left">{{ customer.industry }}</td>
+          <td class="!p-3 text-center"> <p-checkbox 
+            value="view"/></td>
+         
+          <td class="!p-3 text-center"> <p-checkbox 
+            value="edit"/></td>
+          <td class="!p-3 text-center"> <p-checkbox 
+            value="add "/></td>
+          <td class="!p-3 text-center"> <p-checkbox 
+            value="delete"/></td>
+            <td class="!p-3 text-center"> <p-checkbox 
+              value="all"/></td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+
+
+</div>
+</p-dialog>

@@ -29,6 +29,7 @@ export class UpdatePasswordWhileCreateUserComponent {
   updateForm:FormGroup;
   isOtpVerified:boolean=false;
   expiryTime: any;
+  private timeoutId: any;
   isLinkValid: boolean=true;
   constructor(private authService:AuthService,private messageService:MessageService,private router:Router,
     private fb:FormBuilder,private activatedRoute:ActivatedRoute){
@@ -59,11 +60,33 @@ export class UpdatePasswordWhileCreateUserComponent {
   }
 
   checkLinkValidity() {
+    // const currentTime = Date.now();
+    // if (this.expiryTime && currentTime <= this.expiryTime) {
+    //   this.isLinkValid = true;
+    // } else {
+    //   this.isLinkValid = false;
+    // }
+
     const currentTime = Date.now();
+    
+    // If the link is valid (not expired yet), refresh the page after 15 minutes
     if (this.expiryTime && currentTime <= this.expiryTime) {
       this.isLinkValid = true;
+      const timeLeft = this.expiryTime - currentTime;
+
+      // Set a timeout to refresh the page after the remaining time (15 minutes)
+      this.timeoutId = setTimeout(() => {
+        window.location.reload();  // This will refresh the page
+      }, timeLeft);
     } else {
       this.isLinkValid = false;
+    }
+  }
+
+  ngOnDestroy() {
+    // Clear the timeout if the component is destroyed before 15 minutes
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
     }
   }
 
@@ -131,7 +154,7 @@ let password=this.updateForm.value.password
         // this.messageService.add({severity:'success',life:300000,summary:'Invalid OTP',detail:'Try Again!!'})
          this.isLoading=false;
         this.isOtpVerified=true;
-        
+        this.messageService.add({severity:'success',life:30000,summary:'Your OTP has been verified succesfully!!',detail:'You can submit now!!'})
               //this.router.navigate(['/dashboard']);
               // this.OTP=''
         // alert('2FA verified successfully!');
@@ -178,9 +201,14 @@ let password=this.updateForm.value.password
       console.log("submit ",data)
       this.authService.updatePasswordWhileCreatingUser(data).subscribe((res:any)=>{
         this.isLoading=false;
+        this.messageService.add({severity:'success',life:30000,summary:'Your Password has been created succesfully!!',detail:'You can Login now!!'})
+        this.updateForm.reset();
+        
           this.isSubmitted=true;
       },(error:any)=>{
         this.isLoading=false;
+        this.updateForm.reset();
+        
       })
     }
     else{

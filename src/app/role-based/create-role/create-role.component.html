@@ -89,24 +89,26 @@
             At least one checkbox must be selected!
           </div>
         </form>
-        <div class="flex justify-center w-full items-center">
-          <button (click)="submit()" 
-            class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
-            rounded-lg  focus:outline-none focus:ring-2 
-             focus:ring-opacity-50 sm:text-base
-              md:text-lg lg:text-lg cursor-pointer"
-          >
-            Add Role 
-          </button>
-        </div>
+       
       </div>
     </div>
   
     <div class="flex justify-center">
       <div
-        class="flex flex-row w-[80vw] md:w-[60vw] py-3 md:px-0 justify-between"
-      >
-        <h3 class="font-semibold text-base text-md md:text-xl">Access Settings</h3>
+        class="flex flex-row w-[80vw] md:w-[60vw] py-3 md:px-0 justify-between align-items-center">
+      
+        <!-- <h3 class="font-semibold text-base text-md md:text-xl">Access Settings</h3> -->
+
+          <div class="mb-3">
+              <span class="font-semibold text-base text-md md:text-xl ">Access Settings</span>
+          </div>
+          <div>
+            <!-- <i class="pi pi-user cursor-pointer me-3" style="font-size: 1.5rem;font-weight:bold " ></i> -->
+            <i class='bx bx-download cursor-pointer me-3' style="font-size: 1.5rem;font-weight:bold " ></i>
+            <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold" ></i>
+            
+          </div>
+        
       </div>
     </div>
   
@@ -124,12 +126,14 @@
           <!-- Table Header -->
           <ng-template  pTemplate="header">
             <tr class="bg-gray-200 text-gray-700 text-sm font-semibold">
-              <th class=" text-left">Module</th>
+              <th class=" text-left">Business Vertical</th>
+              <th class=" text-left">Module</th>             
               <th class=" text-left">Sub Module</th>
               <th class=" text-left">View</th>
               <th class=" text-left">Edit</th>
               <th class=" text-left">Add</th>
-              <th class=" text-left">Delete</th>
+              <th class=" text-left">Delete/Inactive</th>
+              <th class=" text-left">All</th>
             </tr>
           </ng-template>
   
@@ -138,17 +142,20 @@
             <tr
               class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14"
             >
-              <td class="!p-3">{{ customer.name }}</td>
-              <td class="!p-3">{{ customer.industry }}</td>
-              <td class="!p-3"> <p-checkbox 
+            <td class="!p-3 text-left">SIMS</td>
+              <td class="!p-3 text-left">{{ customer.name }}</td>
+              <td class="!p-3 text-left">{{ customer.industry }}</td>
+              <td class="!p-3 text-center"> <p-checkbox 
                 value="view"/></td>
              
-              <td class="!p-3"> <p-checkbox 
+              <td class="!p-3 text-center"> <p-checkbox 
                 value="edit"/></td>
-              <td class="!p-3"> <p-checkbox 
+              <td class="!p-3 text-center"> <p-checkbox 
                 value="add"/></td>
-              <td class="!p-3"> <p-checkbox 
+              <td class="!p-3 text-center"> <p-checkbox 
                 value="delete"/></td>
+                <td class="!p-3 text-center"> <p-checkbox 
+                  value="all"/></td>
             </tr>
           </ng-template>
         </p-table>
@@ -156,6 +163,18 @@
     
     
     </div>
+   
+    </div>
+
+    <div class="flex justify-center w-full items-center">
+      <button (click)="submit()" 
+        class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
+        rounded-lg  focus:outline-none focus:ring-2 
+         focus:ring-opacity-50 sm:text-base
+          md:text-lg lg:text-lg cursor-pointer"
+      >
+        Add Role 
+      </button>
     </div>
   </div>
 </div>

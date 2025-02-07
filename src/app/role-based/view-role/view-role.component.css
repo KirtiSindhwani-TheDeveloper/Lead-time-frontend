@@ -29,4 +29,9 @@
     color: white;
 }
 
+:host ::ng-deep .ng-tns-c1946505645-2.p-dialog-content.ng-star-inserted{
+    display: flex;
+    justify-content: center;
+}
+
 

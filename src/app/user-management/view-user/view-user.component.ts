@@ -72,7 +72,7 @@ export class ViewUserComponent {
       let roleObj=this.roles.find((obj:any)=>{return obj.id==rowData.roleId})
       let verticalObj=this.associatedBusinesses.find((obj:any)=>{return obj.id==rowData.business_vertical})
       let statusObj=this.statuses.find((obj:any)=>{return obj.name==rowData.status})
-      console.log(roleObj,designationObj,verticalObj,statusObj)
+      //console.log(roleObj,designationObj,verticalObj,statusObj)
       this.editUserForm.patchValue({
         name: rowData.name,
         email: rowData.emailId,
@@ -121,8 +121,12 @@ export class ViewUserComponent {
       product.status = product.status === 'Active' ? 'Inactive' : 'Active';
 
       console.log(product);
+      this.isLoading=true;
       this.userService.deleteUser({...product,token:this.token,loginUserId:this.userId}).subscribe((res:any)=>{
+        this.isLoading=false;
         this.viewUser();
+      },(error:any)=>{
+        this.isLoading=false;
       })
   }
     getRoles(){

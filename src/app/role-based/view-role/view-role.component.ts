@@ -7,11 +7,12 @@ import { MessageService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { RoleBasedService } from '../../services/role-based.service';
 import { CommonModule } from '@angular/common';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-view-role',
   standalone: true,
-  imports: [HeaderComponent, PrimengModule, SharedModule, SidebarComponent,FormsModule,CommonModule],
+  imports: [HeaderComponent,MatSlideToggleModule, PrimengModule, SharedModule, SidebarComponent,FormsModule,CommonModule],
   providers:[MessageService],
   templateUrl: './view-role.component.html',
   styleUrl: './view-role.component.css'
@@ -24,7 +25,7 @@ export class ViewRoleComponent {
   isSubmitEnabled:boolean=false;
  token:any;
   roles :any=[];
-
+  visible:boolean=false;
 
   constructor(private roleService:RoleBasedService,private messageService:MessageService){
     this.viewRole();
@@ -32,11 +33,34 @@ export class ViewRoleComponent {
     this.userId=localStorage.getItem('userId');
   }
 
+  showDialog(){
+    this.visible=false;
+  }
+
   enableCheckboxes() {
     this.areCheckboxesEnabled = true; // Enable checkboxes when action button is clicked
     this.isSubmitEnabled = true; // Enable the submit button
   }
 
+  setToggleState(product: any): boolean {
+    return product.status === 'Active'; // true if 'Active', false if 'Inactive'
+  }
+
+  onStatusChange(product: any,status:any) {
+    // this.setToggleStatus(product, this.getToggleStatus(product));
+    //let status=product.status === 'Active' ? 'Inactive' : 'Active'
+    // This ensures that the status is updated correctly when toggling
+    product.status = product.status === 'Active' ? 'Inactive' : 'Active';
+
+    console.log(product);
+    this.isLoading=true;
+    this.roleService.deleteRole({...product,token:this.token,loginUserId:this.userId}).subscribe((res:any)=>{
+      this.isLoading=false;
+      this.viewRole();
+    },(error:any)=>{
+      this.isLoading=false;
+    })
+}
   updateRoleState(role: any, field: string, event: any) {
     role[field] = event.checked;
     console.log(`${field} updated for ${role.name}: `, role[field],role);
@@ -48,6 +72,7 @@ export class ViewRoleComponent {
   editRow(index: number) {
     this.selectedRow = index; // Set the selected row index
     this.isSubmitEnabled = true; // Enable the submit button for the selected row
+    this.visible=true;
   }
 
   // Submit the selected row's data
@@ -85,13 +110,14 @@ export class ViewRoleComponent {
       this.isLoading=false;
       this.roles=res.data;
 
-      this.roles.map((item:any) => ({
-        
+      this.roles = this.roles.map((item: any) => ({
         ...item,
-        showErrorMessage:false
+        status: item.status === true ? 'Active' : 'Inactive',  // Convert status to 'active' if true
+        showErrorMessage: false
       }));
     },(error:any)=>{
       this.isLoading=false;
     })
   }
+
 }

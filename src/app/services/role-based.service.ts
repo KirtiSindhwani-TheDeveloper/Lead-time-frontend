@@ -24,4 +24,11 @@ export class RoleBasedService {
     return this.http.post(`${this.apiUrl}roles/edit`,data)
   }
 
+  deleteRole(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}roles/delete`,data)
+  }
+
+  downloadRoleFormat():Observable<any>{
+    return this.http.get(`${this.apiUrl}roles/download-role-format`)
+  }
 }
