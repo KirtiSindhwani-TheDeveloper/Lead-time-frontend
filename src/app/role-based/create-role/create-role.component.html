@@ -120,7 +120,7 @@
           [scrollHeight]="'280px'"
            [scrollable]="true"
            
-          [value]="customers"
+          [value]="allModules"
           class="bg-white w-full !rounded-lg border !h-[50vh]  border-gray-200 shadow-md"
         >
           <!-- Table Header -->
@@ -138,13 +138,13 @@
           </ng-template>
   
           <!-- Table Body -->
-          <ng-template pTemplate="body" let-customer>
-            <tr
+          <ng-template pTemplate="body" let-module>
+            <!-- <tr
               class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14"
             >
             <td class="!p-3 text-left">SIMS</td>
-              <td class="!p-3 text-left">{{ customer.name }}</td>
-              <td class="!p-3 text-left">{{ customer.industry }}</td>
+              <td class="!p-3 text-left">{{ customer.module_name }}</td>
+              <td></td>
               <td class="!p-3 text-center"> <p-checkbox 
                 value="view"/></td>
              
@@ -154,9 +154,35 @@
                 value="add"/></td>
               <td class="!p-3 text-center"> <p-checkbox 
                 value="delete"/></td>
-                <td class="!p-3 text-center"> <p-checkbox 
+                <td class="!p-3 text-center" (change)="toggleSelectAll()"> <p-checkbox 
                   value="all"/></td>
             </tr>
+             -->
+    
+            <!-- Submodule Rows (if any) -->
+            <tr *ngFor="let submodule of module.submodules; let i=index" class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14">
+              <td class="!p-3 text-left">{{submodule.businessVerticalName}}</td>
+              <td>{{submodule.parentModuleName}}</td>
+              <td class="!p-3 text-left">{{ submodule.module_name }}</td>
+              <!-- <td class="!p-3 text-left">-</td> -->
+              <td class="!p-3 text-center">
+                <p-checkbox [(ngModel)]="submodule.view1" binary="true"></p-checkbox>
+              </td>
+              <td class="!p-3 text-center">
+                <p-checkbox [(ngModel)]="submodule.edit1" binary="true" ></p-checkbox>
+              </td>
+              <td class="!p-3 text-center">
+                <p-checkbox [(ngModel)]="submodule.add1" binary="true"></p-checkbox>
+              </td>
+              <td class="!p-3 text-center">
+                <p-checkbox [(ngModel)]="submodule.delete1" binary="true"></p-checkbox>
+              </td>
+              <td class="!p-3 text-center">
+                <p-checkbox [(ngModel)]="submodule.view1" (onChange)="toggleAllForModule(module,$event,i)" binary="true"></p-checkbox>
+              </td>
+            </tr>
+            
+            
           </ng-template>
         </p-table>
     

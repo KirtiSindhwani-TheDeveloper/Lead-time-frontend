@@ -31,4 +31,12 @@ export class RoleBasedService {
   downloadRoleFormat():Observable<any>{
     return this.http.get(`${this.apiUrl}roles/download-role-format`)
   }
+
+  getModules():Observable<any>{
+    return this.http.get(`${this.apiUrl}sidebar/module`)
+  }
+
+  getModulesBasedOnBVID(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}roles/access-setting-on-BVID`,data);
+  }
 }

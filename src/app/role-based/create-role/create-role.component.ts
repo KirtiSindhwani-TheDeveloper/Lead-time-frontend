@@ -7,6 +7,7 @@ import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { CommonModule } from '@angular/common';
 import { atLeastOneCheckedValidator } from '../../shared/validators/atLeastOnCheckedValidator';
 import { MessageService } from 'primeng/api';
+import { UtilitiesService } from '../../services/utilities.service';
 @Component({
   selector: 'app-create-role',
   standalone: true,
@@ -18,125 +19,131 @@ import { MessageService } from 'primeng/api';
 export class CreateRoleComponent {
   isLoading:boolean=false;
   visible:boolean=false;
-  customers = [
-    {
-      name: 'John Doe',
-      industry: 'Technology',
-      segment: 'Retail',
-      status: 'Active',
-      contactNo: '1234567890',
-      address: '1234 Elm Street',
-    },
-    {
-      name: 'Jane Smith',
-      industry: 'Finance',
-      segment: 'Wholesale',
-      status: 'Inactive',
-      contactNo: '9876543210',
-      address: '5678 Oak Avenue',
-    },
-    {
-      name: 'John Doe',
-      industry: 'Technology',
-      segment: 'Retail',
-      status: 'Active',
-      contactNo: '1234567890',
-      address: '1234 Elm Street',
-    },
-    {
-      name: 'Jane Smith',
-      industry: 'Finance',
-      segment: 'Wholesale',
-      status: 'Inactive',
-      contactNo: '9876543210',
-      address: '5678 Oak Avenue',
-    },
-    {
-      name: 'John Doe',
-      industry: 'Technology',
-      segment: 'Retail',
-      status: 'Active',
-      contactNo: '1234567890',
-      address: '1234 Elm Street',
-    },
-    {
-      name: 'Jane Smith',
-      industry: 'Finance',
-      segment: 'Wholesale',
-      status: 'Inactive',
-      contactNo: '9876543210',
-      address: '5678 Oak Avenue',
-    },
-    {
-      name: 'John Doe',
-      industry: 'Technology',
-      segment: 'Retail',
-      status: 'Active',
-      contactNo: '1234567890',
-      address: '1234 Elm Street',
-    },
-    {
-      name: 'Jane Smith',
-      industry: 'Finance',
-      segment: 'Wholesale',
-      status: 'Inactive',
-      contactNo: '9876543210',
-      address: '5678 Oak Avenue',
-    },
-    {
-      name: 'John Doe',
-      industry: 'Technology',
-      segment: 'Retail',
-      status: 'Active',
-      contactNo: '1234567890',
-      address: '1234 Elm Street',
-    },
-    {
-      name: 'Jane Smith',
-      industry: 'Finance',
-      segment: 'Wholesale',
-      status: 'Inactive',
-      contactNo: '9876543210',
-      address: '5678 Oak Avenue',
-    },
-    {
-      name: 'John Doe',
-      industry: 'Technology',
-      segment: 'Retail',
-      status: 'Active',
-      contactNo: '1234567890',
-      address: '1234 Elm Street',
-    },
-    {
-      name: 'Jane Smith',
-      industry: 'Finance',
-      segment: 'Wholesale',
-      status: 'Inactive',
-      contactNo: '9876543210',
-      address: '5678 Oak Avenue',
-    },
-    {
-      name: 'John Doe',
-      industry: 'Technology',
-      segment: 'Retail',
-      status: 'Active',
-      contactNo: '1234567890',
-      address: '1234 Elm Street',
-    },
-    {
-      name: 'Jane Smith',
-      industry: 'Finance',
-      segment: 'Wholesale',
-      status: 'Inactive',
-      contactNo: '9876543210',
-      address: '5678 Oak Avenue',
-    }
-  ];
+  // customers = [
+  //   {
+  //     name: 'John Doe',
+  //     industry: 'Technology',
+  //     segment: 'Retail',
+  //     status: 'Active',
+  //     contactNo: '1234567890',
+  //     address: '1234 Elm Street',
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     industry: 'Finance',
+  //     segment: 'Wholesale',
+  //     status: 'Inactive',
+  //     contactNo: '9876543210',
+  //     address: '5678 Oak Avenue',
+  //   },
+  //   {
+  //     name: 'John Doe',
+  //     industry: 'Technology',
+  //     segment: 'Retail',
+  //     status: 'Active',
+  //     contactNo: '1234567890',
+  //     address: '1234 Elm Street',
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     industry: 'Finance',
+  //     segment: 'Wholesale',
+  //     status: 'Inactive',
+  //     contactNo: '9876543210',
+  //     address: '5678 Oak Avenue',
+  //   },
+  //   {
+  //     name: 'John Doe',
+  //     industry: 'Technology',
+  //     segment: 'Retail',
+  //     status: 'Active',
+  //     contactNo: '1234567890',
+  //     address: '1234 Elm Street',
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     industry: 'Finance',
+  //     segment: 'Wholesale',
+  //     status: 'Inactive',
+  //     contactNo: '9876543210',
+  //     address: '5678 Oak Avenue',
+  //   },
+  //   {
+  //     name: 'John Doe',
+  //     industry: 'Technology',
+  //     segment: 'Retail',
+  //     status: 'Active',
+  //     contactNo: '1234567890',
+  //     address: '1234 Elm Street',
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     industry: 'Finance',
+  //     segment: 'Wholesale',
+  //     status: 'Inactive',
+  //     contactNo: '9876543210',
+  //     address: '5678 Oak Avenue',
+  //   },
+  //   {
+  //     name: 'John Doe',
+  //     industry: 'Technology',
+  //     segment: 'Retail',
+  //     status: 'Active',
+  //     contactNo: '1234567890',
+  //     address: '1234 Elm Street',
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     industry: 'Finance',
+  //     segment: 'Wholesale',
+  //     status: 'Inactive',
+  //     contactNo: '9876543210',
+  //     address: '5678 Oak Avenue',
+  //   },
+  //   {
+  //     name: 'John Doe',
+  //     industry: 'Technology',
+  //     segment: 'Retail',
+  //     status: 'Active',
+  //     contactNo: '1234567890',
+  //     address: '1234 Elm Street',
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     industry: 'Finance',
+  //     segment: 'Wholesale',
+  //     status: 'Inactive',
+  //     contactNo: '9876543210',
+  //     address: '5678 Oak Avenue',
+  //   },
+  //   {
+  //     name: 'John Doe',
+  //     industry: 'Technology',
+  //     segment: 'Retail',
+  //     status: 'Active',
+  //     contactNo: '1234567890',
+  //     address: '1234 Elm Street',
+  //   },
+  //   {
+  //     name: 'Jane Smith',
+  //     industry: 'Finance',
+  //     segment: 'Wholesale',
+  //     status: 'Inactive',
+  //     contactNo: '9876543210',
+  //     address: '5678 Oak Avenue',
+  //   }
+  // ];
+  modules:any;
   userId:any;
   roleForm:FormGroup
   token:any;
+  mainModules: any = [];
+  subModules: any = [];
+  allModules:any=[];
+  associatedBusinesses:any=[];
   constructor(private roleService:RoleBasedService,
-    private fb:FormBuilder,private messageService:MessageService
+    private fb:FormBuilder,private messageService:MessageService,
+    private utilitiesService:UtilitiesService
   ){
     this.roleForm = this.fb.group({
       rolename: ['', Validators.required],
@@ -159,8 +166,86 @@ export class CreateRoleComponent {
       ?.valueChanges.subscribe(() => this.checkAtLeastOneChecked());
   
     this.userId=localStorage.getItem('userId');
-    this.token=localStorage.getItem('authToken')
+    this.token=localStorage.getItem('authToken');
+    
   }
+
+  getModules(){
+    
+    this.roleService.getModules().subscribe((res:any)=>{
+      this.modules=res.data;
+      //console.log("modules ",this.modules)
+      this.organizeModules()
+    })
+  }
+  ngOnInit(){
+    
+    this.getBusinessVerticals();
+  }
+
+  getModulesBasedonBVID(){
+    let data;
+    this.roleService.getModulesBasedOnBVID(data).subscribe((res:any)=>{
+
+    })
+  }
+ // Toggle the "All" checkbox for all submodules
+ toggleAllForModule(module: any,event:any,index:any): void {
+  
+  module.submodules.forEach((submodule: any,i:any) => {
+
+    if(index==i){
+      submodule.view1 = event.checked;
+      submodule.edit1 = event.checked;
+      submodule.add1 = event.checked;
+      submodule.delete1 = event.checked;
+
+    }
+  });
+  console.log("submodules ",event,module.submodules)
+}
+
+// Handling the checkbox change event for individual checkboxes
+onCheckboxChange(submodule: any, checkboxType: string): void {
+  // You can handle any additional logic here
+  console.log(`Checkbox changed for ${checkboxType} of submodule with ID: ${submodule.id}`);
+}
+
+  organizeModules() {
+    
+    this.mainModules = this.modules.filter((module:any) => module?.parentId === 0);
+    this.subModules = this.modules.filter((module:any) => module?.parentId !== 0);
+   // console.log("main and sub",this.mainModules,this.subModules)
+   this.mainModules.forEach((mainModule: any) => {
+    const submodulesForMainModule = this.subModules.filter((submodule: any) => submodule.parentId === mainModule.id);
+  
+    // Step 4: Add parent module's name to each submodule
+    submodulesForMainModule.forEach((submodule: any) => {
+      submodule.parentModuleName = mainModule.module_name; // Add parent module name to submodule
+  
+      // Find the business vertical by matching the business_vertical_id with the id in associatedBusinesses
+      const businessVertical = this.associatedBusinesses.find((obj: any) => submodule.business_vertical_id
+      == obj.id);
+  
+      // Check if businessVertical is found, and if so, add the business_vertical name to the submodule
+      if (businessVertical) {
+        submodule.businessVerticalName = businessVertical.business_vertical;
+      } else {
+        // Handle the case when no matching business vertical is found
+        console.warn(`Business vertical not found for submodule with id: ${submodule.id}`);
+      }
+    });
+  
+    // Attach the submodules to the main module
+    mainModule.submodules = submodulesForMainModule;
+  });
+  
+   
+    // Step 3: Combine main modules and their submodules into a single array
+    this.allModules = this.mainModules;
+    // console.log("all modules ",this.allModules)
+  }
+
 
   checkAtLeastOneChecked() {
     const checkboxes = this.roleForm.get('checkboxes')?.value;
@@ -172,6 +257,7 @@ export class CreateRoleComponent {
       this.roleForm.get('checkboxes')?.setErrors(null);
     }
   }
+  
   get checkboxes() {
     return this.roleForm.get('checkboxes') as FormGroup;
   }
@@ -183,6 +269,17 @@ export class CreateRoleComponent {
     this.visible=true;
   }
 
+  getBusinessVerticals(){
+    this.utilitiesService.getBusinessVertical().subscribe((res:any)=>{
+      // this.isLoading=false;
+      this.associatedBusinesses=res.data;
+      this.getModules();
+      
+    },(error:any)=>{
+      this.isLoading=false
+      console.log("vertical error ",error)
+    })
+  }
   
   submit(){
     if(this.roleForm.valid){
