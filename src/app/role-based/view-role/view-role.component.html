@@ -63,7 +63,7 @@
                <td class="text-center">
                    <p-checkbox 
                        [(ngModel)]="role.sims" 
-                       (onChange)="updateRoleState(role, 'sims', $event)"
+                       (onChange)="updateRoleState(role, 'SIMS', $event)"
                       
                        binary="true">
                        <!-- [disabled]="selectedRow !== i" -->
@@ -73,7 +73,7 @@
                    <p-checkbox 
                    binary="true"
                        [(ngModel)]="role.audit" 
-                       (onChange)="updateRoleState(role, 'audit', $event)"
+                       (onChange)="updateRoleState(role, 'AUDIT', $event)"
                        >
                        <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
@@ -82,7 +82,7 @@
                    <p-checkbox 
                    binary="true"
                        [(ngModel)]="role.gainer" 
-                       (onChange)="updateRoleState(role, 'gainer', $event)"
+                       (onChange)="updateRoleState(role, 'GAINER', $event)"
                       >
                       <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
@@ -91,7 +91,7 @@
                    <p-checkbox 
                    binary="true"
                        [(ngModel)]="role.it" 
-                       (onChange)="updateRoleState(role, 'it', $event)"
+                       (onChange)="updateRoleState(role, 'IT', $event)"
                        >
                        <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
@@ -100,7 +100,7 @@
                    <p-checkbox 
                    binary="true"
                        [(ngModel)]="role.hr" 
-                       (onChange)="updateRoleState(role, 'hr', $event)"
+                       (onChange)="updateRoleState(role, 'HR', $event)"
                       >
                       <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
@@ -109,13 +109,13 @@
                    <p-checkbox 
                    binary="true"
                        [(ngModel)]="role.other" 
-                       (onChange)="updateRoleState(role, 'others', $event)"
+                       (onChange)="updateRoleState(role, 'OTHERS', $event)"
                        >
                        <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
                <td class="text-center">
-                   <i class="bx bx-edit cursor-pointer" (click)="editRow(i)"></i>
+                   <i class="bx bx-edit cursor-pointer" (click)="editRow(i,role)"></i>
                </td>
                
                    <!-- <button pButton type="button" label="Update" class="btn-submit cursor-pointer" [disabled]="selectedRow !== i || !isSubmitEnabled" (click)="submit(role,role.id)"></button> -->
@@ -149,7 +149,7 @@
        [scrollable]="true"
        [paginator]="true"
     [rows]="15"
-      [value]="roles"
+      [value]="allModules"
       class="bg-white w-full !rounded-lg border !h-[50vh]  border-gray-200 shadow-md"
     >
       <!-- Table Header -->
@@ -167,29 +167,45 @@
       </ng-template>
 
       <!-- Table Body -->
-      <ng-template pTemplate="body" let-customer>
-        <tr
-          class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14"
-        >
-        <td class="!p-3 text-left">SIMS</td>
-          <td class="!p-3 text-left">{{ customer.name }}</td>
-          <td class="!p-3 text-left">{{ customer.industry }}</td>
-          <td class="!p-3 text-center"> <p-checkbox 
-            value="view"/></td>
-         
-          <td class="!p-3 text-center"> <p-checkbox 
-            value="edit"/></td>
-          <td class="!p-3 text-center"> <p-checkbox 
-            value="add "/></td>
-          <td class="!p-3 text-center"> <p-checkbox 
-            value="delete"/></td>
-            <td class="!p-3 text-center"> <p-checkbox 
-              value="all"/></td>
+      <ng-template pTemplate="body" let-module>
+          
+            
+        <!-- Submodule Rows (if any) -->
+        <tr *ngFor="let submodule of module.submodules; let i=index" class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14">
+          <td class="!p-3 text-left">{{submodule.businessVerticalName}}</td>
+          <td class="!p-3 text-left">{{submodule.parentModuleName}}</td>
+          <td class="!p-3 text-left">{{ submodule.module_name }}</td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.view1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'view')"></p-checkbox>
+          </td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.edit1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'edit')" ></p-checkbox>
+          </td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.add1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'add')"></p-checkbox>
+          </td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.delete1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'delete')"></p-checkbox>
+          </td>
+          <td class="!p-3 text-center">
+            <p-checkbox [(ngModel)]="submodule.all" (onChange)="toggleAllForModule(module,$event,i,'all')" binary="true"></p-checkbox>
+          </td>
         </tr>
+        
+        <div class="flex justify-center w-full items-center">
+            <button (click)="submit(module)" 
+              class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
+              rounded-lg  focus:outline-none focus:ring-2 
+               focus:ring-opacity-50 sm:text-base
+                md:text-lg lg:text-lg cursor-pointer update-role"
+            >
+              Update Role 
+            </button>
+          </div>
       </ng-template>
     </p-table>
 
-
+   
 
 </div>
 </p-dialog>

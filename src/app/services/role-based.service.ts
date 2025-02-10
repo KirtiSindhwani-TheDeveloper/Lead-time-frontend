@@ -39,4 +39,8 @@ export class RoleBasedService {
   getModulesBasedOnBVID(data:any):Observable<any>{
     return this.http.post(`${this.apiUrl}roles/access-setting-on-BVID`,data);
   }
+
+  getEditModulesBasedOnBVID(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}roles/edit-access-setting-on-BVID`,data);
+  }
 }

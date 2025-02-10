@@ -34,4 +34,9 @@
     justify-content: center;
 }
 
+:host ::ng-deep .update-role{
+    outline: none;
+    box-shadow: none;
+}
+
 

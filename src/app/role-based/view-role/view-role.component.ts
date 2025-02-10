@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { RoleBasedService } from '../../services/role-based.service';
 import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { UtilitiesService } from '../../services/utilities.service';
 
 @Component({
   selector: 'app-view-role',
@@ -26,8 +27,14 @@ export class ViewRoleComponent {
  token:any;
   roles :any=[];
   visible:boolean=false;
-
-  constructor(private roleService:RoleBasedService,private messageService:MessageService){
+  allModules:any=[];
+  mainModules:any=[]
+  modules:any=[];
+  subModules:any=[];
+  associatedBusinesses:any=[];
+  constructor(private roleService:RoleBasedService,private messageService:MessageService,
+    private utilitiesService:UtilitiesService
+  ){
     this.viewRole();
     this.token=localStorage.getItem('authToken');
     this.userId=localStorage.getItem('userId');
@@ -69,39 +76,139 @@ export class ViewRoleComponent {
   selectedRow: number | null = null; // Track the selected row index
  
 
-  editRow(index: number) {
+  ngOnInit(){
+    this.getBusinessVerticals()
+  }
+
+  editRow(index: number,rowData:any) {
     this.selectedRow = index; // Set the selected row index
     this.isSubmitEnabled = true; // Enable the submit button for the selected row
     this.visible=true;
+    const selectedIds =[];
+    //console.log("rowData ",rowData)
+    // Loop through the form values
+    for (let key in rowData) {
+      
+      //console.log(key)
+      if (rowData[key]) {
+        // Push the mapped ID for each checked checkbox
+        const selectedItem = this.associatedBusinesses.find((item:any) => item.business_vertical === key.toLocaleUpperCase());
+        //console.log(selectedItem)
+        if (selectedItem) {
+          selectedIds.push(selectedItem.id);  // Push the corresponding ID
+        }
+      }
+      
+    }
+    this.roleService.getEditModulesBasedOnBVID({vertical_ids:selectedIds,roleId:rowData.id}).subscribe((res:any)=>{
+      this.modules=res.data;
+      this.organizeModules();
+      console.log("allModules ",this.modules)
+      this.isLoading=false;
+    },(error:any)=>{
+      this.isLoading=false;
+    })
   }
 
-  // Submit the selected row's data
-  submit(rowData: any,index?:any) {
-    // Handle the submit logic
-   
-      
+  organizeModules() {
+    
+    this.mainModules = this.modules.filter((module:any) => module?.parentId === 0);
+    this.subModules = this.modules.filter((module:any) => module?.parentId !== 0);
+   // console.log("main and sub",this.mainModules,this.subModules)
+   this.mainModules.forEach((mainModule: any) => {
+    mainModule.view1=false;
+    mainModule.edit1=false;
+    mainModule.delete1=false;
+    mainModule.add1=false;
+    const submodulesForMainModule = this.subModules.filter((submodule: any) => submodule.parentId === mainModule.id);
   
-    if((!rowData.audit) && !rowData.gainer&& !rowData.it && !rowData.other && !rowData.sims){
-      // console.log("index",index,this.roles[index])
-      const role = this.roles.find((r:any) => r.id === rowData.id);
-      if (role) {
-        role.showErrorMessage = true;
-    }
+    // Step 4: Add parent module's name to each submodule
+    submodulesForMainModule.forEach((submodule: any) => {
+      submodule.parentModuleName = mainModule.module_name; // Add parent module name to submodule
+  
+      // Find the business vertical by matching the business_vertical_id with the id in associatedBusinesses
+      const businessVertical = this.associatedBusinesses.find((obj: any) => submodule.business_vertical_id
+      == obj.id);
+  
+      // Check if businessVertical is found, and if so, add the business_vertical name to the submodule
+      if (businessVertical) {
+        submodule.businessVerticalName = businessVertical.business_vertical;
+      } else {
+        // Handle the case when no matching business vertical is found
+        console.warn(`Business vertical not found for submodule with id: ${submodule.id}`);
+      }
+    });
+  
+    // Attach the submodules to the main module
+    mainModule.submodules = submodulesForMainModule;
+  });
+  
+   
+    // Step 3: Combine main modules and their submodules into a single array
+    this.allModules = this.mainModules;
+    // console.log("all modules ",this.allModules)
+  }
+
+   // Toggle the "All" checkbox for all submodules
+ toggleAllForModule(module: any,event:any,index:any,eventString:string): void {
+  
+  module.submodules.forEach((submodule: any,i:any) => {
+
+    if(index==i){
+      if(eventString=='all'){
+        submodule.all = event.checked;
+        submodule.view1 = event.checked;
+        submodule.edit1 = event.checked;
+        submodule.add1 = event.checked;
+        submodule.delete1 = event.checked;
+      }
+      else{
+        submodule.all=false;
+      }
+    //   if(eventString=='view' && eventString=='add' && eventString=='delete' && eventString=='edit'){
+    // submodule.all=true;        
+    //   }
     }
     
-    else{
+  });
+  //console.log("submodules ",event,module.submodules)
+}
+ 
+  getBusinessVerticals(){
+    this.utilitiesService.getBusinessVertical().subscribe((res:any)=>{
+      // this.isLoading=false;
+      this.associatedBusinesses=res.data;
+      // this.getModules();
+      
+    },(error:any)=>{
+      this.isLoading=false
+      console.log("vertical error ",error)
+    })
+  }
+  // Submit the selected row's data
+  submit(rowData:any,index?:any) {
+    // Handle the submit logic
+    // if((!rowData.audit) && !rowData.gainer&& !rowData.it && !rowData.other && !rowData.sims){
+    //   // console.log("index",index,this.roles[index])
+    //   const role = this.roles.find((r:any) => r.id === rowData.id);
+    //   if (role) {
+    //     role.showErrorMessage = true;
+    // }
+    // }
+    
+    // else{
       this.isLoading=true;
-      this.roleService.editRole({...rowData,token:this.token,userId:this.userId}).subscribe((res:any)=>{
+      this.roleService.editRole({modules:this.allModules,token:this.token,userId:this.userId,roleId:rowData.id}).subscribe((res:any)=>{
         this.isLoading=false;
         this.messageService.add({severity:'success',summary:'Role updated successfully',life:10000})
         this.viewRole();
       },(error:any)=>{
         this.isLoading=false;
       })
-      console.log('Updating role:', rowData);
+      //console.log('Updating role:', rowData);
       this.selectedRow = null; // Reset selected row after submission
       this.isSubmitEnabled = false; // Disable submit button after submission
-    }
+ //   }
   }
 
   viewRole(){

@@ -88,11 +88,21 @@
           <div *ngIf="roleForm.get('checkboxes')?.hasError('atLeastOneRequired') && roleForm.get('checkboxes')?.touched" class="text-red-500 mt-1">
             At least one checkbox must be selected!
           </div>
+
         </form>
-       
+         <div class="flex justify-center w-full items-center">
+      <button (click)="getAccessSettings()" 
+        class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
+        rounded-lg  focus:outline-none focus:ring-2 
+         focus:ring-opacity-50 sm:text-base
+          md:text-lg lg:text-lg cursor-pointer"
+      >
+        Get Access Settings 
+      </button>
+    </div>
       </div>
     </div>
-  
+    
     <div class="flex justify-center">
       <div
         class="flex flex-row w-[80vw] md:w-[60vw] py-3 md:px-0 justify-between align-items-center">
@@ -139,26 +149,8 @@
   
           <!-- Table Body -->
           <ng-template pTemplate="body" let-module>
-            <!-- <tr
-              class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14"
-            >
-            <td class="!p-3 text-left">SIMS</td>
-              <td class="!p-3 text-left">{{ customer.module_name }}</td>
-              <td></td>
-              <td class="!p-3 text-center"> <p-checkbox 
-                value="view"/></td>
-             
-              <td class="!p-3 text-center"> <p-checkbox 
-                value="edit"/></td>
-              <td class="!p-3 text-center"> <p-checkbox 
-                value="add"/></td>
-              <td class="!p-3 text-center"> <p-checkbox 
-                value="delete"/></td>
-                <td class="!p-3 text-center" (change)="toggleSelectAll()"> <p-checkbox 
-                  value="all"/></td>
-            </tr>
-             -->
-    
+          
+            
             <!-- Submodule Rows (if any) -->
             <tr *ngFor="let submodule of module.submodules; let i=index" class="hover:bg-gray-100 transition duration-300 p-[10px] text-gray-700 text-sm h-14">
               <td class="!p-3 text-left">{{submodule.businessVerticalName}}</td>
@@ -166,23 +158,29 @@
               <td class="!p-3 text-left">{{ submodule.module_name }}</td>
               <!-- <td class="!p-3 text-left">-</td> -->
               <td class="!p-3 text-center">
-                <p-checkbox [(ngModel)]="submodule.view1" binary="true"></p-checkbox>
+                <p-checkbox [(ngModel)]="submodule.view1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'view')"></p-checkbox>
               </td>
               <td class="!p-3 text-center">
-                <p-checkbox [(ngModel)]="submodule.edit1" binary="true" ></p-checkbox>
+                <p-checkbox [(ngModel)]="submodule.edit1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'edit')" ></p-checkbox>
               </td>
               <td class="!p-3 text-center">
-                <p-checkbox [(ngModel)]="submodule.add1" binary="true"></p-checkbox>
+                <p-checkbox [(ngModel)]="submodule.add1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'add')"></p-checkbox>
               </td>
               <td class="!p-3 text-center">
-                <p-checkbox [(ngModel)]="submodule.delete1" binary="true"></p-checkbox>
+                <p-checkbox [(ngModel)]="submodule.delete1" binary="true" (onChange)="toggleAllForModule(module,$event,i,'delete')"></p-checkbox>
               </td>
               <td class="!p-3 text-center">
-                <p-checkbox [(ngModel)]="submodule.view1" (onChange)="toggleAllForModule(module,$event,i)" binary="true"></p-checkbox>
+                <p-checkbox [(ngModel)]="submodule.all" (onChange)="toggleAllForModule(module,$event,i,'all')" binary="true"></p-checkbox>
               </td>
             </tr>
             
             
+          </ng-template>
+          <ng-template pTemplate="footer" *ngIf="allModules.length==0">
+            <td colspan="8">
+
+              <div class="d-flex justify-center align-items-center">No data is Available</div>
+            </td>
           </ng-template>
         </p-table>
     

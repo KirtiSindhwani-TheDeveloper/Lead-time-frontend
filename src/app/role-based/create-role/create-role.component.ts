@@ -175,7 +175,7 @@ export class CreateRoleComponent {
     this.roleService.getModules().subscribe((res:any)=>{
       this.modules=res.data;
       //console.log("modules ",this.modules)
-      this.organizeModules()
+     
     })
   }
   ngOnInit(){
@@ -183,33 +183,28 @@ export class CreateRoleComponent {
     this.getBusinessVerticals();
   }
 
-  getModulesBasedonBVID(){
-    let data;
-    this.roleService.getModulesBasedOnBVID(data).subscribe((res:any)=>{
-
-    })
-  }
  // Toggle the "All" checkbox for all submodules
- toggleAllForModule(module: any,event:any,index:any): void {
+ toggleAllForModule(module: any,event:any,index:any,eventString:string): void {
   
   module.submodules.forEach((submodule: any,i:any) => {
 
     if(index==i){
-      submodule.view1 = event.checked;
-      submodule.edit1 = event.checked;
-      submodule.add1 = event.checked;
-      submodule.delete1 = event.checked;
-
+      if(eventString=='all'){
+        submodule.all = event.checked;
+        submodule.view1 = event.checked;
+        submodule.edit1 = event.checked;
+        submodule.add1 = event.checked;
+        submodule.delete1 = event.checked;
+      }
+      else{
+        submodule.all=false;
+      }
     }
+    
   });
-  console.log("submodules ",event,module.submodules)
+  //console.log("submodules ",event,module.submodules)
 }
 
-// Handling the checkbox change event for individual checkboxes
-onCheckboxChange(submodule: any, checkboxType: string): void {
-  // You can handle any additional logic here
-  console.log(`Checkbox changed for ${checkboxType} of submodule with ID: ${submodule.id}`);
-}
 
   organizeModules() {
     
@@ -217,10 +212,18 @@ onCheckboxChange(submodule: any, checkboxType: string): void {
     this.subModules = this.modules.filter((module:any) => module?.parentId !== 0);
    // console.log("main and sub",this.mainModules,this.subModules)
    this.mainModules.forEach((mainModule: any) => {
+    mainModule.view1=false;
+    mainModule.edit1=false;
+    mainModule.delete1=false;
+    mainModule.add1=false;
     const submodulesForMainModule = this.subModules.filter((submodule: any) => submodule.parentId === mainModule.id);
   
     // Step 4: Add parent module's name to each submodule
     submodulesForMainModule.forEach((submodule: any) => {
+      submodule.view1=false;
+    submodule.edit1=false;
+    submodule.delete1=false;
+    submodule.add1=false;
       submodule.parentModuleName = mainModule.module_name; // Add parent module name to submodule
   
       // Find the business vertical by matching the business_vertical_id with the id in associatedBusinesses
@@ -257,7 +260,7 @@ onCheckboxChange(submodule: any, checkboxType: string): void {
       this.roleForm.get('checkboxes')?.setErrors(null);
     }
   }
-  
+
   get checkboxes() {
     return this.roleForm.get('checkboxes') as FormGroup;
   }
@@ -273,7 +276,7 @@ onCheckboxChange(submodule: any, checkboxType: string): void {
     this.utilitiesService.getBusinessVertical().subscribe((res:any)=>{
       // this.isLoading=false;
       this.associatedBusinesses=res.data;
-      this.getModules();
+      // this.getModules();
       
     },(error:any)=>{
       this.isLoading=false
@@ -282,28 +285,75 @@ onCheckboxChange(submodule: any, checkboxType: string): void {
   }
   
   submit(){
+   // console.log("modules ",this.allModules)
     if(this.roleForm.valid){
 
       let formValues = this.roleForm.value;
-      // console.log("form value ",this.roleForm.value)
-      // for (let key in formValues.checkboxes) {
-      //   if (formValues[key] === true) {
-      //     formValues[key] = 1;  // If checkbox is checked, set it to an array with '1'
-      //   } else if (formValues[key] === false) {
-      //     formValues[key] = 0;  // If checkbox is unchecked, set it to 0
-      //   }
-      // }
   
       this.isLoading=true;
       console.log(formValues);
-      this.roleService.createRole({...formValues,...formValues.checkboxes,userId:this.userId,token:this.token}).subscribe((res:any)=>{
+      this.roleService.createRole({...formValues,...formValues.checkboxes,userId:this.userId,token:this.token,modules:this.allModules}).subscribe((res:any)=>{
         this.isLoading=false;
         this.roleForm.reset();
+        this.allModules=[];
         this.messageService.add({severity:'success' ,summary:'Role has created Successfully',life:10000})
       },(error:any)=>{
         this.isLoading=false;
         this.roleForm.reset();
+        this.allModules=[];
         this.messageService.add({severity:'error',detail:'There is some error in creating role..',life:3000000000});
+      })
+    }
+    else{
+      
+      Object.keys(this.roleForm.controls).forEach(controlName => {
+        const control = this.roleForm.get(controlName);
+  
+          // Mark regular form controls (like rolename) as touched
+          control?.markAsTouched();
+        
+      });
+      const checkboxes = this.roleForm.get('checkboxes')?.value;
+  const isAnyChecked = Object.values(checkboxes).includes(true);
+
+  // If no checkbox is selected, manually set the 'atLeastOneRequired' error
+  if (!isAnyChecked) {
+    this.roleForm.get('checkboxes')?.setErrors({ atLeastOneRequired: true });
+  } else {
+    // If at least one checkbox is selected, clear the error (if it exists)
+    this.roleForm.get('checkboxes')?.setErrors(null);
+  }
+
+      
+    }
+  }
+
+  getAccessSettings(){
+    if(this.roleForm.valid){
+
+      let formValues = this.roleForm.value;
+  
+      const selectedIds = [];
+    // Loop through the form values
+    for (const key in formValues.checkboxes) {
+      if (formValues.checkboxes[key]) {
+        // Push the mapped ID for each checked checkbox
+        const selectedItem = this.associatedBusinesses.find((item:any) => item.business_vertical === key);
+        if (selectedItem) {
+          selectedIds.push(selectedItem.id);  // Push the corresponding ID
+        }
+      }
+    }
+    //console.log("selected ids",selectedIds)
+      this.isLoading=true;
+     // console.log(formValues);
+      this.roleService.getModulesBasedOnBVID({vertical_ids:selectedIds}).subscribe((res:any)=>{
+        this.modules=res.data;
+        this.organizeModules();
+        //console.log("allModules ",this.allModules)
+        this.isLoading=false;
+      },(error:any)=>{
+        this.isLoading=false;
       })
     }
     else{
