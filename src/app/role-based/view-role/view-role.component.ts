@@ -30,7 +30,9 @@ export class ViewRoleComponent {
   allModules:any=[];
   mainModules:any=[]
   modules:any=[];
+  roleId:any;
   subModules:any=[];
+  roleStatus:any;
   associatedBusinesses:any=[];
   constructor(private roleService:RoleBasedService,private messageService:MessageService,
     private utilitiesService:UtilitiesService
@@ -84,8 +86,12 @@ export class ViewRoleComponent {
     this.selectedRow = index; // Set the selected row index
     this.isSubmitEnabled = true; // Enable the submit button for the selected row
     this.visible=true;
+    this.roleId=rowData.id;
+    this.isLoading=true;
+
     const selectedIds =[];
-    //console.log("rowData ",rowData)
+    this.roleStatus=rowData.status
+   // console.log("rowData ",rowData)
     // Loop through the form values
     for (let key in rowData) {
       
@@ -102,8 +108,9 @@ export class ViewRoleComponent {
     }
     this.roleService.getEditModulesBasedOnBVID({vertical_ids:selectedIds,roleId:rowData.id}).subscribe((res:any)=>{
       this.modules=res.data;
+      this.isLoading=false;
       this.organizeModules();
-      console.log("allModules ",this.modules)
+      //console.log("allModules ",this.modules)
       this.isLoading=false;
     },(error:any)=>{
       this.isLoading=false;
@@ -182,11 +189,11 @@ export class ViewRoleComponent {
       
     },(error:any)=>{
       this.isLoading=false
-      console.log("vertical error ",error)
+     // console.log("vertical error ",error)
     })
   }
   // Submit the selected row's data
-  submit(rowData:any,index?:any) {
+  submit(index?:any) {
     // Handle the submit logic
     // if((!rowData.audit) && !rowData.gainer&& !rowData.it && !rowData.other && !rowData.sims){
     //   // console.log("index",index,this.roles[index])
@@ -198,7 +205,8 @@ export class ViewRoleComponent {
     
     // else{
       this.isLoading=true;
-      this.roleService.editRole({modules:this.allModules,token:this.token,userId:this.userId,roleId:rowData.id}).subscribe((res:any)=>{
+     // console.log("modules ",this.allModules)
+      this.roleService.editRole({modules:this.allModules,token:this.token,userId:this.userId,roleId:this.roleId,status:this.roleStatus}).subscribe((res:any)=>{
         this.isLoading=false;
         this.messageService.add({severity:'success',summary:'Role updated successfully',life:10000})
         this.viewRole();

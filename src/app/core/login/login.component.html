@@ -199,6 +199,12 @@
     [style]="{ width: '50vw' }" 
     [draggable]="false" 
     [resizable]="false">
+    <div class="d-flex justify-center align-items-center flex-column">
+      <label  class="" *ngIf="!isResetClicked">OTP for Authentication</label>
+      <p-inputOtp  [length]="6" [integerOnly]="true" *ngIf="!isResetClicked" [(ngModel)]="OTP" />
+
+      <a (click)="resetAuthentication()" class="cursor-pointer mt-2">Reset Authentication</a>
+    </div>
     <div *ngIf="qrCodeUrl" class="d-flex justify-center align-items-center flex-column">
       <h3>Scan this QR code with Google Authenticator</h3>
       <img [src]="qrCodeUrl" alt="QR Code">
@@ -206,6 +212,10 @@
         <input type="text" [(ngModel)]="OTP" name="token" placeholder="Enter OTP" class="p-2 me-4">
         <button (click)="verifyOTP()" class="w-30 h-50 btn verify-btn">Verify OTP</button>
       </div>
+     
+    </div>
+    <div class="d-flex justify-center mt-2">
+      <button (click)="verifyOTP()" class="w-30 h-50 btn verify-btn" *ngIf="!isResetClicked">Submit</button>
     </div>
 </p-dialog>
   

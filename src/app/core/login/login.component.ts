@@ -28,8 +28,10 @@ export class LoginComponent {
   qrCodeUrl: string = '';
   OTP: string = '';
   loginUser:any=[];
+  isResetClicked:boolean=false;
   private modalVisibilitySubscription: any;
   getOtp:boolean=true;
+  userId:any;
   userLoginInputDetails : FormGroup = new FormGroup({
     email: new FormControl('',[Validators.required]),
     userPassword: new FormControl('',[Validators.required])
@@ -70,22 +72,23 @@ export class LoginComponent {
       // console.log(email,password)
       this.isLoading=true;
       this.authService.login({email:email,userPassword:password}).subscribe((res:any)=>{
-       
+        console.log("res ",res)
         this.visibleTwoFactor=true;
-        this.secretKey=res.secret
+        
         this.loginUser={...res.user,refreshToken:res.refreshToken,accessToken:res.accessToken};
         if(res.user){
+          this.secretKey=res.user.secretKey;
           // this.cookieService.set('refreshToken',res.refreshToken)
           // localStorage.setItem('authToken',res.accessToken)
-              
-          //     localStorage.setItem('userId',res.user.userId)
-          //     // localStorage.setItem('authToken', res.data);
-          //     localStorage.setItem('designationId',res.user.designationId)
-          //     localStorage.setItem('roleId',res.user.roleId)
-          //     localStorage.setItem('name',res.user.name)
-          //     localStorage.setItem('status',res.user.status)
-          //     localStorage.setItem('isLoggedIn','true')
-             this.qrCodeUrl=res.qr
+              this.userId=res.user.userId;
+              // localStorage.setItem('userId',res.user.userId)
+              // // localStorage.setItem('authToken', res.data);
+              // localStorage.setItem('designationId',res.user.designationId)
+              // localStorage.setItem('roleId',res.user.roleId)
+              // localStorage.setItem('name',res.user.name)
+              // localStorage.setItem('status',res.user.status)
+              // localStorage.setItem('isLoggedIn','true')
+             //this.qrCodeUrl=res.qr
             
   
         }
@@ -115,23 +118,23 @@ export class LoginComponent {
     }
     else{
       this.isLoading=true;
-      this.authService.twoFactorAuthentication({token:this.OTP,secret:this.secretKey}).subscribe( (response) => {
+      this.authService.twoFactorAuthentication({token:this.OTP,secret:this.secretKey,userId:this.userId}).subscribe( (response) => {
         // this.messageService.add({severity:'success',life:300000,summary:'Invalid OTP',detail:'Try Again!!'})
          this.isLoading=false;
-         console.log("loginUser ",this.loginUser)
-         this.cookieService.set('refreshToken',this.loginUser?.refreshToken)
-          localStorage.setItem('authToken',this.loginUser?.accessToken)
-              
-              localStorage.setItem('userId',this.loginUser?.userId)
-              // localStorage.setItem('authToken', this.loginUser?.data);
-              localStorage.setItem('designationId',this.loginUser?.designationId)
-              localStorage.setItem('roleId',this.loginUser?.roleId)
-              localStorage.setItem('name',this.loginUser?.name)
-              localStorage.setItem('status',this.loginUser?.status)
-              localStorage.setItem('isLoggedIn','true');
+
               this.userLoginInputDetails.reset();
               this.router.navigate(['/dashboard']);
               this.OTP=''
+              // this.loginUser={...res.user,refreshToken:res.refreshToken,accessToken:res.accessToken};
+              this.cookieService.set('refreshToken',this.loginUser.refreshToken)
+              localStorage.setItem('authToken',this.loginUser.accessToken)
+                  localStorage.setItem('userId',this.loginUser.userId)
+                  // localStorage.setItem('authToken', res.data);
+                  localStorage.setItem('designationId',this.loginUser.designationId)
+                  localStorage.setItem('roleId',this.loginUser.roleId)
+                  localStorage.setItem('name',this.loginUser.name)
+                  localStorage.setItem('status',this.loginUser.status)
+                  localStorage.setItem('isLoggedIn','true')
         // alert('2FA verified successfully!');
       },
       (error) => {
@@ -144,6 +147,13 @@ export class LoginComponent {
     }
   }
 
+  resetAuthentication(){
+    this.isResetClicked=true;
+    this.authService.generateQR().subscribe((res:any)=>{
+      this.qrCodeUrl=res.qr;
+      this.secretKey=res.secret;
+    })
+  }
   showAuthDialog(){
     this.visibleTwoFactor=true;
   }
@@ -187,7 +197,7 @@ if(this.updateInfoForm.get('email')?.valid){
   if(!this.isPasswordFilledVisible && !this.getOtp){
     this.loginService.verifyOTP({email:this.updateInfoForm.value.email,otp:this.updateInfoForm.value.otp}).subscribe({
       next: (res: any) => {
-        console.log("Response received:", res);
+       // console.log("Response received:", res);
         
         // Check if res and res.status exist before checking status
         if (res && res.status === 200) {
@@ -212,7 +222,7 @@ if(this.updateInfoForm.get('email')?.valid){
 
   }
   if(this.isPasswordFilledVisible){
-    console.log(this.token)
+   // console.log(this.token)
     this.loginService.resetPassword({jwtToken:this.token,password:this.updateInfoForm.value.password}).subscribe((res:any)=>{
       if(res.status==200){
         this.visible=false;

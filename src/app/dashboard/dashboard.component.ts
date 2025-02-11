@@ -20,8 +20,11 @@ export class DashboardComponent {
 
    
   }
-  ngAfterViewInit(){
+  ngOnInit(){
     this.userName=localStorage.getItem('name');
+  }
+  ngAfterViewInit(){
+    
     if (localStorage.getItem('isLoggedIn') === 'true') {
       // Show a toast message
       // console.log("taost is appearing")

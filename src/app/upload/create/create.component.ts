@@ -641,6 +641,7 @@ search(){
     }
     catch(error){
       this.isLoading=false;
+      this.messageService.add({severity:'error',life:3000000,summary:'Error in Uploading File..'});
     }
    
   }

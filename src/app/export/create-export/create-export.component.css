@@ -137,6 +137,9 @@ margin-left: 64px; */
     align-items: center;
 } */
 
+:host ::ng-deep .p-checkbox-box{
+    border: 2px solid !important;
+}
 ::ng-deep /deep/ .p-multiselect {
     width: 90% !important;
     border-radius: 5px !important;

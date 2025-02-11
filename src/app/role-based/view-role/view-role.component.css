@@ -37,6 +37,8 @@
 :host ::ng-deep .update-role{
     outline: none;
     box-shadow: none;
+    width: 130px;
+    height: 40px;
 }
 
 

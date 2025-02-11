@@ -41,7 +41,7 @@
            [value]="roles"
            [paginator]="true"
            [rows]="20"
-           styleClass="{width:100%}"
+           styleClass="{width:80%}"
            class="bg-white   !rounded-lg border !h-auto  border-gray-200 shadow-md"
       >
        <ng-template pTemplate="header">
@@ -191,21 +191,23 @@
             <p-checkbox [(ngModel)]="submodule.all" (onChange)="toggleAllForModule(module,$event,i,'all')" binary="true"></p-checkbox>
           </td>
         </tr>
-        
-        <div class="flex justify-center w-full items-center">
-            <button (click)="submit(module)" 
-              class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
-              rounded-lg  focus:outline-none focus:ring-2 
-               focus:ring-opacity-50 sm:text-base
-                md:text-lg lg:text-lg cursor-pointer update-role"
-            >
-              Update Role 
-            </button>
-          </div>
+          
       </ng-template>
+     
+        
+
     </p-table>
 
-   
+    <div class="flex justify-center w-full items-center">
+        <button (click)="submit()" 
+          class="bg-customBlue text-white font-semibold mt-4 py-1 px-2 
+          rounded-lg  focus:outline-none focus:ring-2 
+           focus:ring-opacity-50 sm:text-base
+            md:text-lg lg:text-lg cursor-pointer update-role "
+        >
+          Update Role 
+        </button>
+      </div>
 
 </div>
 </p-dialog>

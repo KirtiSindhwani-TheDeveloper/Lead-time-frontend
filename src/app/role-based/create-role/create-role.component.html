@@ -176,11 +176,17 @@
             
             
           </ng-template>
-          <ng-template pTemplate="footer" *ngIf="allModules.length==0">
-            <td colspan="8">
-
-              <div class="d-flex justify-center align-items-center">No data is Available</div>
-            </td>
+          <ng-template pTemplate="footer" >
+           
+              <tr *ngIf="allModules.length==0">
+                <td colspan="8">
+    
+                  <div class="d-flex justify-center align-items-center">No data is Available</div>
+                </td>
+  
+              </tr>
+            
+           
           </ng-template>
         </p-table>
     
