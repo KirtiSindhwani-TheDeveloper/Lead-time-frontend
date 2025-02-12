@@ -252,12 +252,13 @@ export class ViewUserComponent {
 
       if(this.editUserForm.valid){
         console.log(this.editUserForm.value)
-       let link="http://localhost:4200/update-user-password";
+      //  let link="http://localhost:4200/update-user-password";
+      let link="http://103.30.72.109/update-user-password";
         if(this.actionName=='Add User'){
           this.isLoading=true;
           this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token,link:link}).subscribe((res:any)=>{
             this.isLoading=false;
-            this.messageService.add({severity:'success',life:10000,summary:'User is created Succesfully'})
+            this.messageService.add({severity:'success',life:10000,summary:'User is created Succesfully',detail:'Email has been sent to your registered ID'})
             
             this.viewUser();
             this.visible = false;

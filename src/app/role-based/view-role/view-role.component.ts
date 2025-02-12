@@ -9,6 +9,7 @@ import { RoleBasedService } from '../../services/role-based.service';
 import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UtilitiesService } from '../../services/utilities.service';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-view-role',
@@ -31,6 +32,7 @@ export class ViewRoleComponent {
   mainModules:any=[]
   modules:any=[];
   roleId:any;
+  associatedVerticalsOnView:any=[];
   subModules:any=[];
   roleStatus:any;
   associatedBusinesses:any=[];
@@ -87,8 +89,9 @@ export class ViewRoleComponent {
     this.isSubmitEnabled = true; // Enable the submit button for the selected row
     this.visible=true;
     this.roleId=rowData.id;
+    this.associatedVerticalsOnView=rowData
     this.isLoading=true;
-
+    
     const selectedIds =[];
     this.roleStatus=rowData.status
    // console.log("rowData ",rowData)
@@ -194,24 +197,32 @@ export class ViewRoleComponent {
   }
   // Submit the selected row's data
   submit(index?:any) {
-    // Handle the submit logic
-    // if((!rowData.audit) && !rowData.gainer&& !rowData.it && !rowData.other && !rowData.sims){
-    //   // console.log("index",index,this.roles[index])
-    //   const role = this.roles.find((r:any) => r.id === rowData.id);
-    //   if (role) {
-    //     role.showErrorMessage = true;
-    // }
-    // }
     
     // else{
       this.isLoading=true;
      // console.log("modules ",this.allModules)
-      this.roleService.editRole({modules:this.allModules,token:this.token,userId:this.userId,roleId:this.roleId,status:this.roleStatus}).subscribe((res:any)=>{
+      let filteredModules=[];
+      for(let item of this.allModules){
+
+          const filteredArray = item.submodules.filter((module:any) => 
+            !(module.view1 === false && module.edit1 === false && module.add1 === false && module.delete1 === false)
+          );
+          if(filteredArray.length>0){
+            filteredModules.push(filteredArray)
+
+          }
+      }
+  // console.log("filtered array ",filteredModules)
+     
+      this.roleService.editRole({modules:filteredModules,token:this.token,userId:this.userId,roleId:this.roleId,status:this.roleStatus,verticals:this.associatedVerticalsOnView}).subscribe((res:any)=>{
         this.isLoading=false;
         this.messageService.add({severity:'success',summary:'Role updated successfully',life:10000})
         this.viewRole();
+        this.visible=false;
       },(error:any)=>{
         this.isLoading=false;
+        this.messageService.add({summary:'Error in Updating Role!!',life:3300000,severity:'error'})
+        this.visible=false;
       })
       //console.log('Updating role:', rowData);
       this.selectedRow = null; // Reset selected row after submission
@@ -234,5 +245,7 @@ export class ViewRoleComponent {
       this.isLoading=false;
     })
   }
+
+  
 
 }

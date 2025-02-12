@@ -133,7 +133,7 @@ input:focus-visible{
 
 :host ::ng-deep input.p-inputtext.p-component.p-element.p-inputotp-input
 {
-  width: 6vw !important;
+  width: 4vw !important;
 }
 @media (min-width: 768px) and (max-width: 992px) {
     :host ::ng-deep input.p-inputtext.p-component.p-element {

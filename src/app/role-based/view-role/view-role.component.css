@@ -40,5 +40,7 @@
     width: 130px;
     height: 40px;
 }
-
+/* :host ::ng-deep .p-datatable-wrapper{
+    max-height: 65vh !important;
+} */
 

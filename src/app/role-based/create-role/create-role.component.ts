@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { atLeastOneCheckedValidator } from '../../shared/validators/atLeastOnCheckedValidator';
 import { MessageService } from 'primeng/api';
 import { UtilitiesService } from '../../services/utilities.service';
+import saveAs from 'file-saver';
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-create-role',
   standalone: true,
@@ -141,6 +143,7 @@ export class CreateRoleComponent {
   subModules: any = [];
   allModules:any=[];
   associatedBusinesses:any=[];
+  selectedIds:any=[];
   constructor(private roleService:RoleBasedService,
     private fb:FormBuilder,private messageService:MessageService,
     private utilitiesService:UtilitiesService
@@ -328,26 +331,26 @@ export class CreateRoleComponent {
     }
   }
 
+
   getAccessSettings(){
     if(this.roleForm.valid){
 
       let formValues = this.roleForm.value;
   
-      const selectedIds = [];
     // Loop through the form values
     for (const key in formValues.checkboxes) {
       if (formValues.checkboxes[key]) {
         // Push the mapped ID for each checked checkbox
         const selectedItem = this.associatedBusinesses.find((item:any) => item.business_vertical === key);
         if (selectedItem) {
-          selectedIds.push(selectedItem.id);  // Push the corresponding ID
+          this.selectedIds.push(selectedItem.id);  // Push the corresponding ID
         }
       }
     }
     //console.log("selected ids",selectedIds)
       this.isLoading=true;
      // console.log(formValues);
-      this.roleService.getModulesBasedOnBVID({vertical_ids:selectedIds}).subscribe((res:any)=>{
+      this.roleService.getModulesBasedOnBVID({vertical_ids:this.selectedIds}).subscribe((res:any)=>{
         this.modules=res.data;
         this.organizeModules();
         //console.log("allModules ",this.allModules)
@@ -378,5 +381,51 @@ export class CreateRoleComponent {
 
       
     }
+  }
+
+  downloadRoleFormat(){
+    let data=[];
+    let data1:any[]=[];
+    if(this.allModules.length>0){
+
+    
+    
+    for(let item1 of this.allModules){
+       data.push(item1.submodules);
+      
+    }
+ 
+    for(let module of data){
+      //console.log("modules ",module);
+      module.map((item:any)=>{
+        data1.push({
+          ['Business Vertical']: item.businessVerticalName,  // The business vertical name
+        ['Module Name']: item.parentModuleName,  // The name of the parent module
+          ['Sub Module']:item.module_name,
+          view:'',   // Convert boolean to 'Y' or 'N'
+          edit:'',   // Convert boolean to 'Y' or 'N'
+          delete:'',   // Convert boolean to 'Y' or 'N'
+          add: ''
+      })
+    }
+  )
+ 
+    }
+    data1.push({Note:'Values for View, Edit, Add, Delete accepted in Y or N '})
+  }
+    if(this.allModules.length==0){
+      data1=[{message:'You have not selected Business Verticals'}]
+    }
+   //console.log("data ",data1)
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data1);
+    
+    // Create a new workbook
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Modules');
+
+    // Export the workbook to an Excel file
+    XLSX.writeFile(wb, 'Role-Access-Settings.xlsx');
   }
 }
