@@ -32,6 +32,10 @@ export class RoleBasedService {
     return this.http.post(`${this.apiUrl}roles/download-role-format`, { responseType: 'blob',data:data })
   }
 
+  uploadRoleFormat(data:any):Observable<any>{
+    return this.http.post(`${this.apiUrl}roles/upload-role`,data)
+  }
+
   getModules():Observable<any>{
     return this.http.get(`${this.apiUrl}sidebar/module`)
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PrimengModule } from '../../shared/primeng/primeng.module';
 import { HeaderComponent } from "../../core/header/header.component";
 import { SidebarComponent } from "../../core/sidebar/sidebar.component";
@@ -20,6 +20,7 @@ import * as XLSX from 'xlsx';
 })
 export class CreateRoleComponent {
   isLoading:boolean=false;
+  formData:any;
   visible:boolean=false;
   // customers = [
   //   {
@@ -137,13 +138,16 @@ export class CreateRoleComponent {
   // ];
   modules:any;
   userId:any;
+  selectedFile:any;
   roleForm:FormGroup
   token:any;
   mainModules: any = [];
   subModules: any = [];
   allModules:any=[];
+  fileName:any;
   associatedBusinesses:any=[];
   selectedIds:any=[];
+  @ViewChild('fileInput') fileInput: any;
   constructor(private roleService:RoleBasedService,
     private fb:FormBuilder,private messageService:MessageService,
     private utilitiesService:UtilitiesService
@@ -173,6 +177,11 @@ export class CreateRoleComponent {
     
   }
 
+  triggerFileInput(fileInput: HTMLInputElement): void {
+    // Trigger the file input click when the icon is clicked
+    fileInput.click();
+  }
+
   getModules(){
     
     this.roleService.getModules().subscribe((res:any)=>{
@@ -181,11 +190,17 @@ export class CreateRoleComponent {
      
     })
   }
+
   ngOnInit(){
     
     this.getBusinessVerticals();
   }
 
+  onFileSelect(event: any): void {
+    this.selectedFile = event.target.files[0];
+    this.fileName=this.selectedFile.name;
+    //console.log("this.selectedFile ",this.selectedFile)
+  }
  // Toggle the "All" checkbox for all submodules
  toggleAllForModule(module: any,event:any,index:any,eventString:string): void {
   
@@ -295,6 +310,7 @@ export class CreateRoleComponent {
   
       this.isLoading=true;
       console.log(formValues);
+      if(this.fileName==''){
       this.roleService.createRole({...formValues,...formValues.checkboxes,userId:this.userId,token:this.token,modules:this.allModules}).subscribe((res:any)=>{
         this.isLoading=false;
         this.roleForm.reset();
@@ -308,6 +324,11 @@ export class CreateRoleComponent {
       })
     }
     else{
+      this.uploadRoleFormat({...formValues,...formValues.checkboxes,userId:this.userId,token:this.token});
+      
+    }
+    }
+    else{
       
       Object.keys(this.roleForm.controls).forEach(controlName => {
         const control = this.roleForm.get(controlName);
@@ -316,6 +337,7 @@ export class CreateRoleComponent {
           control?.markAsTouched();
         
       });
+
       const checkboxes = this.roleForm.get('checkboxes')?.value;
   const isAnyChecked = Object.values(checkboxes).includes(true);
 
@@ -326,8 +348,7 @@ export class CreateRoleComponent {
     // If at least one checkbox is selected, clear the error (if it exists)
     this.roleForm.get('checkboxes')?.setErrors(null);
   }
-
-      
+     
     }
   }
 
@@ -427,5 +448,32 @@ export class CreateRoleComponent {
 
     // Export the workbook to an Excel file
     XLSX.writeFile(wb, 'Role-Access-Settings.xlsx');
+  }
+
+  uploadRoleFormat(data:any){
+    this.isLoading=true;
+    if (!this.selectedFile) {
+      alert('Please select a file first.');
+      return;
+    }
+
+     this.formData = new FormData();
+    this.formData.append('excelFile', this.selectedFile, this.selectedFile.name);
+    this.formData.append('data', JSON.stringify(data));
+    this.roleService.uploadRoleFormat(this.formData).subscribe((res:any)=>{
+      this.isLoading=false;
+      this.formData=new FormData();
+      this.roleForm.reset();
+      this.selectedFile='';
+      this.fileName='';
+      this.messageService.add({severity:'success',life:10000,summary:'Role is created Successfully!!!'})
+    },(error:any)=>{
+      this.isLoading=false;
+      this.roleForm.reset();
+      this.formData=new FormData();
+      this.selectedFile='';
+      this.fileName=''
+      this.messageService.add({severity:'error',life:3000000,summary:'Error in creating role!!!'})
+    })
   }
 }

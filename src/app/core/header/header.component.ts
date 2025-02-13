@@ -33,11 +33,11 @@ export class HeaderComponent {
           {
               separator: true
           },
-          {
-            label: 'Update Password',
-            icon: 'bx bxs-edit',
-            command: () => this.updatePassword()
-        },
+        //   {
+        //     label: 'Update Password',
+        //     icon: 'bx bxs-edit',
+        //     command: () => this.updatePassword()
+        // },
           
         ]
       }

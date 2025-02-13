@@ -115,8 +115,15 @@
           <div>
             <!-- <i class="pi pi-user cursor-pointer me-3" style="font-size: 1.5rem;font-weight:bold " ></i> -->
             <i class='bx bx-download cursor-pointer me-3' style="font-size: 1.5rem;font-weight:bold " (click)="downloadRoleFormat()" ></i>
-            <i class='bx bx-export cursor-pointer' style="font-size: 1.5rem;font-weight:bold" ></i>
-            
+            <input 
+    type="file" 
+    #fileInput 
+    (change)="onFileSelect($event)" 
+    [accept]="'.xlsx, .xls, .csv'"
+    style="display: none" 
+  />
+            <i class='bx bx-upload cursor-pointer' style="font-size: 1.5rem;font-weight:bold" (click)="triggerFileInput(fileInput)" ></i>
+            <span>    {{fileName}}</span>
           </div>
         
       </div>

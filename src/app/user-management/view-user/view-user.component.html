@@ -84,120 +84,7 @@
     </div>
 </div>
 
-<!-- <p-dialog [header]=actionName  [modal]="true"  [(visible)]="visible" [style]="{ width: '80vh'  }" class="header edit-add-user">
-     <span class="p-text-secondary block mb-5">Update your information.</span> -->
-    <!-- <form [formGroup]="editUserForm">
 
-      <div class="card">
-         
-             
-              <div class="row">
-                <div class="col-12"> -->
-               <!-- <div class="row">
-                  <div class="col-6 p-2 d-flex flex-column">
-                     <span class="font-semibold">Name</span>
-                     <input type="text" pInputText formControlName="name" placeholder="Enter Name" />
-                     <div *ngIf="editUserForm.get('name')!.touched && editUserForm.get('name')!.invalid">
-                      <small *ngIf="editUserForm.get('name')?.hasError('required')" style="color: red; font-size: 12px;">Name is required.</small>
-                    </div>
-                  </div>
-                  <div class="col-6 p-2 d-flex flex-column">
-                   <span class="font-semibold">Designation</span>
-                       <p-dropdown 
-         [options]="designations" 
-        formControlName="designation"
-         optionLabel="designation_name" 
-         optionValue="id"
-         placeholder="Enter Designation" />
-         <div *ngIf="editUserForm.get('designation')?.touched && editUserForm.get('designation')?.invalid">
-          <small *ngIf="editUserForm.get('designation')?.hasError('required')" style="color: red; font-size: 12px;">Designation is required.</small>
-        </div>
-                </div>
-               </div>
-               <div class="row">
-                 <div class="col-6 p-2 d-flex flex-column">
-                    <span class="font-semibold">Role</span>
-                    <p-dropdown 
-                    [options]="roles" 
-                   formControlName="role"
-                    optionLabel="role_name"
-                    optionValue="id" 
-                    placeholder="Enter Role" />
-                    <div *ngIf="editUserForm.get('role')?.touched && editUserForm.get('role')?.invalid">
-                      <small *ngIf="editUserForm.get('role')?.hasError('required')" style="color: red; font-size: 12px;">Role is required.</small>
-                    </div>
-                   </div>
-   
-                   <div class="col-6 p-2">
-                     <span class="font-semibold">Email ID</span>
-                     <input type="text" pInputText formControlName="email" placeholder="Enter Email" />
-                     <div *ngIf="editUserForm.get('email')?.touched && editUserForm.get('email')?.invalid">
-                      <small *ngIf="editUserForm.get('email')?.hasError('required')" style="color: red; font-size: 12px;">Email is required.</small>
-                    </div>
-                    <div *ngIf="editUserForm.get('email')?.touched && editUserForm.get('email')?.invalid">
-                      <small *ngIf="editUserForm.get('email')?.hasError('email')" style="color: red; font-size: 12px;">Email is invalid.</small>
-                    </div>
-               </div>
-              </div>
-              <div class="row">
-               <div class="col-6 p-2  d-flex flex-column">
-                  <span class="font-semibold">Mobile No </span>
-                  <input type="text" pInputText formControlName="mobileNo" placeholder="Enter Mobile Number" />
-                  <div *ngIf="editUserForm.get('mobileNo')?.touched && editUserForm.get('mobileNo')?.invalid">
-                    <small *ngIf="editUserForm.get('mobileNo')?.hasError('required')" style="color: red; font-size: 12px;">Mobile No is required.</small>
-                  </div>
-                  <div *ngIf="editUserForm.get('mobileNo')?.touched && editUserForm.get('mobileNo')?.invalid">
-                    <small *ngIf="editUserForm.get('mobileNo')?.hasError('pattern')" style="color: red; font-size: 12px;">Mobile No is invalid.</small>
-                  </div>
-                 </div>
-                 
-                 <div class="col-6 p-2 pt-2">
-                   <span class="font-semibold">Associated Business</span>
-                   <p-dropdown 
-         [options]="associatedBusinesses" 
-        formControlName="associatedBusiness"
-         optionLabel="business_vertical" 
-         optionValue="id"
-         placeholder="Enter Associated Business"/>
-                   <div *ngIf="editUserForm.get('associatedBusiness')?.touched && editUserForm.get('associatedBusiness')?.invalid">
-                    <small *ngIf="editUserForm.get('associatedBusiness')?.hasError('required')" style="color: red; font-size: 12px;">Associated Business is required.</small>
-                  </div>
-             </div>
-            </div>
-            <div class="row"> -->
-             <!-- <div class="col-6 p-2 d-flex flex-column">
-                <span class="font-semibold">Password </span>
-                <input type="text" pInputText formControlName="password" placeholder="Enter Password"/>
-                <div *ngIf="editUserForm.get('password')?.touched && editUserForm.get('password')?.invalid">
-                  <small *ngIf="editUserForm.get('password')?.hasError('required')" style="color: red; font-size: 12px;">Password is required.</small>
-                </div>
-               </div> -->
-               
-               <!-- <div class="col-6 p-2 d-flex flex-column">
-                 <span class="font-semibold">Status</span>
-                 <p-dropdown 
-                 [options]="statuses" 
-                formControlName="status"
-                 optionLabel="name" 
-                 optionValue="name"
-                 placeholder="Enter Status" />
-                 <div *ngIf="editUserForm.get('status')?.touched && editUserForm.get('status')?.invalid">
-                  <small *ngIf="editUserForm.get('status')?.hasError('required')" style="color: red; font-size: 12px;">Status is required.</small>
-                </div>
-           </div>
-          </div>
-  
-             
-           </div>
-          </div> 
-        
-      </div>
-    </form> -->
-    <!-- <div class="div-btn">
-      <p-button label="Cancel" class="btn text-white mr-5" (click)="visible=false"/>
-      <p-button label="Submit" class="btn text-white " (click)="submit()"/>
-    </div>
-</p-dialog> -->
 
 <p-dialog [header]="actionName" [modal]="true" [(visible)]="visible" [style]="{ width: '80vh' }" class="header edit-add-user">
   <form [formGroup]="editUserForm">
@@ -249,10 +136,13 @@
             <!-- Email Field -->
             <div class="col-6 p-2">
               <span class="font-semibold">Email ID</span>
-              <input type="text" pInputText formControlName="email" placeholder="Enter Email" />
+              <input type="text" pInputText formControlName="email" placeholder="Enter Email" (input)="checkEmailAvailability()" />
               <div *ngIf="editUserForm.get('email')?.touched && editUserForm.get('email')?.invalid">
                 <small *ngIf="editUserForm.get('email')?.hasError('required')" style="color: red; font-size: 12px;">Email is required.</small>
                 <small *ngIf="editUserForm.get('email')?.hasError('email')" style="color: red; font-size: 12px;">Email is invalid.</small>
+              </div>
+              <div>
+                <small style="color: red; font-size: 12px;">{{showErrorMessage}}</small>
               </div>
             </div>
           </div>

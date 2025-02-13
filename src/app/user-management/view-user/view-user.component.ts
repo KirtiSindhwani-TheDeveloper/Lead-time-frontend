@@ -13,6 +13,7 @@ import { UserService } from '../../services/user.service';
 import { MessageService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import * as XLSX from 'xlsx';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-view-user',
   imports: [PrimengModule, MatSlideToggleModule, SharedModule, FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent, HeaderComponent],
@@ -37,6 +38,8 @@ export class ViewUserComponent {
   rowId:any;
   token:any;
   userId:any;
+  showErrorMessage:any;
+  emailArray:any=[];
     statuses:any=[
       { name:'Active',id:1},
    
@@ -44,8 +47,8 @@ export class ViewUserComponent {
      ]
     constructor(private router:Router,private utilitiesService:UtilitiesService,
       private fb:FormBuilder,private cdr:ChangeDetectorRef,
-      private userService:UserService,private messageService:MessageService
-  
+      private userService:UserService,private messageService:MessageService,
+      private authService:AuthService
     ){
      
  this.editUserForm= this.fb.group({
@@ -83,8 +86,14 @@ export class ViewUserComponent {
         userId: rowData.userId,
         status: statusObj?statusObj?.name:null
       });
+
+      Object.keys(this.editUserForm.controls).forEach((controleName:any)=>{
+        this.editUserForm.get(controleName)?.markAsUntouched();
+      })
     }
     this.visible = true;
+    this.showErrorMessage=''
+    
     // console.log(rowData)
 
    
@@ -100,7 +109,40 @@ export class ViewUserComponent {
       this.getRoles();
   
     this.userId=localStorage.getItem('userId');
-    this.token=localStorage.getItem('authToken')
+    this.token=localStorage.getItem('authToken');
+    this.authService.checkEmail({email:this.editUserForm.value.email}).subscribe(
+      (response) => {
+        this.emailArray=response.data;
+      //  console.log(this.emailArray)
+      },
+      (error) => {
+       
+      }
+    );
+    }
+
+    checkEmailAvailability() {
+      this.showErrorMessage = '';
+  
+      // Loop through the email array to check if the entered email exists
+      let emailExists = false;
+      
+      this.emailArray.forEach((item: any) => {
+        // Check if the email exists in the array
+        if (item.emailId === this.editUserForm.value.email) {
+          this.showErrorMessage = '';
+          //this.userName=item.name
+          emailExists = true; // Email found, set flag to true
+          // console.log(item.emailId, this.editUserForm.value.email, this.emailMessage);
+        }
+      });
+    
+      // If email is not found in the array, update the message
+      if (emailExists && this.editUserForm.value.email) {
+        this.showErrorMessage = 'Email Id is already taken.';
+        // console.log(this.emailMessage);
+      }
+     
     }
 
     getToggleStatus(product: any): boolean {
