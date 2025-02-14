@@ -38,31 +38,63 @@
   </div> -->
 
 
-  <div class="sidebar">
+  <!-- <div class="sidebar">
     <ul class="menu">
       <li *ngFor="let item of sidebarItems" [class.active]="item.isActive" class="f-18" routerLinkActive="active" >
         
         <!-- Main Menu Item -->
 
-        <a class="submenu-title cursor-pointer text-balance line-clamp-1 full-name" (click)="toggleSubMenu(item)" [ngClass]="item.isActive ? 'active-item' : ''">
-          <!-- Chevron Icon -->
-          <i class="icon " [ngClass]="item.isOpen ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"></i>
-             {{ item.label }}
+        <!-- <a class="submenu-title cursor-pointer text-balance line-clamp-1 full-name" (click)="toggleSubMenu(item)" [ngClass]="item.isActive ? 'active-item' : ''">
+        
+          <i class="icon " [ngClass]="item.isOpen ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"  ></i>
+             {{ item.module_name }}
            </a>
         
-        <!-- Submenu -->
+        
         <ul  *ngIf="item.isOpen" class="submenu">
-          <li *ngFor="let subItem of item.submenu"  class="subsidebar f-16" routerLinkActive="active">
-            <a [routerLink]="subItem.route"  (click)="setActive(subItem)" [ngClass]="subItem.isActive ? 'active-item' : ''">
-              {{ subItem.label }}
+          <li *ngFor="let subItem of item.submodules"  class="subsidebar f-16" routerLinkActive="active">
+            <a [routerLink]="subItem.module_route"  (click)="setActive(subItem,item)" [ngClass]="subItem.isActive ? 'active-item' : ''">
+              {{ subItem.module_name }}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div> -->
+
+  <div class="sidebar">
+    <ul class="menu">
+      <li *ngFor="let item of sidebarItems" [class.active]="item.isActive" class="f-18">
+        
+        <!-- Main Menu Item -->
+        <a 
+          class="submenu-title cursor-pointer text-balance line-clamp-1 full-name" 
+          [routerLink]="item.module_route" 
+          routerLinkActive="active" 
+          (click)="toggleSubMenu(item)" 
+          [ngClass]="item.isActive ? 'active-item' : ''">
+          
+          <!-- Chevron Icon -->
+          <i class="icon" [ngClass]="item.isOpen ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"></i>
+          {{ item.parentModuleName }}
+        </a>
+        
+        <!-- Submenu -->
+        <ul *ngIf="item.isOpen" class="submenu">
+          <li *ngFor="let subItem of item.subchildren" class="subsidebar f-16">
+            <a 
+              [routerLink]="subItem.module_route" 
+              routerLinkActive="active" 
+              (click)="setActive(subItem, item)" 
+              [ngClass]="subItem.isActive ? 'active-item' : ''">
+              {{ subItem.module_name }}
             </a>
           </li>
         </ul>
       </li>
     </ul>
   </div>
-
-
+  
 
 
 

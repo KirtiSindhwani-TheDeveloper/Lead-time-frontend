@@ -179,6 +179,7 @@ export class CreateRoleComponent {
 
   triggerFileInput(fileInput: HTMLInputElement): void {
     // Trigger the file input click when the icon is clicked
+    fileInput.value = '';
     fileInput.click();
   }
 
@@ -199,7 +200,7 @@ export class CreateRoleComponent {
   onFileSelect(event: any): void {
     this.selectedFile = event.target.files[0];
     this.fileName=this.selectedFile.name;
-    //console.log("this.selectedFile ",this.selectedFile)
+   // console.log("this.selectedFile ",this.selectedFile)
   }
  // Toggle the "All" checkbox for all submodules
  toggleAllForModule(module: any,event:any,index:any,eventString:string): void {
@@ -298,7 +299,7 @@ export class CreateRoleComponent {
       
     },(error:any)=>{
       this.isLoading=false
-      console.log("vertical error ",error)
+    //  console.log("vertical error ",error)
     })
   }
   
@@ -309,7 +310,7 @@ export class CreateRoleComponent {
       let formValues = this.roleForm.value;
   
       this.isLoading=true;
-      console.log(formValues);
+     // console.log(formValues);
       if(this.fileName==''){
       this.roleService.createRole({...formValues,...formValues.checkboxes,userId:this.userId,token:this.token,modules:this.allModules}).subscribe((res:any)=>{
         this.isLoading=false;
@@ -452,21 +453,30 @@ export class CreateRoleComponent {
 
   uploadRoleFormat(data:any){
     this.isLoading=true;
-    if (!this.selectedFile) {
-      alert('Please select a file first.');
-      return;
-    }
+    // if (!this.selectedFile) {
+    //   alert('Please select a file first.');
+    //   return;
+    // }
 
      this.formData = new FormData();
     this.formData.append('excelFile', this.selectedFile, this.selectedFile.name);
     this.formData.append('data', JSON.stringify(data));
     this.roleService.uploadRoleFormat(this.formData).subscribe((res:any)=>{
+
       this.isLoading=false;
-      this.formData=new FormData();
       this.roleForm.reset();
       this.selectedFile='';
       this.fileName='';
-      this.messageService.add({severity:'success',life:10000,summary:'Role is created Successfully!!!'})
+      if(res.isWrongFile){
+        this.messageService.add({severity:'error',life:3000000,summary:'You have selected a wrong file'})
+      }
+      else{
+
+        this.formData=new FormData();
+       
+        this.messageService.add({severity:'success',life:10000,summary:'Role is created Successfully!!!'})
+      }
+    
     },(error:any)=>{
       this.isLoading=false;
       this.roleForm.reset();

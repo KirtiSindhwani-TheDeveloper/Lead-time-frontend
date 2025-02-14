@@ -25,19 +25,19 @@ export class DashboardComponent {
   }
   ngAfterViewInit(){
     
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      // Show a toast message
-      // console.log("taost is appearing")
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Welcome!',
-        detail: 'You are now logged in.',
-        life: 300000
-      });
-    } else {
-      // Redirect to login page if not logged in
-      this.router.navigate(['/login']);
-    }
+    // if (localStorage.getItem('isLoggedIn') === 'true') {
+    //   // Show a toast message
+    //   // console.log("taost is appearing")
+    //   this.messageService.add({
+    //     severity: 'success',
+    //     summary: 'Welcome!',
+    //     detail: 'You are now logged in.',
+    //     life: 300000
+    //   });
+    // } else {
+    //   // Redirect to login page if not logged in
+    //   this.router.navigate(['/login']);
+    // }
 
   }
 }

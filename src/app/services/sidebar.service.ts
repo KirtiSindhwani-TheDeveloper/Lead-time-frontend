@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { apiUrl } from '../../../config';
 interface SidebarItem {
   id:Number;
   label: string;
@@ -12,6 +14,7 @@ submenu?: SidebarItem[];
 })
 export class SidebarService {
 
+   private apiUrl:any=apiUrl.baseUrl
   private sidebarItems: any = [
     {
       label: 'Lead Time Calculator',
@@ -49,7 +52,7 @@ export class SidebarService {
   // Simulate getting current user roles (could be fetched from a backend service)
   private currentUserRoles = ['user']; // This would be dynamic in a real app
 
-  constructor() { }
+  constructor(private http:HttpClient) { }
 
   // Return sidebar items based on current user roles
   getSidebarItems() {
@@ -57,6 +60,13 @@ export class SidebarService {
       item.roles.some((role:any) => this.currentUserRoles.includes(role))
     );
   }
+
+  getModules():Observable<any>{
+      let roleId=localStorage.getItem('roleId');
+      return this.http.post(`${this.apiUrl}sidebar/modules-based-on-roles`,{roleId:roleId})
+    }
+
+  
 
 
 }

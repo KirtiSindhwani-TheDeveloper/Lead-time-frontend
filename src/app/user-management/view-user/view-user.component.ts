@@ -4,16 +4,17 @@ import { SharedModule } from '../../shared/shared.module';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../core/sidebar/sidebar.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UtilitiesService } from '../../services/utilities.service';
 import { HeaderComponent } from "../../core/header/header.component";
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UserManagementModule } from '../user-management.module';
 import { UserService } from '../../services/user.service';
 import { MessageService } from 'primeng/api';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { AuthService } from '../../services/auth.service';
+import { SharedServiceService } from '../../services/shared-service.service';
 @Component({
   selector: 'app-view-user',
   imports: [PrimengModule, MatSlideToggleModule, SharedModule, FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent, HeaderComponent],
@@ -40,6 +41,9 @@ export class ViewUserComponent {
   userId:any;
   showErrorMessage:any;
   emailArray:any=[];
+   dataSubscription: Subscription|null=null;
+   currentRoute:any;
+  receivedData: any;
     statuses:any=[
       { name:'Active',id:1},
    
@@ -48,7 +52,8 @@ export class ViewUserComponent {
     constructor(private router:Router,private utilitiesService:UtilitiesService,
       private fb:FormBuilder,private cdr:ChangeDetectorRef,
       private userService:UserService,private messageService:MessageService,
-      private authService:AuthService
+      private authService:AuthService,
+      private sharedService:SharedServiceService,
     ){
      
  this.editUserForm= this.fb.group({
@@ -61,6 +66,8 @@ export class ViewUserComponent {
     associatedBusiness: ['', Validators.required],
     status: ['', Validators.required]
   });
+  this.currentRoute=router.url;
+  console.log(this.currentRoute)
 }
   
 
@@ -119,6 +126,13 @@ export class ViewUserComponent {
        
       }
     );
+
+    this.dataSubscription = this.sharedService.sidebarData.subscribe(
+      (data) => {
+        this.receivedData = data;
+       // console.log('Data received in User:', this.receivedData);
+      }
+    );
     }
 
     checkEmailAvailability() {
@@ -162,7 +176,7 @@ export class ViewUserComponent {
       // This ensures that the status is updated correctly when toggling
       product.status = product.status === 'Active' ? 'Inactive' : 'Active';
 
-      console.log(product);
+     // console.log(product);
       this.isLoading=true;
       this.userService.deleteUser({...product,token:this.token,loginUserId:this.userId}).subscribe((res:any)=>{
         this.isLoading=false;
@@ -179,7 +193,7 @@ export class ViewUserComponent {
         this.getDesignations();
       },(error:any)=>{
         this.isLoading=false;
-        console.log("roles error ",error)
+      //  console.log("roles error ",error)
       })
     }
   
@@ -293,7 +307,7 @@ export class ViewUserComponent {
     submit(){
 
       if(this.editUserForm.valid){
-        console.log(this.editUserForm.value)
+     //   console.log(this.editUserForm.value)
       //  let link="http://localhost:4200/update-user-password";
       let link="http://103.30.72.109/update-user-password";
         if(this.actionName=='Add User'){
@@ -314,7 +328,7 @@ export class ViewUserComponent {
           this.userService.editUser({...this.editUserForm.value,userId:this.rowId,updatedBy:this.userId,token:this.token}).subscribe((res:any)=>{
             this.isLoading=false;
             this.messageService.add({severity:'success',life:10000,summary:'User is updated Succesfully.'})
-            console.log(this.roles,this.designations)
+          //  console.log(this.roles,this.designations)
             this.viewUser();
             this.visible=false;
           },(error:any)=>{
