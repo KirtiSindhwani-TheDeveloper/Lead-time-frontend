@@ -11,3 +11,8 @@
 :host::ng-deep .p-dialog-header.ng-tns-c1946505645-1.ng-star-inserted{
     padding-block:5px !important;
 }
+
+:host ::ng-deep .btn-access-settings:focus{
+    box-shadow: none;
+    outline: none;
+}

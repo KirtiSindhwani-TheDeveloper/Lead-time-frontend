@@ -43,7 +43,8 @@ export class ViewUserComponent {
   emailArray:any=[];
    dataSubscription: Subscription|null=null;
    currentRoute:any;
-  receivedData: any;
+  receivedData: any=[];
+  userPermissions:any;
     statuses:any=[
       { name:'Active',id:1},
    
@@ -131,6 +132,25 @@ export class ViewUserComponent {
       (data) => {
         this.receivedData = data;
        // console.log('Data received in User:', this.receivedData);
+        if(this.receivedData!=null){
+
+          for(let item of this.receivedData){
+            const moduleItem = item.subchildren.find((child:any) => child.module_route === this.currentRoute);
+  
+  if (moduleItem) {
+    // Extract values if module is found
+    this.userPermissions = {
+      view1: moduleItem.view1,
+      add1: moduleItem.add1,
+      delete1: moduleItem.delete1,
+      edit1: moduleItem.edit1
+    };
+   
+  }
+          }
+        }
+       // console.log("result",this.userPermissions)
+       
       }
     );
     }
@@ -140,6 +160,7 @@ export class ViewUserComponent {
   
       // Loop through the email array to check if the entered email exists
       let emailExists = false;
+      console.log("email exists ",this.emailArray);
       
       this.emailArray.forEach((item: any) => {
         // Check if the email exists in the array
@@ -166,6 +187,7 @@ export class ViewUserComponent {
     setToggleStatus(product: any, value: boolean): void {
       product.status = value ? 'Active' : 'Inactive';
     }
+
     setToggleState(product: any): boolean {
       return product.status === 'Active'; // true if 'Active', false if 'Inactive'
     }

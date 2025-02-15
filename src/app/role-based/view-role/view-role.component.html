@@ -18,6 +18,10 @@
         
         <app-sidebar class="h-[100vh]"></app-sidebar>
     </div>
+
+    <div class="d-flex justify-center h-[80vh] w-full align-items-center" *ngIf="!userPermissions.edit1 && !userPermissions.add1 && !userPermissions.view1 && !userPermissions.delete1">
+      <h2>You do not have the access for User Management</h2>  
+      </div> 
     <div class="w-[100vw]">
 
         <div class="flex justify-center">
@@ -54,8 +58,8 @@
                <th class="text-center">IT</th>
                <th class="text-center">HR</th>
                <th class="text-center">OTHERS</th>
-               <th class="text-center">Action</th>
-               <th class="text-center">Delete</th>
+               <th class="text-center" *ngIf="userPermissions.edit1">Action</th>
+               <th class="text-center" *ngIf="userPermissions.delete1">Delete</th>
            </tr>
        </ng-template>
        <ng-template pTemplate="body" let-role let-i="rowIndex">
@@ -115,12 +119,12 @@
                        <!-- [disabled]="selectedRow !== i" -->
                    </p-checkbox>
                </td>
-               <td class="text-center">
-                   <i class="bx bx-edit cursor-pointer" (click)="editRow(i,role)"></i>
+               <td class="text-center" *ngIf="userPermissions.edit1">
+                   <i class="bx bx-edit cursor-pointer"  (click)="editRow(i,role)"></i>
                </td>
                
                    <!-- <button pButton type="button" label="Update" class="btn-submit cursor-pointer" [disabled]="selectedRow !== i || !isSubmitEnabled" (click)="submit(role,role.id)"></button> -->
-                   <td class="p-2"><mat-slide-toggle 
+                   <td class="p-2" *ngIf="userPermissions.delete1"><mat-slide-toggle 
                      
                     [ngModel]="setToggleState(role)" 
                     (ngModelChange)="onStatusChange(role,role.status)">

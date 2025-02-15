@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UtilitiesService } from '../../services/utilities.service';
 import saveAs from 'file-saver';
+import { Subscription } from 'rxjs';
+import { SharedServiceService } from '../../services/shared-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-role',
@@ -36,12 +39,18 @@ export class ViewRoleComponent {
   subModules:any=[];
   roleStatus:any;
   associatedBusinesses:any=[];
+  userPermissions:any;
+  receivedData:any;
+  currentRoute:any;
+  dataSubscription:Subscription|null=null;
   constructor(private roleService:RoleBasedService,private messageService:MessageService,
-    private utilitiesService:UtilitiesService
+    private utilitiesService:UtilitiesService,private sharedService:SharedServiceService,
+    private router:Router
   ){
     this.viewRole();
     this.token=localStorage.getItem('authToken');
     this.userId=localStorage.getItem('userId');
+    this.currentRoute=router.url;
   }
 
   showDialog(){
@@ -74,14 +83,39 @@ export class ViewRoleComponent {
 }
   updateRoleState(role: any, field: string, event: any) {
     role[field] = event.checked;
-    console.log(`${field} updated for ${role.name}: `, role[field],role);
+   // console.log(`${field} updated for ${role.name}: `, role[field],role);
   }
 
   selectedRow: number | null = null; // Track the selected row index
  
 
   ngOnInit(){
-    this.getBusinessVerticals()
+    this.getBusinessVerticals();
+    this.dataSubscription = this.sharedService.sidebarData.subscribe(
+      (data) => {
+        this.receivedData = data;
+       // console.log('Data received in User:', this.receivedData);
+        if(this.receivedData!=null){
+
+          for(let item of this.receivedData){
+            const moduleItem = item.subchildren.find((child:any) => child.module_route === this.currentRoute);
+  
+  if (moduleItem) {
+    // Extract values if module is found
+    this.userPermissions = {
+      view1: moduleItem.view1,
+      add1: moduleItem.add1,
+      delete1: moduleItem.delete1,
+      edit1: moduleItem.edit1
+    };
+   
+  }
+          }
+        }
+        console.log("result",this.userPermissions)
+       
+      }
+    );
   }
 
   editRow(index: number,rowData:any) {
