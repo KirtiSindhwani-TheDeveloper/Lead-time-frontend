@@ -21,8 +21,10 @@
       <app-sidebar></app-sidebar>
     </div>
     <div class="row col mt-2">
-
-      <form [formGroup]="exportForm">
+      <div class="d-flex justify-center align-items-center" *ngIf=" !userPermissions.edit1 && !userPermissions.add1 && !userPermissions.view1 && !userPermissions.delete1">
+        <h2>You do not have the access for User Management</h2>  
+    </div>
+      <form [formGroup]="exportForm" *ngIf="userPermissions.length>0 || userPermissions?.edit1 ||  userPermissions?.add1 || userPermissions?.view1 || userPermissions?.delete1">
         <!-- <div class="font-semibold row ms-2">
           <span class=" ms-2  d-flex align-items-center text-[20px]">Lead Time Export</span>
         </div> -->

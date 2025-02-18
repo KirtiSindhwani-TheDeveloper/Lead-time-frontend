@@ -44,7 +44,7 @@ export class ViewUserComponent {
    dataSubscription: Subscription|null=null;
    currentRoute:any;
   receivedData: any=[];
-  userPermissions:any;
+  userPermissions:any=[];
     statuses:any=[
       { name:'Active',id:1},
    
@@ -68,7 +68,7 @@ export class ViewUserComponent {
     status: ['', Validators.required]
   });
   this.currentRoute=router.url;
-  console.log(this.currentRoute)
+ // console.log(this.currentRoute)
 }
   
 
@@ -76,7 +76,9 @@ export class ViewUserComponent {
  //  console.log(rowData)
     this.actionName=action;
     if(this.actionName=='Add User'){
+      this.viewUser();
       this.editUserForm.reset();
+      
     }else{
       this.rowId=rowData.userId;
       let designationObj=this.designations.find((obj:any)=>{ return obj.id==rowData.designationId})
@@ -160,8 +162,8 @@ export class ViewUserComponent {
   
       // Loop through the email array to check if the entered email exists
       let emailExists = false;
-      console.log("email exists ",this.emailArray);
-      
+     // console.log("email exists ",this.emailArray);
+
       this.emailArray.forEach((item: any) => {
         // Check if the email exists in the array
         if (item.emailId === this.editUserForm.value.email) {
@@ -227,7 +229,7 @@ export class ViewUserComponent {
         this.getBusinessVertical();
       },(error:any)=>{
         this.isLoading=false;
-        console.log("designtion error ",error)
+        //console.log("designtion error ",error)
       })
     }
 
@@ -239,7 +241,7 @@ export class ViewUserComponent {
         this.viewUser();
       },(error:any)=>{
         this.isLoading=false
-        console.log("vertical error ",error)
+        //console.log("vertical error ",error)
       })
     }
 
@@ -330,12 +332,14 @@ export class ViewUserComponent {
 
       if(this.editUserForm.valid){
      //   console.log(this.editUserForm.value)
-      //  let link="http://localhost:4200/update-user-password";
-      let link="http://103.30.72.109/update-user-password";
+        let link="http://localhost:4200/update-user-password";
+      //let link="http://103.30.72.109/update-user-password";
         if(this.actionName=='Add User'){
+          
           this.isLoading=true;
           this.userService.createUser({...this.editUserForm.value,userId:this.userId,token:this.token,link:link}).subscribe((res:any)=>{
             this.isLoading=false;
+
             this.messageService.add({severity:'success',life:10000,summary:'User is created Succesfully',detail:'Email has been sent to your registered ID'})
             
             this.viewUser();

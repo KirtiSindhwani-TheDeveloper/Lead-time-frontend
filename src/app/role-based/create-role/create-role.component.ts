@@ -311,7 +311,8 @@ export class CreateRoleComponent {
   
       this.isLoading=true;
      // console.log(formValues);
-      if(this.fileName==''){
+     console.log("fileName ",this.fileName)
+      if(!this.fileName || this.fileName==''){
       this.roleService.createRole({...formValues,...formValues.checkboxes,userId:this.userId,token:this.token,modules:this.allModules}).subscribe((res:any)=>{
         this.isLoading=false;
         this.roleForm.reset();

@@ -14,10 +14,12 @@ import { ExportService } from '../../services/export.service';
 import * as XLSX from 'xlsx';
 import { FileUpload } from 'primeng/fileupload';
 import { UserService } from '../../services/user.service';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { brandColumnObject } from '../../core/brandColumns';
 import { HeaderComponent } from '../../core/header/header.component';
 import saveAs from 'file-saver';
+import { SharedServiceService } from '../../services/shared-service.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-create',
   imports: [PrimengModule,SharedModule,ReactiveFormsModule,FormsModule,CommonModule,SidebarComponent,HeaderComponent],
@@ -63,6 +65,10 @@ export class CreateComponent {
   locationFormGroup:FormGroup;
   insertedId:any;
   userName:any;
+  receivedData:any=[];
+  userPermissions:any=[];
+  currentRoute:any;
+  dataSubscription:Subscription|null=null
   @ViewChild('fileUpload') fileUpload!: FileUpload;
   uploadForm: FormGroup = new FormGroup({
 
@@ -80,7 +86,9 @@ export class CreateComponent {
     private uploadService:UploadService,private fb:FormBuilder,
     private exportService:ExportService,
     private userService:UserService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private sharedService:SharedServiceService,
+    private router:Router
 
   ){
     this.locationFormGroup=this.fb.group({
@@ -88,12 +96,40 @@ export class CreateComponent {
       brand:['',[Validators.required]],
       // fileType:['',[Validators.required]]
     })
+    this.currentRoute=this.router.url;
+    //console.log(this.currentRoute)
   }
 
   ngOnInit(){
    this.getBrands(); 
    this.getUsers();
    this.userName=localStorage.getItem('name');
+   
+   this.dataSubscription = this.sharedService.sidebarData.subscribe(
+    (data) => {
+      this.receivedData = data;
+     // console.log('Data received in User:', this.receivedData);
+      if(this.receivedData!=null){
+
+        for(let item of this.receivedData){
+          const moduleItem = item.subchildren.find((child:any) => child.module_route === this.currentRoute);
+
+if (moduleItem) {
+  // Extract values if module is found
+  this.userPermissions = {
+    view1: moduleItem.view1,
+    add1: moduleItem.add1,
+    delete1: moduleItem.delete1,
+    edit1: moduleItem.edit1
+  };
+ 
+}
+        }
+      }
+     console.log("result",this.userPermissions)
+     
+    }
+  );
   }
   onBrandSelect(brand: string): void {
     this.fileTypes=[]

@@ -30,4 +30,8 @@ export class UserService {
   editUser(data:any):Observable<any>{
     return this.http.post(`${this.url}user/edit-user`,data);
   }
+
+  requestNewMail(data:any):Observable<any>{
+    return this.http.post(`${this.url}user/request-new-mail`,data)
+  }
 }

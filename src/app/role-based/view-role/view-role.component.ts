@@ -39,7 +39,7 @@ export class ViewRoleComponent {
   subModules:any=[];
   roleStatus:any;
   associatedBusinesses:any=[];
-  userPermissions:any;
+  userPermissions:any=[];
   receivedData:any;
   currentRoute:any;
   dataSubscription:Subscription|null=null;
@@ -72,7 +72,7 @@ export class ViewRoleComponent {
     // This ensures that the status is updated correctly when toggling
     product.status = product.status === 'Active' ? 'Inactive' : 'Active';
 
-    console.log(product);
+    //console.log(product);
     this.isLoading=true;
     this.roleService.deleteRole({...product,token:this.token,loginUserId:this.userId}).subscribe((res:any)=>{
       this.isLoading=false;
@@ -90,6 +90,7 @@ export class ViewRoleComponent {
  
 
   ngOnInit(){
+
     this.getBusinessVerticals();
     this.dataSubscription = this.sharedService.sidebarData.subscribe(
       (data) => {
@@ -112,10 +113,11 @@ export class ViewRoleComponent {
   }
           }
         }
-        console.log("result",this.userPermissions)
+       // console.log("result",this.userPermissions)
        
       }
     );
+   
   }
 
   editRow(index: number,rowData:any) {
@@ -190,7 +192,7 @@ export class ViewRoleComponent {
    
     // Step 3: Combine main modules and their submodules into a single array
     this.allModules = this.mainModules;
-    // console.log("all modules ",this.allModules)
+     console.log("all modules ",this.allModules)
   }
 
    // Toggle the "All" checkbox for all submodules
@@ -246,7 +248,7 @@ export class ViewRoleComponent {
 
           }
       }
-  // console.log("filtered array ",filteredModules)
+  // console.log("filtered modules ",filteredModules)
      
       this.roleService.editRole({modules:filteredModules,token:this.token,userId:this.userId,roleId:this.roleId,status:this.roleStatus,verticals:this.associatedVerticalsOnView}).subscribe((res:any)=>{
         this.isLoading=false;
